@@ -1,0 +1,106 @@
+# KEYBINDS
+
+# KEYBIND FLAGS (MODIFIERS) Example: bind[flags] = ...
+# l	    locked	            Will also work when an input inhibitor (e.g. a lockscreen) is active.
+# r	    release	            Will trigger on release of a key.
+# c	    click	            Will trigger on release of a key or button as long as the mouse cursor stays inside binds:drag_threshold.
+# g	    drag	            Will trigger on release of a key or button as long as the mouse cursor moves outside binds:drag_threshold.
+# o	    long press	        Will trigger on long press of a key.
+# e	    repeat	            Will repeat when held.
+# n	    non-consuming	    Key/mouse events will be passed to the active window in addition to triggering the dispatcher.
+# m	    mouse	            See the dedicated Mouse Binds section.
+# t	    transparent	        Cannot be shadowed by other binds.
+# i	    ignore mods	        Will ignore modifiers.
+# s	    separate	        Will arbitrarily combine keys between each mod/key, see Keysym combos.
+# d	    has description	    Will allow you to write a description for your bind.
+# p	    bypass	            Bypasses the app’s requests to inhibit keybinds.
+
+$mainMod = SUPER
+
+# Desktop zooming or magnifier
+# bind = $mainMod ALT, mouse_down, exec, hyprctl keyword cursor:zoom_factor "$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor * 1.2}')"
+# bind = $mainMod ALT, mouse_up, exec, hyprctl keyword cursor:zoom_factor "$(hyprctl getoption cursor:zoom_factor | awk 'NR==1 {factor = $2; if (factor < 1) {factor = 1}; print factor / 1.2}')" 
+
+# Rofi
+bind = $mainMod, TAB, exec, rofi -show drun													 #==> Apps Manager
+bind = $mainMod, Z, exec, sh ~/.config/hypr/hyprland/scripts/rofimoji.sh 				     #==> Rofi Emoji
+
+# Reload hyprland
+bind = $mainMod ALT, R, exec, hyprctl reload
+
+# Audio control
+binde = , F11, exec, wpctl set-volume --limit 1.0 @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
+binde = , F12, exec, wpctl set-volume --limit 1.0 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
+
+# OCR
+bindd = SUPER+SHIFT, A, Character recognition, exec, grim -g "$(slurp $SLURP_ARGS)" "tmp.png" && tesseract "tmp.png" - | wl-copy && rm "tmp.png" # [hidden]
+
+# Screenshot
+bindld = ,PRINT, Screenshot >> clipboard ,exec, grim - | wl-copy # Screenshot >> clipboard
+bindld = $CTRL,PRINT, Screenshot >> clipboard & save, exec, mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png # Screenshot >> clipboard & file
+bindd = $SUPER+SHIFT, S, Screen snip, exec, pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent
+
+#programs
+bind = $CTRL+SHIFT, ESCAPE, exec, kitty btop
+bind = $ALT+SHIFT, ESCAPE, exec, hyprctl kill # Forcefully zap a window
+bind = $ALT, ESCAPE, killactive
+bind = $ALT, Q, exec, kitty --title main
+bind = $mainMod, APOSTROPHE, exec, ~/.config/hypr/hyprland/scripts/switch-audio-sink.sh
+bind = $ALT, W, exec, pavucontrol
+bind = $ALT, E, exec, nemo
+bind = $ALT, R, exec, firefox
+bind = $ALT, C, exec, code
+bind = $mainMod, C, exec, gnome-calculator
+bind = $ALT, 1, exec, Discord
+bind = $ALT, 2, exec, steam
+# bind = $ALT, 3, exec, stremio
+bind = $ALT, 3, exec, /usr/lib/electron37/electron /usr/lib/stremio-enhanced/streamingserver/server.js
+
+# Updates
+bind = $ALT, F9, exec, kitty sudo dnf update discord
+
+# Shutdown menu
+bind = $mainMod $ALT, X, exec, kitty systemctl poweroff -i
+bind = $mainMod $ALT, Z, exec, kitty reboot
+
+# Fullscreen
+bind = $mainMod, F, fullscreen
+
+# Floating window
+bind = $mainMod, SPACE, togglefloating
+bind = $mainMod ALT, SPACE, exec, hyprctl dispatch workspaceopt allfloat
+
+# Move windows between workspaces
+bind = $ALT, A, movetoworkspacesilent, 1
+bind = $ALT, S, movetoworkspacesilent, 2
+bind = $ALT, D, movetoworkspacesilent, 3
+bind = $ALT, F, movetoworkspacesilent, 4
+bind = $ALT, G, movetoworkspacesilent, 5
+bind = $ALT, H, movetoworkspacesilent, 6
+
+# Scroll through existing workspaces
+bind = $mainMod, mouse_down, workspace, e+1
+bind = $mainMod, mouse_up, workspace, e-1
+# bind = $ALT, mouse_down, workspace, e+1
+# bind = $ALT, mouse_up, workspace, e-1
+bind = $ALT, TAB, workspace, e+1
+bind = $ALT SHIFT, TAB, workspace, e-1
+bind = $ALT, APOSTROPHE, workspace, empty
+
+# Move/resize windows with mainMod + LMB/RMB and dragging
+bindm = $mainMod, mouse:272, movewindow
+bindm = $mainMod, mouse:273, resizewindow
+
+bind = , XF86AudioPlay, exec, playerctl play-pause
+bind = , XF86AudioNext, exec, playerctl next
+bind = , XF86AudioPrev, exec, playerctl previous
+
+# Switch workspaces with mainMod + [0-9]
+# bind = $mainMod, 1, workspace, 1
+
+# Move active window to a workspace with mainMod + SHIFT + [0-9]
+# bind = $mainMod SHIFT, 1, movetoworkspace, 1
+
+# Move window silently to workspace Super + Alt + [0-9]
+# bind = $mainMod ALT, 1, movetoworkspacesilent, 1
+z

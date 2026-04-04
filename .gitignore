@@ -1,0 +1,24 @@
+# Cache e arquivos temporários
+*.log
+*.tmp
+*.bak
+*.orig
+*.swp
+*~
+
+# Dados sensíveis que não devem ir ao GitHub
+config/google-chrome/
+config/discord/
+config/Code/
+config/Cursor/
+config/opera-gx/
+
+# Arquivos de sessão
+config/session/
+
+# Pastas de build/cache do kitty
+config/kitty/cache/
+
+# Histórico do shell (nunca commitar)
+home/.zsh_history
+home/.bash_history

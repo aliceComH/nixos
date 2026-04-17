@@ -139,7 +139,7 @@ echo "==> [3/4] Instalando Flatpaks..."
 
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-flatpak install -y flathub com.discordapp.Discord
+flatpak install -y flathub dev.vencord.Vesktop
 flatpak install -y flathub com.jetbrains.DataGrip
 flatpak install -y flathub com.spotify.Client
 flatpak install -y flathub com.stremio.Stremio

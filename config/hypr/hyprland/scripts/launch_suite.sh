@@ -1,6 +1,6 @@
 #!/bin/bash
 # Lança o Discord
-flatpak run com.discordapp.Discord & 
+flatpak run dev.vencord.Vesktop & 
 
 sleep 0.2
 

@@ -1,155 +1,147 @@
-# dotfiles
+# nixHyprland
 
-Configurações pessoais para **Fedora 43 + Hyprland**.
+Configuração **declarativa** para NixOS com **Hyprland**, **Home Manager** e dotfiles versionados no mesmo repositório. Objetivo: clonar numa máquina nova (ou após formatação), apontar o flake para `/etc/nixos` e instalar/reconstruir com Nix.
 
----
-
-## O que tem aqui
-
-| Pasta / Arquivo | O que é |
-|---|---|
-| `config/` | Espelha `~/.config/` — Hyprland, GTK, Qt, Kvantum, kitty, rofi, fastfetch, starship, etc. |
-| `local/` | Espelha `~/.local/share/` — color-schemes e syntax-highlighting do KDE |
-| `home/` | Dotfiles soltos em `$HOME` — `.zshrc` e `zshrc.d/` |
-| `system/` | Arquivos customizados em `/etc/` — autologin no tty1 e overdrive da GPU AMD |
-| `install.sh` | Setup completo para uma máquina nova |
-| `sync.sh` | Backup/restore bidirecional (sistema ↔ repo) |
+O caminho **`repoRoot` está fixo em `/etc/nixos`** no [flake.nix](flake.nix): os symlinks do Home Manager (`mkOutOfStoreSymlink`) precisam de um directório real no disco, não da cópia na Nix store. Mantém o clone em `/etc/nixos` (fluxo habitual do NixOS) ou cria um symlink `sudo ln -sfn /caminho/do/teu/clone /etc/nixos` para desenvolver doutro sítio.
 
 ---
 
-## Scripts
+## Instalação em máquina nova
 
-### `sync.sh` — bidirecional
+### Particionamento e montagem (live USB)
+
+1. Partição UEFI (~512 MB, vfat) e resto para `/` (por exemplo **F2FS** ou o que usares no `hardware-configuration.nix`).
+2. Montagem típica:
 
 ```bash
-./sync.sh pull   # sistema → repo
-./sync.sh push   # repo → sistema
+mount /dev/disk/by-label/nixos /mnt
+mkdir -p /mnt/boot
+mount /dev/disk/by-label/boot /mnt/boot
 ```
 
-**`pull`** — copia tudo do sistema para dentro do repo. Use sempre antes de fazer `git commit`, para garantir que o repo reflete o estado atual do seu sistema.
+(Se usares UUID, monta com `/dev/disk/by-uuid/...` conforme `blkid`.)
 
-**`push`** — copia tudo do repo para o sistema. Use após clonar o repo numa máquina nova ou após uma formatação.
+### Clonar este repositório
 
-> **Sobre o `sudo`:** os arquivos de usuário (`~/.config/`, `~/.local/`, `~/.zshrc`) são copiados sem privilégios elevados. Os 2 arquivos em `system/etc/` precisam ir para `/etc/`, que pertence ao root — por isso o script usa `sudo` **apenas** para esses 2 arquivos. O terminal vai pedir sua senha uma única vez.
-
----
-
-### `install.sh` — máquina nova
+Durante a instalação a partir da ISO, o sítio usual é `/mnt/etc/nixos`:
 
 ```bash
-./install.sh
+mkdir -p /mnt/etc/nixos
+git clone https://github.com/SEU-USUARIO/nixHyprland.git /mnt/etc/nixos
+cd /mnt/etc/nixos
 ```
 
-Executa na ordem:
+Substitui a URL pelo teu remoto. Depois do primeiro boot, o mesmo conteúdo fica em `/etc/nixos`.
 
-1. Habilita RPM Fusion (free + nonfree)
-2. Habilita Copr: `solopasha/hyprland`, `ilyaz/LACT`, `peterwu/rendezvous`
-3. Adiciona repos externos: VS Code, Docker CE, Yarn, Cursor IDE
-4. Instala todos os pacotes DNF, um por linha
-5. Instala todos os Flatpaks do Flathub
-6. Chama `./sync.sh push` para aplicar todas as configs
+### Hardware
 
----
-
-## Workflows
-
-### Workflow diário — manter o GitHub em dia
-
-Após editar qualquer arquivo de configuração no sistema:
-
-```
-./sync.sh pull
-git add .
-git commit -m "descrição da mudança"
-git push
-```
-
-### Workflow de formatação / máquina nova
+Gera ou actualiza o módulo de hardware **nesta** máquina:
 
 ```bash
-git clone https://github.com/SEU_USUARIO/dotfiles
-cd dotfiles
-./install.sh
-# reiniciar após a conclusão
+nixos-generate-config --root /mnt --show-hardware-config > hosts/alice-nixos/hardware-configuration.nix
+```
+
+Revisa o ficheiro (discos, kernel, filesystems) e funde com o que já existia no repo se precisares.
+
+### Instalar
+
+```bash
+cd /mnt/etc/nixos
+nixos-install --flake .#alice-nixos
+```
+
+Define a password de `root` quando pedir, reinicia e entra com o utilizador `alice` (Home Manager já vem pelo flake).
+
+---
+
+## Dia a dia
+
+### Adicionar um programa
+
+1. Utilizador: edita [modules/home/packages-home.nix](modules/home/packages-home.nix).
+2. Sistema: edita [modules/nixos/packages-system.nix](modules/nixos/packages-system.nix).
+3. Procura o atributo exacto em [search.nixos.org](https://search.nixos.org/packages).
+4. Aplica:
+
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#alice-nixos
+```
+
+(Se já estás em `/etc/nixos`: `sudo nixos-rebuild switch --flake .#alice-nixos`.)
+
+### Actualizar inputs
+
+```bash
+cd /etc/nixos
+nix flake update
+sudo nixos-rebuild switch --flake .#alice-nixos
+```
+
+Para só um input: `nix flake lock --update-input nixpkgs`.
+
+### Testar um pacote sem instalar
+
+```bash
+nix shell nixpkgs#nome-do-pacote
+```
+
+### Rollback
+
+Se uma geração não arranca bem: no menu de arranque escolhe uma geração anterior; depois corrige os `.nix` e volta a correr `nixos-rebuild switch`.
+
+---
+
+## Estrutura do repositório
+
+| Caminho | Função |
+|---------|--------|
+| [flake.nix](flake.nix) | Inputs (`nixpkgs`, `home-manager`) e `nixosConfigurations.alice-nixos`. |
+| [hosts/alice-nixos/](hosts/alice-nixos/) | Hostname, discos, imports de hardware e caches. |
+| [modules/nixos/](modules/nixos/) | Sistema: Hyprland, GPU AMD, Docker, PipeWire, kernel Zen, Flatpak (serviço), etc. |
+| [modules/home/](modules/home/) | Home Manager: pacotes do utilizador, zsh, symlinks para `config/` e `local/share/`. |
+| [home/alice/home.nix](home/alice/home.nix) | Entrada Home Manager para `alice`. |
+| [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, GTK, Qt, Kvantum, etc. |
+| [local/share/](local/share/) | Esquemas de cores e temas de syntax highlighting (ligados via HM). |
+| [home/](home/) | Ficheiros em `$HOME` / fragmentos referenciados pelo zsh (ex.: [home/zshrc.d/](home/zshrc.d/)). |
+
+---
+
+## Hyprland e theming
+
+- Ficheiro principal: [config/hypr/hyprland.conf](config/hypr/hyprland.conf).
+- Regras de janelas modularizadas em [config/hypr/hyprland/windowrules/](config/hypr/hyprland/windowrules/) (`general`, `floating`, `layerrules`, workspaces especiais/numerados).
+- **GTK**: [config/gtk-3.0/](config/gtk-3.0/), [config/gtk-4.0/](config/gtk-4.0/).
+- **Qt**: [config/qt5ct/](config/qt5ct/), [config/qt6ct/](config/qt6ct/), [config/Kvantum/](config/Kvantum/).
+- Variáveis de sessão (Wayland, Qt, cursor): [modules/home/session-variables.nix](modules/home/session-variables.nix) e [config/hypr/hyprland/env.conf](config/hypr/hyprland/env.conf) onde aplicável.
+
+---
+
+## Flatpaks (Flathub)
+
+Instalados na activação do Home Manager ([modules/home/flatpak-user.nix](modules/home/flatpak-user.nix)): DataGrip, Spotify, Stremio, ProtonPlus, Mission Center, qBittorrent. Adiciona IDs ao `for app in \` se precisares de mais apps.
+
+---
+
+## Editar dotfiles
+
+Tudo está num **único** repositório Git. Os ficheiros em `config/` e `local/share/` são ligados por symlinks para `/etc/nixos/...`; podes editar directamente. Quando mudas **módulos Nix** (pacotes, opções de sistema), corre `nixos-rebuild switch`. Para histórico limpo: `git pull`, revisa, rebuild.
+
+---
+
+## Limpeza da store
+
+Com cuidado (remove gerações não referenciadas):
+
+```bash
+sudo nix-collect-garbage -d
 ```
 
 ---
 
-## Detalhes das configs
+## Caches binários
 
-### Hyprland
+Configurados em [hosts/alice-nixos/configuration.nix](hosts/alice-nixos/configuration.nix): `cache.nixos.org` e `nix-community.cachix.org`.
 
-Arquivo principal: `config/hypr/hyprland.conf`
+## Kernel
 
-As windowrules estão modularizadas em `config/hypr/hyprland/windowrules/`:
-
-| Arquivo | Conteúdo |
-|---|---|
-| `general.conf` | `noblur` e `opacity` global de todas as apps |
-| `floating.conf` | Regras `float`, `size`, `center`, PiP, `tile` |
-| `layerrules.conf` | Todos os `layerrule` (AGS, rofi, wlogout, etc.) |
-| `workspace-special.conf` | `special:stash` — Spotify, SVPManager, Steam |
-| `workspace-4-social.conf` | Discord e steamwebhelper → workspace 4 |
-| `workspace-5-gaming.conf` | Steam apps, Dota2, Albion, gamescope → workspace 5 |
-| `workspace-6-media.conf` | Stremio e mpv → workspace 6 |
-
-### Theming (GTK + Qt)
-
-- **GTK 3/4**: `config/gtk-3.0/` e `config/gtk-4.0/` com `settings.ini` e `gtk.css`
-- **Qt5**: `config/qt5ct/` com `qt5ct.conf` e color scheme
-- **Qt6**: `config/qt6ct/` com `qt6ct.conf` e color scheme
-- **Kvantum**: `config/Kvantum/` com temas Colloid e MaterialAdw
-- **Variáveis de ambiente**: `config/environment.d/` com `QT_QPA_PLATFORMTHEME`, `QT_STYLE_OVERRIDE`
-
-### Configs de sistema (`system/`)
-
-Apenas arquivos que são customizações reais — não gerenciados por pacotes:
-
-**`system/etc/systemd/system/getty@tty1.service.d/autologin.conf`**
-Drop-in do systemd que configura autologin automático no tty1 para o usuário `alice`.
-
-**`system/etc/modprobe.d/99-amdgpu-overdrive.conf`**
-Habilita overdrive na GPU AMD (`ppfeaturemask=0xFFF7FFFF`) para uso com o LACT.
-
-### Shell
-
-- `.zshrc` principal em `home/.zshrc`
-- Fragmentos em `home/zshrc.d/` (auto-Hypr, shortcuts)
-- Plugins usados: `zsh-autosuggestions`, `zsh-syntax-highlighting` (instalados via dnf)
-
-### KDE color schemes
-
-Em `local/share/color-schemes/` — 8 variações do MaterialYou (dark/light com variantes de titlebar).
-
----
-
-## Pacotes instalados
-
-### Flatpaks (Flathub)
-
-| App | ID |
-|---|---|
-| Discord | `com.discordapp.Discord` |
-| JetBrains DataGrip | `com.jetbrains.DataGrip` |
-| Spotify | `com.spotify.Client` |
-| Stremio | `com.stremio.Stremio` |
-| ProtonPlus | `com.vysp3r.ProtonPlus` |
-| Mission Center | `io.missioncenter.MissionCenter` |
-| qBittorrent | `org.qbittorrent.qBittorrent` |
-
-### Repos Copr habilitados
-
-| Copr | Para |
-|---|---|
-| `solopasha/hyprland` | Hyprland e utilitários atualizados |
-| `ilyaz/LACT` | LACT (controle da GPU AMD) |
-| `peterwu/rendezvous` | Bibata cursor themes |
-
-### Repos externos (`.repo`)
-
-| Repo | Para |
-|---|---|
-| Docker CE | `docker-ce`, `docker-ce-cli`, plugins |
-| VS Code | `code` |
-| Cursor IDE | `cursor` |
-| Yarn | `yarn` |
+O módulo [modules/nixos/kernel-zen.nix](modules/nixos/kernel-zen.nix) usa `linuxPackages_zen`. Para o kernel por omissão, remove o import desse ficheiro em `configuration.nix`.

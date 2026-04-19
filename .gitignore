@@ -22,3 +22,8 @@ config/kitty/cache/
 # Histórico do shell (nunca commitar)
 home/.zsh_history
 home/.bash_history
+
+# Nix
+result
+result-*
+.direnv/

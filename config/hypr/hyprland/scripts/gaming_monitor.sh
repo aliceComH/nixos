@@ -1,44 +1,5 @@
 #!/bin/bash
 
-# handle() {
-#   case $1 in
-#     # 1. Prioridade Máxima: Workspace de Games
-#     activespecial*gaming*)
-#       hyprctl dispatch submap gaming
-#       ;;
-
-#     # # 2. Mudança de Janela (Class e Title)
-#     # activewindowv2*)
-#     #   # O Hyprland envia: activewindowv2>>[address],[class],[title]
-#     #   # Vamos extrair a class e o title
-#     #   window_info=$(echo "$1" | cut -d'>' -f3)
-#     #   class=$(echo "$window_info" | cut -d',' -f2)
-#     #   title=$(echo "$window_info" | cut -d',' -f3)
-
-#     #   if [[ "$class" == "firefox" ]]; then
-#     #     hyprctl dispatch submap browser
-#     #   elif [[ "$class" == "codium" && "$title" == *"FintechProject"* ]]; then
-#     #     # Se for o VS Code num projeto específico
-#     #     hyprctl dispatch submap dev_mode
-#     #   else
-#     #     # Se não for nada especial e não estiver no workspace gaming
-#     #     hyprctl dispatch submap reset
-#     #   fi
-#     #   ;;
-
-#     # 3. Voltou para o workspace normal
-#     workspace*)
-#       hyprctl dispatch submap reset
-#       ;;
-#   esac
-# }
-
-# socat -U - UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | while read -r line; do 
-#     handle "$line"
-# done
-
-#!/bin/bash
-
 # Opcional: Log para debugar (pode comentar depois)
 # LOG_FILE="/tmp/gaming_monitor.log"
 

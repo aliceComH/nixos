@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Opcional: Log para debugar (pode comentar depois)
 # LOG_FILE="/tmp/gaming_monitor.log"

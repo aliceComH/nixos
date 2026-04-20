@@ -1,7 +1,15 @@
 # Traduz env.conf do Hyprland + Wayland/Electron (preferir aqui em vez de só env = no Hyprland).
-{ ... }:
+{ pkgs, ... }:
 
 {
+  # Garante o cursor para apps Wayland e XWayland (ex.: Steam).
+  home.pointerCursor = {
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 48;
+    x11.enable = true;
+  };
+
   home.sessionVariables = {
     ELECTRON_OZONE_PLATFORM_HINT = "auto";
     QT_QPA_PLATFORM = "wayland";

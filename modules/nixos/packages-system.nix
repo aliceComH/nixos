@@ -52,6 +52,7 @@
     pkg-config
     vulkan-tools
     libcanberra-gtk3
+    imagemagick
     tesseract
     vapoursynth
     vapoursynth-mvtools

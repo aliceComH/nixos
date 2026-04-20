@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # 1. Pega a lista de sinks (nomes técnicos), excluindo o easyeffects
 mapfile -t sinks < <(pactl list short sinks | awk '{print $2}' | grep -v "easyeffects")

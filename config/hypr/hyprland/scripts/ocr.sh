@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 # Nome do arquivo temporário
 TEMP_IMG="/tmp/ocr_shot.png"
@@ -15,7 +17,13 @@ magick "$TEMP_IMG" -resize 300% -colorspace gray -type grayscale -sharpen 0x1 "$
 
 # 3. OCR com Tesseract usando Português e Inglês
 # O "-" manda o resultado direto pro stdout
-tesseract "$PROC_IMG" - -l por+eng 2>/dev/null | wl-copy
+if tesseract --list-langs 2>/dev/null | grep -qx "por"; then
+  OCR_LANGS="por+eng"
+else
+  OCR_LANGS="eng"
+fi
+
+tesseract "$PROC_IMG" - -l "$OCR_LANGS" 2>/dev/null | wl-copy
 
 # 5. Limpeza
 rm "$TEMP_IMG" "$PROC_IMG"

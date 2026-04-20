@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # Lança o Discord
 flatpak run dev.vencord.Vesktop & 
 

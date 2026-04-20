@@ -3,6 +3,16 @@
 # Opcional: Log para debugar (pode comentar depois)
 # LOG_FILE="/tmp/gaming_monitor.log"
 
+if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+  runtime_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+  HYPRLAND_INSTANCE_SIGNATURE="$(ls -1 "$runtime_dir/hypr" 2>/dev/null | head -n1 || true)"
+fi
+
+if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
+  notify-send "Hyprland" "gaming_monitor: HYPRLAND_INSTANCE_SIGNATURE ausente"
+  exit 1
+fi
+
 # touch "$HOME/.config/hypr/hyprland/scripts/submap_handler.log"
 # LAST_SUBMAP="$HOME/.config/hypr/hyprland/scripts/submap_handler.log"
 # echo "reset" > "$LAST_SUBMAP"

@@ -45,6 +45,13 @@
 
   services.tuned.enable = true;
 
+  # Expoe/ativa unidade lactd a partir do pacote do LACT.
+  systemd.packages = [ pkgs.lact ];
+  systemd.services.lactd = {
+    enable = true;
+    wantedBy = [ "multi-user.target" ];
+  };
+
   programs.dconf.enable = true;
 
   programs.zsh.enable = true;

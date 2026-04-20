@@ -5,6 +5,7 @@
     ../../modules/home/session-variables.nix
     ../../modules/home/packages-home.nix
     ../../modules/home/zsh.nix
+    ../../modules/home/hypr-user-services.nix
     ../../modules/home/xdg-config.nix
     ../../modules/home/xdg-data.nix
     ../../modules/home/flatpak-user.nix

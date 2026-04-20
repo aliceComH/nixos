@@ -8,7 +8,6 @@ FORBIDDEN=5
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
-    notify-send "Hyprland" "Comando ausente para cycle_workspaces: $1"
     exit 1
   }
 }
@@ -17,7 +16,6 @@ require_cmd hyprctl
 require_cmd jq
 
 if [[ "$DIRECTION" != "next" && "$DIRECTION" != "prev" ]]; then
-  notify-send "Hyprland" "Direcao invalida: $DIRECTION"
   exit 1
 fi
 
@@ -30,7 +28,6 @@ mapfile -t WS_IDS < <(
 CURRENT_ID="$(hyprctl activeworkspace -j | jq -r '.id')"
 
 if ! [[ "$CURRENT_ID" =~ ^-?[0-9]+$ ]]; then
-  notify-send "Hyprland" "Nao foi possivel detectar o workspace atual"
   exit 1
 fi
 

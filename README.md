@@ -77,7 +77,17 @@ nix flake update
 sudo nixos-rebuild switch --flake .#alice-nixos
 ```
 
-Para só um input: `nix flake lock --update-input nixpkgs`.
+Para só um input: `nix flake update nixpkgs`.
+
+### Referência rápida de actualizações
+
+| Acção | Comando | O que muda |
+|---|---|---|
+| Aplicar config actual | `sudo nixos-rebuild switch` | Nada nas versões |
+| Actualizar tudo | `nix flake update && sudo nixos-rebuild switch` | `flake.lock` → novas versões |
+| Actualizar só nixpkgs | `nix flake update nixpkgs && sudo nixos-rebuild switch` | Só nixpkgs |
+| Actualizar Hyprland | `nix flake update nixpkgs-hyprland && sudo nixos-rebuild switch` | Só Hyprland |
+| Voltar versão anterior | `sudo nixos-rebuild switch --rollback` | Geração anterior do sistema |
 
 ### Testar um pacote sem instalar
 
@@ -103,6 +113,37 @@ Se uma geração não arranca bem: no menu de arranque escolhe uma geração ant
 | [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, GTK, Qt, Kvantum, etc. |
 | [local/share/](local/share/) | Esquemas de cores e temas de syntax highlighting (ligados via HM). |
 | [home/](home/) | Ficheiros em `$HOME` / fragmentos referenciados pelo zsh (ex.: [home/zshrc.d/](home/zshrc.d/)). |
+
+---
+
+## Versões travadas (pinning)
+
+O Hyprland está **travado** numa versão específica e **não actualiza** com `nix flake update`. Isso é feito através de um input separado no `flake.nix`:
+
+```nix
+# flake.nix
+nixpkgs-hyprland.url = "github:NixOS/nixpkgs/COMMIT_HASH";
+nixpkgs-hyprland.flake = false;
+```
+
+O commit aponta para o nixpkgs exacto onde a versão desejada do Hyprland está disponível. O módulo [`modules/nixos/hyprland-system.nix`](modules/nixos/hyprland-system.nix) consome esse input via `pkgs-hyprland.hyprland` e `pkgs-hyprland.xdg-desktop-portal-hyprland`.
+
+**Para actualizar o Hyprland manualmente:**
+
+1. Vai a [search.nixos.org/packages](https://search.nixos.org/packages) e encontra o commit do nixpkgs que tem a versão que queres.
+2. Altera o hash em `flake.nix`:
+   ```nix
+   nixpkgs-hyprland.url = "github:NixOS/nixpkgs/NOVO_COMMIT_HASH";
+   ```
+3. Aplica:
+   ```bash
+   sudo nixos-rebuild switch
+   ```
+   
+   Ou usa o atalho que actualiza o input automaticamente para o HEAD do unstable:
+   ```bash
+   nix flake update nixpkgs-hyprland && sudo nixos-rebuild switch
+   ```
 
 ---
 

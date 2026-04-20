@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-hyprland, ... }:
 
 {
   programs.hyprland = {
     enable = true;
     xwayland.enable = true;
+    # Versão travada em 0.54.3 via input nixpkgs-hyprland no flake.nix.
+    # Para atualizar: nix flake update nixpkgs-hyprland && sudo nixos-rebuild switch
+    package = pkgs-hyprland.hyprland;
+    portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
   };
 
   environment.sessionVariables = {

@@ -57,4 +57,6 @@
   programs.zsh.enable = true;
 
   programs.nix-ld.enable = true;
+
+  security.sudo.wheelNeedsPassword = false;
 }

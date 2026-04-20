@@ -34,6 +34,7 @@
     rofi
     rofimoji
     kitty
+    playerctl
     mpv
     imv
     hyprpaper

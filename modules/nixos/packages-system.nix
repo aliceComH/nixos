@@ -35,6 +35,7 @@
     rofimoji
     kitty
     playerctl
+    s-tui
     mpv
     imv
     hyprpaper

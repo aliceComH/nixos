@@ -20,18 +20,17 @@
 
   # Substitua pelo UUID real da partição F2FS (blkid). UUID abaixo é só placeholder válido.
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/00000000-0000-0000-0000-000000000001";
+    device = "/dev/disk/by-uuid/f10bb535-6808-4e2b-bfe9-3e22bb929f2e";
     fsType = "f2fs";
     options = [
       "defaults"
       "noatime"
       "compress_algorithm=zstd"
-      "atgc"
     ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/00000000-0000-0000-0000-000000000002";
+    device = "/dev/disk/by-uuid/F48A-E147";
     fsType = "vfat";
     options = [
       "defaults"

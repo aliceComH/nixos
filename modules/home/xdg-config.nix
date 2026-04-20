@@ -4,20 +4,25 @@
 
 let
   link = rel: config.lib.file.mkOutOfStoreSymlink "${repoRoot}/${rel}";
+  # force: evita falha "would be clobbered" quando já existem pastas/cópias em ~/.config
+  linkForce = rel: {
+    source = link rel;
+    force = true;
+  };
 in
 {
   xdg.configFile = {
-    "hypr".source = link "config/hypr";
-    "kitty".source = link "config/kitty";
-    "rofi".source = link "config/rofi";
-    "gtk-3.0".source = link "config/gtk-3.0";
-    "gtk-4.0".source = link "config/gtk-4.0";
-    "environment.d".source = link "config/environment.d";
-    "fastfetch".source = link "config/fastfetch";
-    "Kvantum".source = link "config/Kvantum";
-    "qt5ct".source = link "config/qt5ct";
-    "qt6ct".source = link "config/qt6ct";
-    "kde-material-you-colors".source = link "config/kde-material-you-colors";
-    "xdg-desktop-portal".source = link "config/xdg-desktop-portal";
+    "hypr" = linkForce "config/hypr";
+    "kitty" = linkForce "config/kitty";
+    "rofi" = linkForce "config/rofi";
+    "gtk-3.0" = linkForce "config/gtk-3.0";
+    "gtk-4.0" = linkForce "config/gtk-4.0";
+    #    "environment.d" = linkForce "config/environment.d";
+    "fastfetch" = linkForce "config/fastfetch";
+    "Kvantum" = linkForce "config/Kvantum";
+    "qt5ct" = linkForce "config/qt5ct";
+    "qt6ct" = linkForce "config/qt6ct";
+    "kde-material-you-colors" = linkForce "config/kde-material-you-colors";
+    "xdg-desktop-portal" = linkForce "config/xdg-desktop-portal";
   };
 }

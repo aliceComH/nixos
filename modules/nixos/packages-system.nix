@@ -4,6 +4,10 @@
 {
   environment.systemPackages =
     (with pkgs; [
+    coreutils
+    gettext
+    findutils
+    gnugrep
     git
     vim
     nano
@@ -17,15 +21,16 @@
     btop
     fastfetch
     wev
+    firefox
     v4l-utils
     nvme-cli
     pavucontrol
     gnome-calculator
     gnome-disk-utility
     file-roller
-    xfce.thunar
-    xfce.thunar-archive-plugin
-    xfce.thunar-volman
+    pkgs.thunar
+    pkgs.thunar-archive-plugin
+    pkgs.thunar-volman
     rofi
     rofimoji
     kitty

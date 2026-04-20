@@ -1,4 +1,4 @@
-{ pkgs, repoRoot, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = [ pkgs.starship ];
@@ -30,9 +30,19 @@
     '';
   };
 
+  # Paths relativos ao módulo: avaliação pura do flake não pode ler /etc/nixos via string.
   xdg.configFile = {
-    "starship.toml".source = "${repoRoot}/config/starship.toml";
-    "zshrc.d/shortcuts.zsh".source = "${repoRoot}/home/zshrc.d/shortcuts.zsh";
-    "zshrc.d/auto-Hypr.sh".source = "${repoRoot}/home/zshrc.d/auto-Hypr.sh";
+    "starship.toml" = {
+      source = ../../config/starship.toml;
+      force = true;
+    };
+    "zshrc.d/shortcuts.zsh" = {
+      source = ../../home/zshrc.d/shortcuts.zsh;
+      force = true;
+    };
+    "zshrc.d/auto-Hypr.sh" = {
+      source = ../../home/zshrc.d/auto-Hypr.sh;
+      force = true;
+    };
   };
 }

@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
-# Lança o Discord
-flatpak run dev.vencord.Vesktop & 
+set -u
+
+# Lança Vesktop (nativo via nixpkgs).
+vesktop &
 
 sleep 0.2
 
-# Lança a Steam
-steam & 
+# Lança Steam.
+steam &
 
 sleep 0.2
 
-# Lança o Spotify
+# Lança Spotify (Flatpak).
 flatpak run com.spotify.Client &
+
+wait

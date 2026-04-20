@@ -22,46 +22,18 @@ handle() {
 
   case "$1" in
     "workspace>>5")
-      # echo ">> Detectado: Entrando no submap gaming" >> "$LOG_FILE"
       hyprctl keyword render:direct_scanout true
       hyprctl dispatch submap gaming
     ;;
 
-    "activespecial>>special:stash,HDMI-A-1")
-      # echo ">> Detectado: Outro workspace especial, resetando submap" >> "$LOG_FILE"
+    "workspace>>7")
       hyprctl keyword render:direct_scanout false
-      hyprctl dispatch submap reset
+      hyprctl dispatch submap stash
     ;;
 
     "workspace>>"*)
-      # echo ">> Detectado: Saindo do submap gaming" >> "$LOG_FILE"
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap reset
-    ;;
-
-    "activespecial>>"*)
-      # Forma mais robusta de pegar o que vem depois do >>
-      data="${1#*>>}" 
-      # Pega o que está antes da primeira vírgula
-      special_name="${data%%,*}"
-
-      if [[ -n "$special_name" ]]; then
-        # Se o nome NÃO está vazio, você abriu um especial (stash, etc)
-        hyprctl keyword render:direct_scanout false
-        hyprctl dispatch submap reset
-      else
-        # Se o nome ESTÁ vazio, você fechou o especial e voltou pro workspace regular
-        # Usamos -r no jq para vir texto limpo e [[ == ]] para comparar como string (mais seguro)
-        current_ws=$(hyprctl activeworkspace -j 2>/dev/null | jq -r '.id' 2>/dev/null)
-        
-        if [[ "$current_ws" == "5" ]]; then
-          hyprctl keyword render:direct_scanout true
-          hyprctl dispatch submap gaming
-        else
-          hyprctl keyword render:direct_scanout false
-          hyprctl dispatch submap reset
-        fi
-      fi
     ;;
   esac
 }

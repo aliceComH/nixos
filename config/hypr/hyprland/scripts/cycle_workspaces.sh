@@ -4,7 +4,8 @@ set -euo pipefail
 
 # Configuracao
 DIRECTION="${1:-next}" # "next" ou "prev"
-FORBIDDEN=5
+# Workspaces excluidos da navegacao por alt-tab: 5 = gaming, 7 = stash
+FORBIDDEN=(5 7)
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -19,9 +20,12 @@ if [[ "$DIRECTION" != "next" && "$DIRECTION" != "prev" ]]; then
   exit 1
 fi
 
-# 1. Pega os IDs dos workspaces numericos ativos, exclui o 5 e ordena.
+# Monta o filtro jq dinamicamente a partir do array FORBIDDEN
+FORBIDDEN_FILTER="$(printf ' and .id != %s' "${FORBIDDEN[@]}")"
+
+# 1. Pega os IDs dos workspaces numericos ativos, exclui os proibidos e ordena.
 mapfile -t WS_IDS < <(
-  hyprctl workspaces -j | jq -r ".[] | select(.id > 0 and .id != $FORBIDDEN) | .id" | sort -n
+  hyprctl workspaces -j | jq -r ".[] | select(.id > 0${FORBIDDEN_FILTER}) | .id" | sort -n
 )
 
 # 2. Pega o ID do workspace atual.
@@ -31,8 +35,15 @@ if ! [[ "$CURRENT_ID" =~ ^-?[0-9]+$ ]]; then
   exit 1
 fi
 
-# 3. Se estivermos no 5, pula para o 1 e encerra.
-if [[ "$CURRENT_ID" -eq "$FORBIDDEN" ]]; then
+# 3. Se estivermos num workspace proibido, pula para o 1 e encerra.
+is_forbidden=false
+for f in "${FORBIDDEN[@]}"; do
+  if [[ "$CURRENT_ID" -eq "$f" ]]; then
+    is_forbidden=true
+    break
+  fi
+done
+if $is_forbidden; then
   hyprctl dispatch workspace 1
   exit 0
 fi

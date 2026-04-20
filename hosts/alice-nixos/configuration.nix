@@ -15,6 +15,7 @@
     ../../modules/nixos/hyprland-system.nix
     ../../modules/nixos/packages-system.nix
     ../../modules/nixos/services.nix
+    ../../modules/nixos/cpu-performance.nix
     ../../modules/nixos/flatpak.nix
   ];
 

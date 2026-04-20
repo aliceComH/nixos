@@ -56,7 +56,12 @@
 
   programs.zsh.enable = true;
 
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    # libgbm.so.1 é necessário para o gatherer do Mission Center (flatpak)
+    # correr fora do sandbox no host NixOS.
+    libraries = with pkgs; [ libgbm ];
+  };
 
   security.sudo.wheelNeedsPassword = false;
 }

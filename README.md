@@ -111,6 +111,7 @@ Se uma geração não arranca bem: no menu de arranque escolhe uma geração ant
 | [modules/home/](modules/home/) | Home Manager: pacotes do utilizador, zsh, symlinks para `config/` e `local/share/`. |
 | [home/alice/home.nix](home/alice/home.nix) | Entrada Home Manager para `alice`. |
 | [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, GTK, Qt, Kvantum, etc. |
+| [wallpapers/](wallpapers/) | Imagem fixa **`1.jpeg`** para o hyprpaper (ver `set_wallpaper.sh`). |
 | [local/share/](local/share/) | Esquemas de cores e temas de syntax highlighting (ligados via HM). |
 | [home/](home/) | Ficheiros em `$HOME` / fragmentos referenciados pelo zsh (ex.: [home/zshrc.d/](home/zshrc.d/)). |
 
@@ -150,6 +151,7 @@ O commit aponta para o nixpkgs exacto onde a versão desejada do Hyprland está 
 ## Hyprland e theming
 
 - Ficheiro principal: [config/hypr/hyprland.conf](config/hypr/hyprland.conf).
+- **Wallpaper (hyprpaper 0.8+)**: ficheiro fixo [wallpapers/1.jpeg](wallpapers/1.jpeg); [config/hypr/hyprland/scripts/set_wallpaper.sh](config/hypr/hyprland/scripts/set_wallpaper.sh) gera `~/.local/state/nixos-wallpaper/hyprpaper.conf` em **hyprlang** (`wallpaper { monitor = … path = … }`). Arranque: `hyprpaper -c` em [config/hypr/hyprland/execs.conf](config/hypr/hyprland/execs.conf). Detalhes em [wallpapers/README.md](wallpapers/README.md).
 - Regras de janelas modularizadas em [config/hypr/hyprland/windowrules/](config/hypr/hyprland/windowrules/) (`general`, `floating`, `layerrules`, workspaces especiais/numerados).
 - **GTK**: [config/gtk-3.0/](config/gtk-3.0/), [config/gtk-4.0/](config/gtk-4.0/).
 - **Qt**: [config/qt5ct/](config/qt5ct/), [config/qt6ct/](config/qt6ct/), [config/Kvantum/](config/Kvantum/).

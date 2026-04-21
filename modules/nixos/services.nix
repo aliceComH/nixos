@@ -1,11 +1,9 @@
-{ pkgs, lib, ... }:
+{ pkgs, ... }:
 
 {
-  # Equivalente ao drop-in getty@tty1 (autologin alice); substitui system/etc/ no repo.
-  systemd.services."getty@tty1".serviceConfig.ExecStart = lib.mkForce [
-    ""
-    "-${pkgs.util-linux}/bin/agetty --autologin alice --noclear %I $TERM"
-  ];
+  # Autologin na consola (substitui o override manual de getty@tty1, que quebrava o ExecStart
+  # oficial do NixOS: faltava --login-program e o wrapper correcto do módulo getty.nix).
+  services.getty.autologinUser = "alice";
 
   fonts.packages = with pkgs; [
     noto-fonts-color-emoji

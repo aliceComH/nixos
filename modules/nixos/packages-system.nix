@@ -22,6 +22,7 @@
     fastfetch
     wev
     firefox
+    google-chrome
     v4l-utils
     nvme-cli
     pavucontrol

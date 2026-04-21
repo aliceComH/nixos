@@ -2,10 +2,12 @@
 
 set -euo pipefail
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=workspace_nav.inc.sh
+source "$SCRIPT_DIR/workspace_nav.inc.sh"
+
 # Configuracao
 DIRECTION="${1:-next}" # "next" ou "prev"
-# Workspaces excluidos da navegacao por alt-tab: 5 = gaming, 7 = stash, 8 = auxiliar
-FORBIDDEN=(5 7 8)
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
@@ -20,8 +22,7 @@ if [[ "$DIRECTION" != "next" && "$DIRECTION" != "prev" ]]; then
   exit 1
 fi
 
-# Monta o filtro jq dinamicamente a partir do array FORBIDDEN
-FORBIDDEN_FILTER="$(printf ' and .id != %s' "${FORBIDDEN[@]}")"
+FORBIDDEN_FILTER="$(forbidden_jq_filter)"
 
 # 1. Pega os IDs dos workspaces numericos ativos, exclui os proibidos e ordena.
 mapfile -t WS_IDS < <(

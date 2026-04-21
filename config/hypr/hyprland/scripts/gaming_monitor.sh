@@ -26,9 +26,9 @@ handle() {
       hyprctl dispatch submap gaming
     ;;
 
-    "workspace>>7")
+    "workspace>>8")
       hyprctl keyword render:direct_scanout false
-      hyprctl dispatch submap stash
+      hyprctl dispatch submap auxiliar
     ;;
 
     "workspace>>"*)

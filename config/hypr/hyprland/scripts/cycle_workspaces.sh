@@ -4,8 +4,8 @@ set -euo pipefail
 
 # Configuracao
 DIRECTION="${1:-next}" # "next" ou "prev"
-# Workspaces excluidos da navegacao por alt-tab: 5 = gaming, 7 = stash
-FORBIDDEN=(5 7)
+# Workspaces excluidos da navegacao por alt-tab: 5 = gaming, 7 = stash, 8 = auxiliar
+FORBIDDEN=(5 7 8)
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {

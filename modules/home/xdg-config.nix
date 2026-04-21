@@ -24,5 +24,6 @@ in
     "qt6ct" = linkForce "config/qt6ct";
     "kde-material-you-colors" = linkForce "config/kde-material-you-colors";
     "xdg-desktop-portal" = linkForce "config/xdg-desktop-portal";
+    "mpv" = linkForce "config/mpv";
   };
 }

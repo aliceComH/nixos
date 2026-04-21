@@ -8,7 +8,7 @@ set -euo pipefail
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || {
-    notify-send "Áudio" "Comando ausente: $1" || true
+    echo "switch-audio-sink: comando ausente: $1" >&2
     exit 1
   }
 }
@@ -31,7 +31,7 @@ mapfile -t sink_ids < <(
 )
 
 if [[ "${#sink_ids[@]}" -eq 0 ]]; then
-  notify-send "Áudio" "Nenhum sink encontrado (wpctl status)." || true
+  echo "switch-audio-sink: nenhum sink encontrado (wpctl status)." >&2
   exit 1
 fi
 
@@ -39,7 +39,7 @@ current_id="$(
   wpctl inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null | head -1 | sed -nE 's/^id ([0-9]+),.*/\1/p' || true
 )"
 if [[ -z "$current_id" ]]; then
-  notify-send "Áudio" "Não foi possível ler o sink atual (@DEFAULT_AUDIO_SINK@)." || true
+  echo "switch-audio-sink: não foi possível ler o sink atual (@DEFAULT_AUDIO_SINK@)." >&2
   exit 1
 fi
 
@@ -60,4 +60,3 @@ fi
 
 next_id="${sink_ids[$next]}"
 wpctl set-default "$next_id"
-notify-send "Áudio" "Sink padrão: id $next_id" || true

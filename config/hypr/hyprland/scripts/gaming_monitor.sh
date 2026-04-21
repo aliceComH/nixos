@@ -9,7 +9,7 @@ if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
 fi
 
 if [[ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]]; then
-  notify-send "Hyprland" "gaming_monitor: HYPRLAND_INSTANCE_SIGNATURE ausente"
+  echo "gaming_monitor: HYPRLAND_INSTANCE_SIGNATURE ausente" >&2
   exit 1
 fi
 

@@ -14,6 +14,7 @@
     ../../modules/nixos/amd-gpu.nix
     ../../modules/nixos/hyprland-system.nix
     ../../modules/nixos/packages-system.nix
+    ../../modules/nixos/wooting-udev.nix
     ../../modules/nixos/services.nix
     ../../modules/nixos/cpu-performance.nix
     ../../modules/nixos/flatpak.nix

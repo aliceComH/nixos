@@ -1,0 +1,103 @@
+From a9f76dc69dcf8735e6c00cf4300f38d7b6870666 Mon Sep 17 00:00:00 2001
+From: charisvt <charisvt@ece.auth.gr>
+Date: Thu, 19 Mar 2026 21:49:51 +0200
+Subject: [PATCH 1/2] desktop/view: ignore client maximize requests for tiled
+ windows   Chromium-based browsers send set_maximized when exiting HTML5 video
+   fullscreen because Hyprland sends MAXIMIZED to all windows at first  
+ commit to suppress CSD. Honoring that request from a tiled window   enters
+ FSMODE_MAXIMIZED, making the browser cover all other tiles.
+
+  Tiled windows are compositor-managed; their layout is controlled by
+  the tiling algorithm, not by client requests. Skip the maximize
+  handler entirely for non-floating windows.
+---
+ src/desktop/view/Window.cpp | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/desktop/view/Window.cpp b/src/desktop/view/Window.cpp
+index 2f87cc0f088..38f93b3d606 100644
+--- a/src/desktop/view/Window.cpp
++++ b/src/desktop/view/Window.cpp
+@@ -1074,7 +1074,14 @@ void CWindow::onUpdateState() {
+ 
+     if (requestsMX.has_value() && !(m_suppressedEvents & SUPPRESS_MAXIMIZE)) {
+         if (m_isMapped) {
+-            auto window    = m_self.lock();
++            auto window = m_self.lock();
++
++            // Tiled windows are compositor-managed; ignore client maximize requests.
++            // Chromium echoes set_maximized on fullscreen exit because Hyprland sends
++            // MAXIMIZED to suppress CSD — honoring it would enter FSMODE_MAXIMIZED.
++            if (!window->m_isFloating)
++                return;
++
+             auto state     = sc<int8_t>(window->m_fullscreenState.client);
+             bool maximized = (state & sc<uint8_t>(FSMODE_MAXIMIZED)) != 0;
+             g_pCompositor->changeWindowFullscreenModeClient(window, FSMODE_MAXIMIZED, !maximized);
+
+From 9f9b66b002ecc83c69e0b3fd0a24a6f31aacfded Mon Sep 17 00:00:00 2001
+From: charisvt <charisvt@ece.auth.gr>
+Date: Mon, 6 Apr 2026 01:58:48 +0300
+Subject: [PATCH 2/2] Replaced the !m_isFloating guard with a one-shot
+ m_suppressNextMaximize flag. The flag is armed only when a tiled window exits
+ FSMODE_FULLSCREEN. This targets the echoed set_maximized that clients send
+ after fullscreen exit (caused by Hyprland sending
+ XDG_TOPLEVEL_STATE_MAXIMIZED to suppress CSD). Legitimate maximize requests
+ from CSD tiled windows are no longer blocked.
+
+---
+ src/Compositor.cpp          | 4 ++++
+ src/desktop/view/Window.cpp | 7 +++----
+ src/desktop/view/Window.hpp | 5 +++++
+ 3 files changed, 12 insertions(+), 4 deletions(-)
+
+diff --git a/src/Compositor.cpp b/src/Compositor.cpp
+index 2a9b094781e..21a330e9cd0 100644
+--- a/src/Compositor.cpp
++++ b/src/Compositor.cpp
+@@ -2194,6 +2194,10 @@ void CCompositor::setWindowFullscreenState(const PHLWINDOW PWINDOW, Desktop::Vie
+ 
+     const bool CHANGEINTERNAL = !PWINDOW->m_pinned && PWINDOW->m_fullscreenState.internal != state.internal;
+ 
++    // arm m_suppressNextMaximize to swallow the set_maximized echo on fullscreen exit
++    if (CHANGEINTERNAL && !PWINDOW->m_isFloating && (PWINDOW->m_fullscreenState.internal & FSMODE_FULLSCREEN) && !(state.internal & FSMODE_FULLSCREEN))
++        PWINDOW->m_suppressNextMaximize = true;
++
+     if (*PALLOWPINFULLSCREEN && PWINDOW->m_pinFullscreened && PWINDOW->isFullscreen() && !PWINDOW->m_pinned && state.internal == FSMODE_NONE) {
+         PWINDOW->m_pinned          = true;
+         PWINDOW->m_pinFullscreened = false;
+diff --git a/src/desktop/view/Window.cpp b/src/desktop/view/Window.cpp
+index 04c8a8477b7..d559c02ea7f 100644
+--- a/src/desktop/view/Window.cpp
++++ b/src/desktop/view/Window.cpp
+@@ -1112,11 +1112,10 @@ void CWindow::onUpdateState() {
+         if (m_isMapped) {
+             auto window = m_self.lock();
+ 
+-            // Tiled windows are compositor-managed; ignore client maximize requests.
+-            // Chromium echoes set_maximized on fullscreen exit because Hyprland sends
+-            // MAXIMIZED to suppress CSD — honoring it would enter FSMODE_MAXIMIZED.
+-            if (!window->m_isFloating)
++            if (window->m_suppressNextMaximize) {
++                window->m_suppressNextMaximize = false;
+                 return;
++            }
+ 
+             auto state     = sc<int8_t>(window->m_fullscreenState.client);
+             bool maximized = (state & sc<uint8_t>(FSMODE_MAXIMIZED)) != 0;
+diff --git a/src/desktop/view/Window.hpp b/src/desktop/view/Window.hpp
+index f69585e3be6..ee31e9caa9b 100644
+--- a/src/desktop/view/Window.hpp
++++ b/src/desktop/view/Window.hpp
+@@ -178,6 +178,11 @@ namespace Desktop::View {
+         // bitfield suppressEvents
+         uint64_t m_suppressedEvents = SUPPRESS_NONE;
+ 
++        // Armed on FSMODE_FULLSCREEN exit to swallow the set_maximized that clients send to restore state.
++        // Hyprland sends XDG_TOPLEVEL_STATE_MAXIMIZED to tiled windows to suppress CSD.
++        // Clients echoing it back would enter FSMODE_MAXIMIZED.
++        bool m_suppressNextMaximize = false;
++
+         // desktop components
+         SP<Desktop::View::CSubsurface> m_subsurfaceHead;
+         SP<Desktop::View::CPopup>      m_popupHead;

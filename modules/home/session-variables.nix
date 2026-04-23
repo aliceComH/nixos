@@ -23,7 +23,7 @@
     XCURSOR_THEME = "Bibata-Modern-Ice";
     XCURSOR_SIZE = "48";
     NIXOS_OZONE_WL = "1";
-    # PipeWire em low-latency (quantum menor para reduzir atraso de audio). 64 para menor, 128 para padrão
-    PIPEWIRE_LATENCY = "128/48000";
+    # PipeWire em low-latency (quantum menor para reduzir atraso de audio).
+    PIPEWIRE_LATENCY = "64/48000";
   };
 }

@@ -18,30 +18,6 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)"
 source "$SCRIPT_DIR/workspace_nav.inc.sh"
 
 WS_RETURN_HISTORY="${XDG_RUNTIME_DIR}/hypr/${HYPRLAND_INSTANCE_SIGNATURE}/ws_return_history"
-MONITOR_NAME="HDMI-A-1"
-MODE_DESKTOP="3840x2160@120"
-MODE_GAMING="2560x1440@120"
-
-get_monitor_mode() {
-  hyprctl monitors -j 2>/dev/null | jq -r --arg monitor "$MONITOR_NAME" '
-    first(.[] | select(.name == $monitor))
-    | if . == null then empty else "\(.width)x\(.height)@\((.refreshRate | tonumber | round))" end
-  '
-}
-
-set_monitor_mode_if_needed() {
-  local target_mode="$1"
-  local current_mode
-  local geometry="${target_mode%@*}"
-  local refresh="${target_mode#*@}"
-
-  current_mode="$(get_monitor_mode)"
-  if [[ "$current_mode" == "$target_mode" ]]; then
-    return 0
-  fi
-
-  hyprctl keyword monitor "${MONITOR_NAME}, ${geometry}@${refresh}, 0x0, 1, bitdepth, 10"
-}
 
 append_allowed_id_dedupe() {
   local id="$1" f="$WS_RETURN_HISTORY"
@@ -106,19 +82,16 @@ handle() {
 
   case "$1" in
     "workspace>>5")
-      # set_monitor_mode_if_needed "$MODE_GAMING"
       hyprctl keyword render:direct_scanout true
       hyprctl dispatch submap gaming
     ;;
 
     "workspace>>8")
-      # set_monitor_mode_if_needed "$MODE_DESKTOP"
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap auxiliar
     ;;
 
     "workspace>>"*)
-      # set_monitor_mode_if_needed "$MODE_DESKTOP"
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap reset
     ;;

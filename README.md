@@ -113,7 +113,7 @@ Se uma geração não arranca bem: no menu de arranque escolhe uma geração ant
 | [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, GTK, Qt, Kvantum, etc. |
 | [wallpapers/](wallpapers/) | Imagem fixa **`1.jpeg`** para o hyprpaper (ver `set_wallpaper.sh`). |
 | [local/share/](local/share/) | Esquemas de cores e temas de syntax highlighting (ligados via HM). |
-| [home/](home/) | Ficheiros em `$HOME` / fragmentos referenciados pelo zsh (ex.: [home/zshrc.d/](home/zshrc.d/)). |
+| [home/](home/) | Ficheiros em `$HOME` no repositório; o zsh é configurado em [modules/home/zsh.nix](modules/home/zsh.nix) (não uses `home/.zshrc` como fonte ativa). |
 
 ---
 

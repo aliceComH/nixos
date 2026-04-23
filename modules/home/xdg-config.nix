@@ -25,5 +25,8 @@ in
     "kde-material-you-colors" = linkForce "config/kde-material-you-colors";
     "xdg-desktop-portal" = linkForce "config/xdg-desktop-portal";
     "mpv" = linkForce "config/mpv";
+    # Apenas settings + keybindings (resto de ~/.config/Cursor fica local: extensões, cache, etc.)
+    "Cursor/User/settings.json" = linkForce "config/cursor/User/settings.json";
+    "Cursor/User/keybindings.json" = linkForce "config/cursor/User/keybindings.json";
   };
 }

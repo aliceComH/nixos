@@ -110,7 +110,7 @@ Se uma geração não arranca bem: no menu de arranque escolhe uma geração ant
 | [modules/nixos/](modules/nixos/) | Sistema: Hyprland, GPU AMD, Docker, PipeWire, kernel Zen, Flatpak (serviço), etc. |
 | [modules/home/](modules/home/) | Home Manager: pacotes do utilizador, zsh, symlinks para `config/` e `local/share/`. |
 | [home/alice/home.nix](home/alice/home.nix) | Entrada Home Manager para `alice`. |
-| [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, GTK, Qt, Kvantum, etc. |
+| [config/](config/) | Espelha `~/.config/` — Hyprland, kitty, rofi, Cursor (`User/settings.json`, `keybindings.json`), GTK, Qt, Kvantum, etc. |
 | [wallpapers/](wallpapers/) | Imagem fixa **`1.jpeg`** para o hyprpaper (ver `set_wallpaper.sh`). |
 | [local/share/](local/share/) | Esquemas de cores e temas de syntax highlighting (ligados via HM). |
 | [home/](home/) | Ficheiros em `$HOME` no repositório; o zsh é configurado em [modules/home/zsh.nix](modules/home/zsh.nix) (não uses `home/.zshrc` como fonte ativa). |

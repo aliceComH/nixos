@@ -106,19 +106,19 @@ handle() {
 
   case "$1" in
     "workspace>>5")
-      set_monitor_mode_if_needed "$MODE_GAMING"
+      # set_monitor_mode_if_needed "$MODE_GAMING"
       hyprctl keyword render:direct_scanout true
       hyprctl dispatch submap gaming
     ;;
 
     "workspace>>8")
-      set_monitor_mode_if_needed "$MODE_DESKTOP"
+      # set_monitor_mode_if_needed "$MODE_DESKTOP"
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap auxiliar
     ;;
 
     "workspace>>"*)
-      set_monitor_mode_if_needed "$MODE_DESKTOP"
+      # set_monitor_mode_if_needed "$MODE_DESKTOP"
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap reset
     ;;

@@ -10,7 +10,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ../../modules/nixos/kernel-zen.nix
+    ../../modules/nixos/kernel-7-rt-oriented.nix
     ../../modules/nixos/amd-gpu.nix
     ../../modules/nixos/hyprland-system.nix
     ../../modules/nixos/packages-system.nix

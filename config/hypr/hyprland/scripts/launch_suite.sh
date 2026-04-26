@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -u
 
-# Lança Vesktop (nativo via nixpkgs).
-vesktop &
+# Lança Discord Canary (Flatpak).
+flatpak run com.discordapp.DiscordCanary &
 
 sleep 0.2
 

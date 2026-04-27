@@ -106,9 +106,13 @@ in
         bindkey '^[Od' backward-word
         bindkey '^[Oc' forward-word
 
-        # Ctrl+Backspace / Ctrl+H
-        bindkey '^H' backward-kill-word
-        bindkey '^?' backward-kill-word
+        # Backspace normal apaga 1 caractere
+        bindkey '^H' backward-delete-char
+        bindkey '^?' backward-delete-char
+        # Mantém atalhos dedicados para apagar palavra
+        bindkey '^[^?' backward-kill-word        # Alt+Backspace
+        bindkey '^[[127;5u' backward-kill-word   # Ctrl+Backspace (CSI u)
+        bindkey '^[[8;5~' backward-kill-word     # Ctrl+Backspace (variante)
 
         bindkey '^Z' undo
 

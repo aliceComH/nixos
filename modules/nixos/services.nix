@@ -9,6 +9,7 @@
     noto-fonts-color-emoji
     noto-fonts-cjk-sans
     jetbrains-mono
+    nerd-fonts.jetbrains-mono
     font-awesome
   ];
 

@@ -4,7 +4,7 @@
 #
 
 TARGET_VALUE="0.8254"
-INTERVAL_SEC=2
+INTERVAL_SEC=0.5
 
 trap 'exit 0' TERM INT
 

@@ -27,7 +27,7 @@
         Type = "simple";
         ExecStart = "${pkgs.bash}/bin/bash %h/.config/hypr/hyprland/scripts/mic-gain-loop.sh";
         Restart = "always";
-        RestartSec = 2;
+        RestartSec = "500ms";
       };
       Install.WantedBy = [ "graphical-session.target" ];
     };

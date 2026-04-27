@@ -1,4 +1,11 @@
 # Flatpaks (Flathub) aplicados na activação do Home Manager após o switch.
+#
+# Discord Canary (Wayland): o vídeo do screen share já usa o portal + PipeWire; o áudio
+# depende do mesmo caminho e de o Chromium pedir o stream de áudio (ver
+# modules/home/discord-canary-flatpak.nix). O Vesktop usa outro pipeline WebRTC, por isso
+# pode funcionar sem estes detalhes. Limitação conhecida: apps que falam só com PipeWire
+# nativo (sem camada Pulse) por vezes não entram no «monitor» que o Discord capta —
+# ver https://www.gamingonlinux.com/2025/01/discord-screen-sharing-with-audio-on-linux-wayland-is-officially-here/
 { lib, pkgs, ... }:
 
 {

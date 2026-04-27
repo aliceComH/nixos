@@ -10,6 +10,7 @@
     ../../modules/home/xdg-config.nix
     ../../modules/home/xdg-data.nix
     ../../modules/home/flatpak-user.nix
+    ../../modules/home/discord-canary-flatpak.nix
   ];
 
   home.username = "alice";

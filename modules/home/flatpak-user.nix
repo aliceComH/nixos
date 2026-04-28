@@ -1,11 +1,7 @@
 # Flatpaks (Flathub) aplicados na activação do Home Manager após o switch.
 #
-# Discord Canary (Wayland): o vídeo do screen share já usa o portal + PipeWire; o áudio
-# depende do mesmo caminho e de o Chromium pedir o stream de áudio (ver
-# modules/home/discord-canary-flatpak.nix). O Vesktop usa outro pipeline WebRTC, por isso
-# pode funcionar sem estes detalhes. Limitação conhecida: apps que falam só com PipeWire
-# nativo (sem camada Pulse) por vezes não entram no «monitor» que o Discord capta —
-# ver https://www.gamingonlinux.com/2025/01/discord-screen-sharing-with-audio-on-linux-wayland-is-officially-here/
+# Vesktop (Flathub): cliente Discord com Vencord; pipeline de partilha de ecrã/áudio distinto
+# do cliente oficial Chromium-only.
 { lib, pkgs, ... }:
 
 {
@@ -16,23 +12,19 @@
       export PATH="${lib.makeBinPath [ pkgs.flatpak pkgs.coreutils ]}:$PATH"
       # --user: evita prompt de polkit durante a activação (sem root/TTY).
       flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
-      flatpak remote-add --user --if-not-exists flathub-beta https://flathub.org/beta-repo/flathub-beta.flatpakrepo || true
+      flatpak uninstall --user -y --noninteractive com.discordapp.DiscordCanary 2>/dev/null || true
       for app in \
         com.jetbrains.DataGrip \
         com.spotify.Client \
         com.stremio.Stremio \
         com.vysp3r.ProtonPlus \
+        dev.vencord.Vesktop \
         io.missioncenter.MissionCenter \
-        org.qbittorrent.qBittorrent \
-        com.discordapp.DiscordCanary
+        org.qbittorrent.qBittorrent
       do
-        remote="flathub"
-        if [ "$app" = "com.discordapp.DiscordCanary" ]; then
-          remote="flathub-beta"
-        fi
-        flatpak install --user -y --noninteractive "$remote" "$app" || true
+        flatpak install --user -y --noninteractive flathub "$app" || true
       done
-      flatpak override --user --socket=wayland com.discordapp.DiscordCanary || true
+      flatpak override --user --socket=wayland dev.vencord.Vesktop || true
     )
   '';
 }

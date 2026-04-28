@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -u
 
-# Lança Discord Canary (Flatpak).
-flatpak run com.discordapp.DiscordCanary &
+# Lança Vesktop (Flatpak, Flathub).
+flatpak run dev.vencord.Vesktop &
 
 sleep 0.2
 

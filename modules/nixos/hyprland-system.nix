@@ -26,8 +26,14 @@ in
     WLR_NO_HARDWARE_CURSORS = "0";
   };
 
-  # programs.hyprland já liga xdg.portal e o portal Hyprland; acrescentamos GTK para diálogos etc.
-  xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-gtk ];
+  # Mantemos os portais explícitos para evitar regressões de screen share.
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+    ];
+  };
 
   xdg.portal.config = {
     common.default = [

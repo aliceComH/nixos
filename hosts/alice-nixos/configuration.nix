@@ -17,6 +17,7 @@
     ../../modules/nixos/wooting-udev.nix
     ../../modules/nixos/services.nix
     ../../modules/nixos/cpu-performance.nix
+    ../../modules/nixos/network-tuning.nix
     ../../modules/nixos/flatpak.nix
   ];
 

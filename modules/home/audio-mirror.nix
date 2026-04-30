@@ -10,9 +10,22 @@ let
     rg_bin="${pkgs.ripgrep}/bin/rg"
     sed_bin="${pkgs.gnused}/bin/sed"
     head_bin="${pkgs.coreutils}/bin/head"
+    mkdir_bin="${pkgs.coreutils}/bin/mkdir"
     wpctl_bin="${pkgs.wireplumber}/bin/wpctl"
     pwlink_bin="${pkgs.pipewire}/bin/pw-link"
     pwloop_bin="${pkgs.pipewire}/bin/pw-loopback"
+    state_dir="''${XDG_RUNTIME_DIR:-/tmp}"
+    hdmi_toggle_file="$state_dir/hyperx-hdmi-mirror.enabled"
+
+    is_hdmi_toggle_enabled() {
+      [ -f "$hdmi_toggle_file" ] && [ "$(<"$hdmi_toggle_file")" = "1" ]
+    }
+
+    set_hdmi_toggle_enabled() {
+      local value="$1"
+      "$mkdir_bin" -p "$state_dir"
+      printf '%s\n' "$value" > "$hdmi_toggle_file"
+    }
 
     is_default_hyperx_7_1() {
       "$wpctl_bin" inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null \
@@ -97,12 +110,48 @@ let
     }
 
     reconcile_loopbacks() {
-      if is_default_hyperx_7_1; then
-        systemctl --user start "$cloud3_service_name"
-        echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON"
-      else
+      local hyperx_sink hdmi_sink cloud3_sink
+
+      if ! is_default_hyperx_7_1; then
         systemctl --user stop "$hdmi_service_name" "$cloud3_service_name"
         echo "mirror-audio: default!=HyperX 7.1 -> HDMI OFF, Cloud3 OFF"
+        return 0
+      fi
+
+      hyperx_sink="$(resolve_hyperx_sink)"
+      hdmi_sink="$(resolve_hdmi_sink)"
+      cloud3_sink="$(resolve_cloud3_sink)"
+
+      if [ -z "$hyperx_sink" ]; then
+        systemctl --user stop "$hdmi_service_name" "$cloud3_service_name"
+        echo "mirror-audio: monitor do HyperX indisponível -> HDMI OFF, Cloud3 OFF"
+        return 0
+      fi
+
+      if ! is_hdmi_toggle_enabled; then
+        systemctl --user stop "$hdmi_service_name" "$cloud3_service_name"
+        echo "mirror-audio: toggle HDMI está OFF -> HDMI OFF, Cloud3 OFF"
+        return 0
+      fi
+
+      if [ -n "$hdmi_sink" ]; then
+        systemctl --user start "$hdmi_service_name"
+      else
+        systemctl --user stop "$hdmi_service_name"
+      fi
+
+      # O espelho para Cloud3 só deve subir quando os dois sinks de saída existem.
+      if [ -n "$cloud3_sink" ] && [ -n "$hdmi_sink" ]; then
+        systemctl --user start "$cloud3_service_name"
+        echo "mirror-audio: default=HyperX 7.1, HDMI+Cloud3 conectados -> HDMI ON, Cloud3 ON"
+      else
+        systemctl --user stop "$cloud3_service_name"
+        if [ -z "$cloud3_sink" ]; then
+          echo "mirror-audio: Cloud3 desconectado -> Cloud3 OFF"
+        fi
+        if [ -z "$hdmi_sink" ]; then
+          echo "mirror-audio: HDMI desconectado -> HDMI OFF, Cloud3 OFF"
+        fi
       fi
     }
 
@@ -114,34 +163,44 @@ let
         run_cloud3_loopback
         ;;
       start)
+        set_hdmi_toggle_enabled 1
         if is_default_hyperx_7_1; then
-          systemctl --user start "$hdmi_service_name"
+          reconcile_loopbacks
         else
           systemctl --user stop "$hdmi_service_name"
-          echo "mirror-audio: HDMI mirror bloqueado porque default sink não é HyperX 7.1."
+          systemctl --user stop "$cloud3_service_name"
+          echo "mirror-audio: HDMI ON solicitado; aguardando default sink HyperX 7.1."
         fi
         ;;
       stop)
+        set_hdmi_toggle_enabled 0
         systemctl --user stop "$hdmi_service_name"
+        systemctl --user stop "$cloud3_service_name"
         ;;
       restart)
+        set_hdmi_toggle_enabled 1
         if is_default_hyperx_7_1; then
-          systemctl --user restart "$hdmi_service_name"
+          reconcile_loopbacks
         else
           systemctl --user stop "$hdmi_service_name"
-          echo "mirror-audio: HDMI mirror bloqueado porque default sink não é HyperX 7.1."
+          systemctl --user stop "$cloud3_service_name"
+          echo "mirror-audio: HDMI ON solicitado; aguardando default sink HyperX 7.1."
         fi
         ;;
       toggle)
-        if ! is_default_hyperx_7_1; then
+        if is_hdmi_toggle_enabled; then
+          set_hdmi_toggle_enabled 0
           systemctl --user stop "$hdmi_service_name"
-          echo "mirror-audio: HDMI OFF (default sink não é HyperX 7.1)."
-        elif systemctl --user --quiet is-active "$hdmi_service_name"; then
-          systemctl --user stop "$hdmi_service_name"
-          echo "mirror-audio: OFF"
+          systemctl --user stop "$cloud3_service_name"
+          echo "mirror-audio: HDMI OFF (toggle)"
         else
-          systemctl --user start "$hdmi_service_name"
-          echo "mirror-audio: ON"
+          set_hdmi_toggle_enabled 1
+          reconcile_loopbacks
+          if systemctl --user --quiet is-active "$hdmi_service_name"; then
+            echo "mirror-audio: HDMI ON (toggle)"
+          else
+            echo "mirror-audio: HDMI ON solicitado (aguardando dispositivos compatíveis)"
+          fi
         fi
         ;;
       reconcile)

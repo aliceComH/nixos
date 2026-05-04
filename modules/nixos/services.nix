@@ -20,6 +20,14 @@
 
   networking.networkmanager.enable = true;
 
+  # Disques (gnome-disk-utility), Thunar-volman e montagens automáticas via D-Bus
+  # precisam do udisks2 activo; sem o serviço a lista de discos fica vazia.
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+
+  # Partições exFAT (p.ex. SSDs externos formatados no Windows).
+  boot.supportedFilesystems = [ "exfat" ];
+
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

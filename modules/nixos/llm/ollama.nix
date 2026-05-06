@@ -1,6 +1,6 @@
 # Ollama com ROCm (AMD). GPU continua configurada em ../amd-gpu.nix — aqui só o runtime de inferência.
 #
-# Segurança WAN: não faças port forward da 11434 no router — usa só HTTPS :443 + /qwen (módulo edge.nix).
+# Este módulo é LAN-only: não há exposição WAN aqui.
 #
 # Open WebUI (opcional, Docker já activo em services.nix); llm-start usa -p 0.0.0.0:3000 (acessível na LAN).
 #   docker run -d --restart unless-stopped \

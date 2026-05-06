@@ -60,7 +60,6 @@ Define a password de `root` quando pedir, reinicia e entra com o utilizador `ali
 
 Este repositório já inclui módulos para LLM em:
 - [modules/nixos/llm/ollama.nix](modules/nixos/llm/ollama.nix)
-- [modules/nixos/llm/edge.nix](modules/nixos/llm/edge.nix)
 
 Depois de aplicar a configuração:
 
@@ -115,7 +114,7 @@ llm-start
 ```
 
 5. **Internet (WAN)**  
-   Para aceder **de fora de casa** com HTTPS e senha, usa o fluxo **Caddy + `/qwen`** descrito mais abaixo (`llm.edge` + DNS). Não abras **11434** nem **3000** no router para a Internet a não ser que saibas exactamente os riscos.
+   Este setup está intencionalmente **LAN-only**. Não abras **11434** nem **3000** no router para a Internet.
 
 #### Hyprland (submaps `reset` e `auxiliar`, não no `gaming`)
 
@@ -161,18 +160,6 @@ Para testar rapidamente (com o serviço **já** a correr):
 
 ```bash
 ollama run qwen2.5-coder:14b
-```
-
-#### Acesso WAN em `/qwen` (opcional)
-
-Se configurares FQDN + ACME no [hosts/alice-nixos/configuration.nix](hosts/alice-nixos/configuration.nix), o Caddy expõe:
-- `https://SEU-DOMINIO/qwen`
-- com Basic Auth configurada no módulo `edge.nix`.
-
-Teste:
-
-```bash
-curl -u 'qwen:Qigs&T1Tgtx*D%Fx' https://SEU-DOMINIO/qwen/api/tags
 ```
 
 #### Comandos úteis

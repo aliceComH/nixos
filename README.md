@@ -56,6 +56,138 @@ Define a password de `root` quando pedir, reinicia e entra com o utilizador `ali
 
 ## Dia a dia
 
+### LLM local (Ollama + Open WebUI + Qwen)
+
+Este repositório já inclui módulos para LLM em:
+- [modules/nixos/llm/ollama.nix](modules/nixos/llm/ollama.nix)
+- [modules/nixos/llm/edge.nix](modules/nixos/llm/edge.nix)
+
+Depois de aplicar a configuração:
+
+```bash
+sudo nixos-rebuild switch --flake /etc/nixos#alice-nixos
+```
+
+#### Arranque no boot
+
+O **Ollama não sobe automaticamente** no boot (o `multi-user.target` não puxa o serviço). Usa os comandos abaixo ou os atalhos do Hyprland.
+
+#### Scripts `llm-start` e `llm-stop` (recomendado)
+
+Estão no `PATH` do sistema (definidos em `llm/ollama.nix`):
+
+```bash
+llm-start   # sobe ollama + open-webui (cria o container na primeira vez)
+llm-stop    # para open-webui + ollama
+```
+
+Na **mesma máquina**: `http://localhost:3000` (Open WebUI). Noutro PC na **LAN**: `http://IP-DESTA-MAQUINA:3000`.
+
+#### Rede local (LAN) — o que está exposto e quando
+
+Ideia simples: **só existe “coisa na rede” enquanto o stack estiver ligado** (`llm-start`). Quando fazes `llm-stop`, o Ollama para de escutar e o container da WebUI para — **ninguém na rede consegue ligar** a esses portos até voltares a subir tudo.
+
+1. **Ollama (API, modelos)**  
+   - Escuta em **todas as interfaces** na porta **11434** (`0.0.0.0:11434`).  
+   - O firewall do NixOS **abre o TCP 11434** para a LAN (e tecnicamente para qualquer interface; na prática o teu router em casa não expõe isto à Internet a não ser que faças **port forward** — não recomendado).  
+   - Noutro dispositivo na mesma Wi‑Fi/cabo: no browser ou no Continue/Cursor usa como base da API algo como `http://IP-DESTA-MAQUINA:11434` (ex.: listar modelos: `http://IP-DESTA-MAQUINA:11434/api/tags`).  
+   - **Não há palavra-passe** nesta API na LAN — trata a tua rede como zona de confiança.
+
+2. **Open WebUI (interface web)**  
+   - O `llm-start` publica o container em **`0.0.0.0:3000`** → qualquer PC na LAN pode abrir `http://IP-DESTA-MAQUINA:3000`.  
+   - O firewall **abre o TCP 3000**.  
+   - O browser noutro PC fala com a WebUI nesse IP; a WebUI, por dentro do Docker, continua a falar com o Ollama no host via `OLLAMA_BASE_URL=http://172.17.0.1:11434`.
+
+3. **Descobrir o IP desta máquina na LAN**  
+
+```bash
+ip -brief addr
+# ou, por exemplo:
+hostname -I
+```
+
+4. **Se já tinhas criado o container com `-p 127.0.0.1:3000`** (só localhost), após `nixos-rebuild switch` tens de **recriar** o container uma vez para passar a escutar na LAN:
+
+```bash
+llm-stop
+docker rm -f open-webui
+llm-start
+```
+
+5. **Internet (WAN)**  
+   Para aceder **de fora de casa** com HTTPS e senha, usa o fluxo **Caddy + `/qwen`** descrito mais abaixo (`llm.edge` + DNS). Não abras **11434** nem **3000** no router para a Internet a não ser que saibas exactamente os riscos.
+
+#### Hyprland (submaps `reset` e `auxiliar`, não no `gaming`)
+
+Em [config/hypr/hyprland/keybinds.conf](config/hypr/hyprland/keybinds.conf):
+
+- **SUPER+SHIFT+F1** — `llm-start`
+- **SUPER+SHIFT+F2** — `llm-stop`
+
+No submap **gaming** estes atalhos não existem de propósito.
+
+#### Manual (equivalente aos scripts)
+
+```bash
+sudo systemctl start ollama
+docker start open-webui || docker run -d --name open-webui --restart unless-stopped \
+  -p 0.0.0.0:3000:8080 \
+  -e OLLAMA_BASE_URL=http://172.17.0.1:11434 \
+  ghcr.io/open-webui/open-webui:main
+```
+
+```bash
+docker stop open-webui
+sudo systemctl stop ollama
+```
+
+#### Verificar estado
+
+```bash
+systemctl status ollama --no-pager
+docker ps --filter name=open-webui
+curl http://127.0.0.1:11434/api/tags
+```
+
+#### Modelo Qwen
+
+O módulo já declara:
+
+```nix
+services.ollama.loadModels = [ "qwen2.5-coder:14b" ];
+```
+
+Para testar rapidamente (com o serviço **já** a correr):
+
+```bash
+ollama run qwen2.5-coder:14b
+```
+
+#### Acesso WAN em `/qwen` (opcional)
+
+Se configurares FQDN + ACME no [hosts/alice-nixos/configuration.nix](hosts/alice-nixos/configuration.nix), o Caddy expõe:
+- `https://SEU-DOMINIO/qwen`
+- com Basic Auth configurada no módulo `edge.nix`.
+
+Teste:
+
+```bash
+curl -u 'qwen:Qigs&T1Tgtx*D%Fx' https://SEU-DOMINIO/qwen/api/tags
+```
+
+#### Comandos úteis
+
+```bash
+# Logs do Ollama
+journalctl -u ollama -f
+
+# Logs da Open WebUI
+docker logs -f open-webui
+
+# Remover e recriar Open WebUI (se necessário)
+docker rm -f open-webui
+```
+
 ### Adicionar um programa
 
 1. Utilizador: edita [modules/home/packages-home.nix](modules/home/packages-home.nix).

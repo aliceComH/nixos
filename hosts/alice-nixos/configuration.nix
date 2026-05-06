@@ -19,7 +19,13 @@
     ../../modules/nixos/cpu-performance.nix
     ../../modules/nixos/network-tuning.nix
     ../../modules/nixos/flatpak.nix
+    ../../modules/nixos/llm/ollama.nix
+    ../../modules/nixos/llm/edge.nix
   ];
+
+  # LLM: Ollama na LAN :11434; Internet só https://«fqdn»/qwen (Basic Auth). Define fqdn + email para activar Caddy/ACME.
+  llm.edge.fqdn = null; # ex.: "llm.teudominio.pt" (registo A → IP público, port forward TCP 443 e 80)
+  llm.edge.acmeEmail = ""; # obrigatório quando fqdn ≠ null (conta Let's Encrypt)
 
   networking.hostName = "alice-nixos";
 

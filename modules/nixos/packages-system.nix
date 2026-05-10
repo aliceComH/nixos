@@ -54,6 +54,7 @@
     lutris
     osu-lazer-bin
     code-cursor
+    claude-code-bin
     vscode
     go
     rustc

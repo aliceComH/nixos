@@ -145,8 +145,48 @@ sudo systemctl stop ollama
 ```bash
 systemctl status ollama --no-pager
 docker ps --filter name=open-webui
+docker ps --filter name=searxng
 curl http://127.0.0.1:11434/api/tags
+curl "http://127.0.0.1:8080/search?q=teste&format=json"
 ```
+
+#### Web Search com SearXNG
+
+O stack LLM também sobe o container `searxng` para alimentar a busca web da Open WebUI:
+
+- `llm-start` garante a rede Docker `llm-stack` e sobe `searxng` (localhost `:8080`) antes da Open WebUI.
+- A Open WebUI é iniciada com:
+  - `ENABLE_WEB_SEARCH=True`
+  - `WEB_SEARCH_ENGINE=searxng`
+  - `SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>&format=json`
+- O SearXNG fica publicado só em `127.0.0.1:8080` (não em LAN), enquanto a Open WebUI continua em `0.0.0.0:3000`.
+- O `llm-start` espera até `http://127.0.0.1:3000/health` devolver HTTP 200 (primeiro arranque pode levar até alguns minutos por migrações / downloads).
+
+Smoke test rápido:
+
+```bash
+llm-start
+curl "http://127.0.0.1:8080/search?q=nixos&format=json"
+docker logs --tail 80 searxng
+docker logs --tail 80 open-webui
+```
+
+No browser (Open WebUI):
+
+1. Abre `http://127.0.0.1:3000` (preferível a `localhost`: no Linux o nome costuma resolver primeiro para IPv6 `[::1]`, mas o Docker publica apenas em IPv4 neste mapeamento, o que causa falhas ou mensagens enganadoras).
+2. Em `Admin Panel -> Settings -> Web Search`, confirma `searxng`.
+3. Numa conversa, ativa Web Search no botão de integrações.
+
+Troubleshooting:
+
+- Mensagens tipo “internal error” logo após `llm-start`: espera até o comando terminar; confirma com `curl -sSI http://127.0.0.1:3000/health` (deve devolver HTTP 200).
+- Se mesmo com `/health` em 200 o browser falhar, testa sempre `127.0.0.1` em vez de `localhost`.
+- Se a busca devolver erro 403/500, valida se o SearXNG responde em JSON (`format=json`).
+- Se a Open WebUI não “ver” o SearXNG, confirma que ambos estão na rede `llm-stack`:
+  - `docker inspect open-webui`
+  - `docker inspect searxng`
+- Se alterares variáveis de Web Search manualmente, remove e recria o container da Open WebUI:
+  - `docker rm -f open-webui && llm-start`
 
 #### Modelo Qwen
 
@@ -171,9 +211,27 @@ journalctl -u ollama -f
 # Logs da Open WebUI
 docker logs -f open-webui
 
+# Logs do SearXNG
+docker logs -f searxng
+
 # Remover e recriar Open WebUI (se necessário)
 docker rm -f open-webui
 ```
+
+#### Busca web para outros clientes (além da Open WebUI)
+
+Clientes que falam diretamente com a API do Ollama não ganham busca web automaticamente. Para suportar esse cenário, adiciona uma camada de agente/gateway com tools:
+
+1. Cliente envia prompt para o gateway (não direto ao Ollama).
+2. Gateway decide quando chamar o SearXNG (`/search?...format=json`).
+3. Gateway injeta contexto no prompt final e só então chama o Ollama.
+4. Resposta volta ao cliente com/sem citações de fontes.
+
+Implementação incremental recomendada:
+
+- Fase 1: Open WebUI + SearXNG (já funcional para uso humano via UI).
+- Fase 2: serviço leve (ex.: FastAPI) com endpoint compatível com os clientes principais.
+- Fase 3: políticas de segurança (timeout, domínio permitido, rate limit e cache).
 
 ### Adicionar um programa
 

@@ -163,10 +163,14 @@ in
     package = pkgs.ollama-rocm;
     host = "0.0.0.0";
     port = 11434;
-    loadModels = [ "qwen2.5-coder:14b" ];
+    loadModels = [ "gemma4:26b" ];
     openFirewall = false;
     # Se `rocminfo` / o serviço falhar a ver a RX 9070 (RDNA 4), tenta descomentar e ajustar conforme docs AMD / ollama gpu.md
     # rocmOverrideGfx = "12.0.0";
+  };
+
+  systemd.services.ollama.environment = {
+    OLLAMA_KEEP_ALIVE = "-1";
   };
 
   # Não arrancar Ollama no boot; usa `llm-start` / Hypr SUPER+SHIFT+F1.

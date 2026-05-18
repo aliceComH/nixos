@@ -2,7 +2,7 @@
 set -u
 
 # Lança Vesktop (Flatpak, Flathub).
-flatpak run dev.vencord.Vesktop &
+flatpak run com.discordapp.Discord &
 
 sleep 0.2
 

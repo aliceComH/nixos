@@ -1,7 +1,5 @@
 # Flatpaks (Flathub) aplicados na activação do Home Manager após o switch.
 #
-# Vesktop (Flathub): cliente Discord com Vencord; pipeline de partilha de ecrã/áudio distinto
-# do cliente oficial Chromium-only.
 { lib, pkgs, ... }:
 
 {
@@ -18,13 +16,13 @@
         com.spotify.Client \
         com.stremio.Stremio \
         com.vysp3r.ProtonPlus \
-        dev.vencord.Vesktop \
+        com.discordapp.Discord \
         io.missioncenter.MissionCenter \
         org.qbittorrent.qBittorrent
       do
         flatpak install --user -y --noninteractive flathub "$app" || true
       done
-      flatpak override --user --socket=wayland dev.vencord.Vesktop || true
+      flatpak override --user --socket=wayland com.discordapp.Discord || true
     )
   '';
 }

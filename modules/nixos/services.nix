@@ -19,6 +19,7 @@
   zramSwap.enable = true;
 
   networking.networkmanager.enable = true;
+  services.cloudflare-warp.enable = true;
 
   # Disques (gnome-disk-utility), Thunar-volman e montagens automáticas via D-Bus
   # precisam do udisks2 activo; sem o serviço a lista de discos fica vazia.

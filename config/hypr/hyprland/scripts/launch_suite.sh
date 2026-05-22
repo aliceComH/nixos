@@ -2,7 +2,7 @@
 set -u
 
 # Lança Vesktop (Flatpak, Flathub).
-flatpak run com.discordapp.Discord &
+vesktop --enable-features=WebRTCPipeWireCapturer &
 
 sleep 0.2
 

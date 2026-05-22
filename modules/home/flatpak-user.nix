@@ -10,19 +10,16 @@
       export PATH="${lib.makeBinPath [ pkgs.flatpak pkgs.coreutils ]}:$PATH"
       # --user: evita prompt de polkit durante a activação (sem root/TTY).
       flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo || true
-      flatpak uninstall --user -y --noninteractive com.discordapp.DiscordCanary 2>/dev/null || true
       for app in \
         com.jetbrains.DataGrip \
         com.spotify.Client \
         com.stremio.Stremio \
         com.vysp3r.ProtonPlus \
-        com.discordapp.Discord \
         io.missioncenter.MissionCenter \
         org.qbittorrent.qBittorrent
       do
         flatpak install --user -y --noninteractive flathub "$app" || true
       done
-      flatpak override --user --socket=wayland com.discordapp.Discord || true
     )
   '';
 }

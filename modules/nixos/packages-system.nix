@@ -73,6 +73,7 @@
     bibata-cursors
     font-awesome
     cloudflare-warp
+    vesktop
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])
     ++ [ pkgs.qt6Packages.qt6ct ];

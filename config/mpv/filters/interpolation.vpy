@@ -3,9 +3,9 @@ core = vs.core
 
 clip = video_in.resize.Bicubic(format=vs.YUV420P8)
 
-dst_fps = 90
+dst_fps = 120
 # Interpolating to fps higher than 60 is too CPU-expensive, smoothmotion can handle the rest.
-while (dst_fps > 90):
+while (dst_fps > 120):
     dst_fps /= 2
 
 src_fps_num = int(container_fps * 1e8)

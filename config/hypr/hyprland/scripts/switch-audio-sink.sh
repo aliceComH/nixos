@@ -22,8 +22,9 @@ require_cmd sed
 allowed_sink_patterns=(
   'HyperX 7\.1 Audio'
   'Kingston_HyperX_Virtual_Surround_Sound'
-  'Navi .*HDMI'
-  'alsa_output\..*hdmi'
+  'IEC958'
+  'iec958'
+  '[ÁA]udio interno'
 )
 
 # Lista IDs dos sinks na seção Audio.

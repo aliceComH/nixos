@@ -70,7 +70,6 @@
     vapoursynth-mvtools
     python3Packages.vapoursynth
     papirus-icon-theme
-    bibata-cursors
     font-awesome
     cloudflare-warp
     vesktop

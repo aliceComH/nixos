@@ -4,7 +4,7 @@ let
   mirrorScript = pkgs.writeShellScriptBin "mirror-audio" ''
     set -euo pipefail
 
-    hdmi_service_name="hyperx-hdmi-mirror.service"
+    internal_service_name="hyperx-internal-mirror.service"
     cloud3_service_name="hyperx-cloud3-mirror.service"
 
     rg_bin="${pkgs.ripgrep}/bin/rg"
@@ -15,16 +15,16 @@ let
     pwlink_bin="${pkgs.pipewire}/bin/pw-link"
     pwloop_bin="${pkgs.pipewire}/bin/pw-loopback"
     state_dir="''${XDG_RUNTIME_DIR:-/tmp}"
-    hdmi_toggle_file="$state_dir/hyperx-hdmi-mirror.enabled"
+    internal_toggle_file="$state_dir/hyperx-internal-mirror.enabled"
 
-    is_hdmi_toggle_enabled() {
-      [ -f "$hdmi_toggle_file" ] && [ "$(<"$hdmi_toggle_file")" = "1" ]
+    is_internal_toggle_enabled() {
+      [ -f "$internal_toggle_file" ] && [ "$(<"$internal_toggle_file")" = "1" ]
     }
 
-    set_hdmi_toggle_enabled() {
+    set_internal_toggle_enabled() {
       local value="$1"
       "$mkdir_bin" -p "$state_dir"
-      printf '%s\n' "$value" > "$hdmi_toggle_file"
+      printf '%s\n' "$value" > "$internal_toggle_file"
     }
 
     is_default_hyperx_7_1() {
@@ -41,11 +41,13 @@ let
       echo "$sink"
     }
 
-    resolve_hdmi_sink() {
+    resolve_internal_sink() {
       local sink
-      sink="$($pwlink_bin -i | $rg_bin '^alsa_output\.pci-0000_03_00\.1\.hdmi-.*:playback_FL$' | $head_bin -n1 | $sed_bin 's/:playback_FL$//' || true)"
+      # Busca pelo sink IEC958 (Estéreo digital) do áudio interno
+      sink="$($pwlink_bin -i | $rg_bin '^alsa_output\..*iec958.*:playback_FL$' | $head_bin -n1 | $sed_bin 's/:playback_FL$//' || true)"
       if [ -z "$sink" ]; then
-        sink="$($pwlink_bin -i | $rg_bin '^alsa_output\..*hdmi.*:playback_FL$' | $head_bin -n1 | $sed_bin 's/:playback_FL$//' || true)"
+        # Fallback genérico para áudio interno PCI (ignora saídas de vídeo hdmi e fones usb)
+        sink="$($pwlink_bin -i | $rg_bin '^alsa_output\.pci-.*:playback_FL$' | $rg_bin -v -i 'hdmi|usb' | $head_bin -n1 | $sed_bin 's/:playback_FL$//' || true)"
       fi
       echo "$sink"
     }
@@ -59,29 +61,29 @@ let
       echo "$sink"
     }
 
-    run_hdmi_loopback() {
-      local hyperx_sink hdmi_sink
+    run_internal_loopback() {
+      local hyperx_sink internal_sink
 
       if ! is_default_hyperx_7_1; then
-        echo "mirror-audio: loopback HDMI só é permitido com HyperX 7.1 como sink default." >&2
+        echo "mirror-audio: loopback Áudio interno só é permitido com HyperX 7.1 como sink default." >&2
         exit 1
       fi
 
       hyperx_sink="$(resolve_hyperx_sink)"
-      hdmi_sink="$(resolve_hdmi_sink)"
+      internal_sink="$(resolve_internal_sink)"
 
       if [ -z "$hyperx_sink" ]; then
         echo "mirror-audio: não encontrei monitor do sink HyperX." >&2
         exit 1
       fi
 
-      if [ -z "$hdmi_sink" ]; then
-        echo "mirror-audio: não encontrei sink HDMI para espelho." >&2
+      if [ -z "$internal_sink" ]; then
+        echo "mirror-audio: não encontrei sink Áudio interno para espelho." >&2
         exit 1
       fi
 
-      echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$hdmi_sink"
-      exec "$pwloop_bin" -n hyperx-hdmi-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$hdmi_sink" -c 2 -m '[ FL FR ]' --latency 100
+      echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$internal_sink"
+      exec "$pwloop_bin" -n hyperx-internal-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 100
     }
 
     run_cloud3_loopback() {
@@ -110,52 +112,52 @@ let
     }
 
     reconcile_loopbacks() {
-      local hyperx_sink hdmi_sink cloud3_sink
+      local hyperx_sink internal_sink cloud3_sink
 
       if ! is_default_hyperx_7_1; then
-        # Ao sair do default 7.1, reseta o toggle do HDMI para estado padrão OFF.
-        set_hdmi_toggle_enabled 0
-        systemctl --user stop "$hdmi_service_name" "$cloud3_service_name"
-        echo "mirror-audio: default!=HyperX 7.1 -> HDMI OFF, Cloud3 OFF"
+        # Ao sair do default 7.1, reseta o toggle do Áudio interno para estado padrão OFF.
+        set_internal_toggle_enabled 0
+        systemctl --user stop "$internal_service_name" "$cloud3_service_name"
+        echo "mirror-audio: default!=HyperX 7.1 -> Áudio interno OFF, Cloud3 OFF"
         return 0
       fi
 
       hyperx_sink="$(resolve_hyperx_sink)"
-      hdmi_sink="$(resolve_hdmi_sink)"
+      internal_sink="$(resolve_internal_sink)"
       cloud3_sink="$(resolve_cloud3_sink)"
 
       if [ -z "$hyperx_sink" ]; then
-        systemctl --user stop "$hdmi_service_name" "$cloud3_service_name"
-        echo "mirror-audio: monitor do HyperX indisponível -> HDMI OFF, Cloud3 OFF"
+        systemctl --user stop "$internal_service_name" "$cloud3_service_name"
+        echo "mirror-audio: monitor do HyperX indisponível -> Áudio interno OFF, Cloud3 OFF"
         return 0
       fi
 
-      if ! is_hdmi_toggle_enabled; then
-        systemctl --user stop "$hdmi_service_name"
+      if ! is_internal_toggle_enabled; then
+        systemctl --user stop "$internal_service_name"
         if [ -n "$cloud3_sink" ]; then
           systemctl --user start "$cloud3_service_name"
-          echo "mirror-audio: toggle HDMI está OFF -> HDMI OFF, Cloud3 ON"
+          echo "mirror-audio: toggle Áudio interno está OFF -> Áudio interno OFF, Cloud3 ON"
         else
           systemctl --user stop "$cloud3_service_name"
-          echo "mirror-audio: toggle HDMI está OFF e Cloud3 desconectado -> HDMI OFF, Cloud3 OFF"
+          echo "mirror-audio: toggle Áudio interno está OFF e Cloud3 desconectado -> Áudio interno OFF, Cloud3 OFF"
         fi
         return 0
       fi
 
-      if [ -n "$hdmi_sink" ]; then
-        systemctl --user start "$hdmi_service_name"
+      if [ -n "$internal_sink" ]; then
+        systemctl --user start "$internal_service_name"
       else
-        systemctl --user stop "$hdmi_service_name"
+        systemctl --user stop "$internal_service_name"
       fi
 
-      # Cloud3 é independente do toggle/estado do HDMI:
+      # Cloud3 é independente do toggle/estado do Áudio interno:
       # sempre ON quando default=HyperX 7.1 e Cloud3 está conectado.
       if [ -n "$cloud3_sink" ]; then
         systemctl --user start "$cloud3_service_name"
-        if [ -n "$hdmi_sink" ]; then
-          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, HDMI ON (toggle)"
+        if [ -n "$internal_sink" ]; then
+          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, Áudio interno ON (toggle)"
         else
-          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, HDMI OFF (desconectado)"
+          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, Áudio interno OFF (desconectado)"
         fi
       else
         systemctl --user stop "$cloud3_service_name"
@@ -166,8 +168,8 @@ let
     }
 
     case "''${1:-}" in
-      run)
-        run_hdmi_loopback
+      run-internal)
+        run_internal_loopback
         ;;
       run-cloud3)
         run_cloud3_loopback
@@ -176,37 +178,37 @@ let
         if is_default_hyperx_7_1; then
           reconcile_loopbacks
         else
-          systemctl --user stop "$hdmi_service_name"
+          systemctl --user stop "$internal_service_name"
           systemctl --user stop "$cloud3_service_name"
           echo "mirror-audio: aguardando default sink HyperX 7.1."
         fi
         ;;
       stop)
-        set_hdmi_toggle_enabled 0
-        systemctl --user stop "$hdmi_service_name"
+        set_internal_toggle_enabled 0
+        systemctl --user stop "$internal_service_name"
         systemctl --user stop "$cloud3_service_name"
         ;;
       restart)
         if is_default_hyperx_7_1; then
           reconcile_loopbacks
         else
-          systemctl --user stop "$hdmi_service_name"
+          systemctl --user stop "$internal_service_name"
           systemctl --user stop "$cloud3_service_name"
           echo "mirror-audio: aguardando default sink HyperX 7.1."
         fi
         ;;
       toggle)
-        if is_hdmi_toggle_enabled; then
-          set_hdmi_toggle_enabled 0
-          systemctl --user stop "$hdmi_service_name"
-          echo "mirror-audio: HDMI OFF (toggle)"
+        if is_internal_toggle_enabled; then
+          set_internal_toggle_enabled 0
+          systemctl --user stop "$internal_service_name"
+          echo "mirror-audio: Áudio interno OFF (toggle)"
         else
-          set_hdmi_toggle_enabled 1
+          set_internal_toggle_enabled 1
           reconcile_loopbacks
-          if systemctl --user --quiet is-active "$hdmi_service_name"; then
-            echo "mirror-audio: HDMI ON (toggle)"
+          if systemctl --user --quiet is-active "$internal_service_name"; then
+            echo "mirror-audio: Áudio interno ON (toggle)"
           else
-            echo "mirror-audio: HDMI ON solicitado (aguardando dispositivos compatíveis)"
+            echo "mirror-audio: Áudio interno ON solicitado (aguardando dispositivos compatíveis)"
           fi
         fi
         ;;
@@ -214,11 +216,11 @@ let
         reconcile_loopbacks
         ;;
       status)
-        systemctl --user status "$hdmi_service_name" --no-pager
+        systemctl --user status "$internal_service_name" --no-pager
         systemctl --user status "$cloud3_service_name" --no-pager
         ;;
       *)
-        echo "uso: mirror-audio {run|run-cloud3|start|stop|restart|toggle|reconcile|status}" >&2
+        echo "uso: mirror-audio {run-internal|run-cloud3|start|stop|restart|toggle|reconcile|status}" >&2
         exit 2
         ;;
     esac
@@ -227,16 +229,15 @@ in
 {
   home.packages = [ mirrorScript ];
 
-  systemd.user.services.hyperx-hdmi-mirror = {
+  systemd.user.services.hyperx-internal-mirror = {
     Unit = {
-      Description = "Mirror HyperX sink monitor to HDMI sink";
+      Description = "Mirror HyperX sink monitor to Internal Audio sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
-
     Service = {
       Type = "simple";
-      ExecStart = "${mirrorScript}/bin/mirror-audio run";
+      ExecStart = "${mirrorScript}/bin/mirror-audio run-internal";
       Restart = "on-failure";
       RestartSec = 2;
     };
@@ -248,7 +249,6 @@ in
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
-
     Service = {
       Type = "simple";
       ExecStart = "${mirrorScript}/bin/mirror-audio run-cloud3";
@@ -263,12 +263,10 @@ in
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
-
     Service = {
       Type = "oneshot";
       ExecStart = "${mirrorScript}/bin/mirror-audio reconcile";
     };
-
     Install.WantedBy = [ "default.target" ];
   };
 
@@ -282,7 +280,6 @@ in
       OnUnitActiveSec = "5s";
       Unit = "hyperx-loopback-reconcile.service";
     };
-
     Install.WantedBy = [ "timers.target" ];
   };
 }

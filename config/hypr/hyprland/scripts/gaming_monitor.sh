@@ -70,8 +70,7 @@ update_ws_return_history() {
 PREV_WS=""
 
 handle() {
-  # echo "$1" >> "$LOG_FILE"
-
+  # Mantemos a sua lógica maravilhosa de histórico intacta
   if [[ "$1" == workspace\>\>* ]]; then
     local rest="${1#workspace>>}"
     if [[ "$rest" =~ ^[0-9]+$ ]]; then
@@ -82,8 +81,18 @@ handle() {
 
   case "$1" in
     "workspace>>5")
+      # O scanout true se mantém para ambos os casos aqui
       hyprctl keyword render:direct_scanout true
-      hyprctl dispatch submap gaming
+      
+      # Pergunta ao Hyprland a classe da janela ativa atual
+      local active_class
+      active_class=$(hyprctl activewindow -j | jq -r '.class')
+      
+      if [[ "$active_class" == "osu!" ]]; then
+        hyprctl dispatch submap osu
+      else
+        hyprctl dispatch submap gaming
+      fi
     ;;
 
     "workspace>>8")
@@ -94,6 +103,22 @@ handle() {
     "workspace>>"*)
       hyprctl keyword render:direct_scanout false
       hyprctl dispatch submap reset
+    ;;
+
+    "activewindow>>"*)
+      # O evento chega no formato: activewindow>>class,title
+      # Isso aqui corta a string e pega apenas a "class" (tudo antes da vírgula)
+      local window_info="${1#activewindow>>}"
+      local class="${window_info%%,*}"
+      
+      # Se a janela mudar ENQUANTO já estivermos no workspace 5, reavaliamos o submap
+      if [[ "${PREV_WS:-}" == "5" ]]; then
+        if [[ "$class" == "osu!" ]]; then
+          hyprctl dispatch submap osu
+        else
+          hyprctl dispatch submap gaming
+        fi
+      fi
     ;;
   esac
 }

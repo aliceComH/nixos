@@ -1,5 +1,5 @@
 # Pacotes de sistema (PATH global). Flatpaks: modules/home/flatpak-user.nix
-{ pkgs, ... }:
+{ pkgs, pkgs-osu, ... }:
 
 {
   environment.systemPackages =
@@ -64,7 +64,7 @@
     lutris
     (pkgs.symlinkJoin {
       name = "osu-lazer-fast";
-      paths = [ pkgs.osu-lazer-bin ];
+      paths = [ pkgs-osu.osu-lazer-bin ];
       buildInputs = [ pkgs.makeWrapper ];
       postBuild = ''
         # Varre a pasta bin e injeta a latência extrema em todos os executáveis (incluindo o "osu!")

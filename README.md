@@ -264,7 +264,22 @@ Para só um input: `nix flake update nixpkgs`.
 | Actualizar tudo | `nix flake update && sudo nixos-rebuild switch` | `flake.lock` → novas versões |
 | Actualizar só nixpkgs | `nix flake update nixpkgs && sudo nixos-rebuild switch` | Só nixpkgs |
 | Actualizar Hyprland | `nix flake update nixpkgs-hyprland && sudo nixos-rebuild switch` | Só Hyprland |
+| **Actualizar osu-lazer** | `nix flake update nixpkgs-osu && sudo nixos-rebuild switch` | **Só osu-lazer** |
 | Voltar versão anterior | `sudo nixos-rebuild switch --rollback` | Geração anterior do sistema |
+
+### Actualizar o osu-lazer (independente)
+
+O osu-lazer usa um input **`nixpkgs-osu`** separado no [flake.nix](flake.nix), o que significa que podes actualizar a versão dele **sem mexer** no nixpkgs principal, Hyprland, ou qualquer outro pacote do sistema.
+
+```bash
+cd /etc/nixos
+nix flake update nixpkgs-osu
+sudo nixos-rebuild switch --flake .#alice-nixos
+```
+
+Isto avança o `nixpkgs-osu` para o HEAD do `nixos-unstable`, puxando a versão mais recente do `osu-lazer-bin` disponível nesse commit. Todo o resto do sistema fica intocado.
+
+> **Nota:** o wrapper `osu-lazer-fast` com `PIPEWIRE_LATENCY="64/48000"` continua a ser aplicado automaticamente sobre o binário vindo do `nixpkgs-osu`.
 
 ### Testar um pacote sem instalar
 
@@ -282,7 +297,7 @@ Se uma geração não arranca bem: no menu de arranque escolhe uma geração ant
 
 | Caminho | Função |
 |---------|--------|
-| [flake.nix](flake.nix) | Inputs (`nixpkgs`, `home-manager`) e `nixosConfigurations.alice-nixos`. |
+| [flake.nix](flake.nix) | Inputs (`nixpkgs`, `nixpkgs-osu`, `home-manager`) e `nixosConfigurations.alice-nixos`. |
 | [hosts/alice-nixos/](hosts/alice-nixos/) | Hostname, discos, imports de hardware e caches. |
 | [modules/nixos/](modules/nixos/) | Sistema: Hyprland, GPU AMD, Docker, PipeWire, kernel Zen, Flatpak (serviço), etc. |
 | [modules/home/](modules/home/) | Home Manager: pacotes do utilizador, zsh, symlinks para `config/` e `local/share/`. |
@@ -322,6 +337,20 @@ O commit aponta para o nixpkgs exacto onde a versão desejada do Hyprland está 
    ```bash
    nix flake update nixpkgs-hyprland && sudo nixos-rebuild switch
    ```
+
+### osu-lazer (input independente)
+
+O **osu-lazer** também tem um input separado (`nixpkgs-osu`), mas ao contrário do Hyprland, segue o `nixos-unstable` em vez de estar travado num commit fixo. Isto permite actualizar o osu a qualquer momento sem arrastar o resto do sistema:
+
+```bash
+nix flake update nixpkgs-osu && sudo nixos-rebuild switch
+```
+
+Se quiseres travar o osu-lazer numa versão específica (por exemplo, para evitar regressões), altera o input para um commit fixo:
+
+```nix
+nixpkgs-osu.url = "github:NixOS/nixpkgs/COMMIT_HASH_COM_VERSAO_DESEJADA";
+```
 
 ---
 

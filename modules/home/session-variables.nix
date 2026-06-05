@@ -1,29 +1,10 @@
 { pkgs, ... }:
 
-let
-  ghostlineCursor = pkgs.stdenv.mkDerivation {
-    pname = "ghostline-cursor-theme";
-    version = "git";
-
-    src = pkgs.fetchFromGitHub {
-      owner = "patinhooh";
-      repo = "ghostline-cursor-theme";
-      rev = "main";
-      # Se der erro de "hash mismatch", copie o hash que o terminal der e coloque nestas aspas!
-      hash = "sha256-emllRxawCKiTSseCuoAARs2bG7niyvJU762Y4bDijOQ="; 
-    };
-
-    installPhase = ''
-      mkdir -p $out/share/icons/ghostline
-      cp -r linux/dark/* $out/share/icons/ghostline/
-    '';
-  };
-in
 {
   home.pointerCursor = {
     enable = true;
-    package = ghostlineCursor; # Agora o Nix sabe quem é esse cara
-    name = "ghostline";        # Nome exato da pasta que criamos ali no installPhase
+    package = pkgs.bibata-cursors;
+    name = "Bibata-Original-Ice";
     size = 32; 
     gtk.enable = true;
     x11.enable = true;
@@ -39,7 +20,7 @@ in
     GDK_BACKEND = "wayland,x11";
     TERMINAL = "kitty -1";
     QT_QPA_PLATFORMTHEME = "gtk4";
-    XCURSOR_THEME = "ghostline";
+    XCURSOR_THEME = "Bibata-Original-Ice";
     XCURSOR_SIZE = "32";
     NIXOS_OZONE_WL = "1";
   };

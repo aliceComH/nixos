@@ -44,6 +44,18 @@
     ];
   };
 
+  # Ativa a integração de "Abrir no Terminal" no menu de contexto
+  programs.nautilus-open-any-terminal = {
+    enable = true;
+    terminal = "kitty"; # Mude para o terminal que você usa (kitty, wezterm, etc)
+  };
+
+  # Garante o funcionamento de lixeira, montagem de discos e redes no Nautilus
+  services.gvfs.enable = true; 
+
+  # Opcional: Ativa a visualização de arquivos com a barra de espaço (estilo macOS)
+  services.gnome.sushi.enable = true;
+
   nixpkgs.overlays = [
     (final: prev: {
       openldap = prev.openldap.overrideAttrs (oldAttrs: {

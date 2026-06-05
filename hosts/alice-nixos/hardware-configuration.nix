@@ -17,6 +17,7 @@
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.kernelParams = [ "ipv6.disable=1" ];
 
   # Substitua pelo UUID real da partição F2FS (blkid). UUID abaixo é só placeholder válido.
   fileSystems."/" = {

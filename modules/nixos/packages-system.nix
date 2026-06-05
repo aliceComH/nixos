@@ -32,6 +32,8 @@
     pkgs.thunar
     pkgs.thunar-archive-plugin
     pkgs.thunar-volman
+    nautilus
+    traceroute
     rofi
     rofimoji
     kitty

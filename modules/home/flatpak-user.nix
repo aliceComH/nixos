@@ -13,7 +13,6 @@
       for app in \
         com.jetbrains.DataGrip \
         com.spotify.Client \
-        com.stremio.Stremio \
         com.vysp3r.ProtonPlus \
         io.missioncenter.MissionCenter \
         org.qbittorrent.qBittorrent

@@ -39,13 +39,21 @@
     kitty
     playerctl
     s-tui
-    (pkgs.mpv.override {
-      mpv-unwrapped = pkgs.mpv-unwrapped.override {
-        vapoursynthSupport = true;
-        # Embute o MVTools no VapourSynth para que `core.mv` esteja disponível
-        # nos scripts .vpy. Sem isto o plugin não é encontrado no Nix store.
-        vapoursynth = pkgs.vapoursynth.withPlugins [ pkgs.vapoursynth-mvtools ];
-      };
+    (pkgs.symlinkJoin {
+      name = "mpv-single-instance";
+      paths = [
+        (pkgs.mpv.override {
+          mpv-unwrapped = pkgs.mpv-unwrapped.override {
+            vapoursynthSupport = true;
+            vapoursynth = pkgs.vapoursynth.withPlugins [ pkgs.vapoursynth-mvtools ];
+          };
+        })
+      ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        wrapProgram $out/bin/mpv \
+          --run "pkill mpv || true"
+      '';
     })
     imv
     hyprpaper

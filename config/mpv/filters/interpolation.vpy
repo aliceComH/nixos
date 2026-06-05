@@ -1,24 +1,44 @@
 import vapoursynth as vs
 core = vs.core
 
-clip = video_in.resize.Bicubic(format=vs.YUV420P8)
+clip = video_in
+width = clip.width
 
-dst_fps = 90
-# Interpolating to fps higher than 60 is too CPU-expensive, smoothmotion can handle the rest.
-while (dst_fps > 90):
-    dst_fps /= 2
+# 1. O Cérebro: Lógica Dinâmica de FPS baseada na Resolução Bruta
+if width <= 1920:
+    target_fps = 180  # 1080p ou menor
+elif width <= 3840:
+    target_fps = 120   # 4K
+else:
+    target_fps = 48   # 8K ou maior
 
+# Mantemos o "Cheat Code" do 1080p para salvar a sua CPU no 4K/8K
+if width > 1920:
+    target_w = 1920
+    target_h = int(target_w * (clip.height / clip.width))
+    clip = core.resize.Bicubic(clip, width=target_w, height=target_h)
+
+clip_analise = core.resize.Bicubic(clip, format=vs.YUV420P8)
+
+# Transformando a nossa variável em denominadores precisos para o VapourSynth
 src_fps_num = int(container_fps * 1e8)
 src_fps_den = int(1e8)
-dst_fps_num = int(dst_fps * 1e4)
+dst_fps_num = int(target_fps * 1e4)
 dst_fps_den = int(1e4)
-# Needed because clip FPS is missing
-clip = core.std.AssumeFPS(clip, fpsnum = src_fps_num, fpsden = src_fps_den)
-print("Reflowing from ",src_fps_num/src_fps_den," fps to ",dst_fps_num/dst_fps_den," fps.")
 
-sup  = core.mv.Super(clip, pel=2, hpad=16, vpad=16)
-bvec = core.mv.Analyse(sup, blksize=16, isb=True , chroma=True, search=3, searchparam=1)
-fvec = core.mv.Analyse(sup, blksize=16, isb=False, chroma=True, search=3, searchparam=1)
-clip = core.mv.BlockFPS(clip, sup, bvec, fvec, num=dst_fps_num, den=dst_fps_den, mode=3, thscd2=12)
+clip = core.std.AssumeFPS(clip, fpsnum=src_fps_num, fpsden=src_fps_den)
+clip_analise = core.std.AssumeFPS(clip_analise, fpsnum=src_fps_num, fpsden=src_fps_den)
+
+b_size = 32
+b_overlap = 8
+
+sup_analise = core.mv.Super(clip_analise, pel=1, hpad=b_size, vpad=b_size)
+
+# Busca Diamante (search=2) para manter a latência no chão
+bvec = core.mv.Analyse(sup_analise, blksize=b_size, overlap=b_overlap, isb=True, chroma=True, search=2)
+fvec = core.mv.Analyse(sup_analise, blksize=b_size, overlap=b_overlap, isb=False, chroma=True, search=2)
+
+sup_render = core.mv.Super(clip, pel=1, hpad=b_size, vpad=b_size)
+clip = core.mv.BlockFPS(clip, sup_render, bvec, fvec, num=dst_fps_num, den=dst_fps_den, mode=3, thscd2=12)
 
 clip.set_output()

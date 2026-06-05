@@ -54,7 +54,18 @@
     protontricks
     winetricks
     lutris
-    osu-lazer-bin
+    (pkgs.symlinkJoin {
+      name = "osu-lazer-fast";
+      paths = [ pkgs.osu-lazer-bin ];
+      buildInputs = [ pkgs.makeWrapper ];
+      postBuild = ''
+        # Varre a pasta bin e injeta a latência extrema em todos os executáveis (incluindo o "osu!")
+        for bin in $out/bin/*; do
+          wrapProgram "$bin" \
+            --set PIPEWIRE_LATENCY "64/48000"
+        done
+      '';
+    })
     code-cursor
     claude-code-bin
     vscode

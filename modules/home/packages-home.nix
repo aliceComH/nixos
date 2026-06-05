@@ -9,7 +9,6 @@
     slurp
     wf-recorder
     libnotify
-    stremio-linux-shell
   ];
 
   dconf.settings = {

@@ -29,4 +29,23 @@ in
     "Cursor/User/settings.json" = linkForce "config/cursor/User/settings.json";
     "Cursor/User/keybindings.json" = linkForce "config/cursor/User/keybindings.json";
   };
+
+  # 1. Cria o aplicativo fantasma no sistema
+  xdg.desktopEntries."mpv-stremio" = {
+    name = "MPV (Stremio Auto-Clean)";
+    exec = "mpv-stremio-cleaner %U";
+    terminal = false;
+    categories = [ "AudioVideo" "Video" ];
+    mimeType = [ "audio/x-mpegurl" "application/vnd.apple.mpegurl" "audio/mpegurl" ];
+  };
+
+  # 2. Redireciona os arquivos do Stremio para o nosso script
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "audio/x-mpegurl" = [ "mpv-stremio.desktop" ];
+      "application/vnd.apple.mpegurl" = [ "mpv-stremio.desktop" ];
+      "audio/mpegurl" = [ "mpv-stremio.desktop" ];
+    };
+  };
 }

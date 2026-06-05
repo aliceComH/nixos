@@ -42,6 +42,5 @@ in
     XCURSOR_THEME = "ghostline";
     XCURSOR_SIZE = "32";
     NIXOS_OZONE_WL = "1";
-    PIPEWIRE_LATENCY = "64/48000";
   };
 }

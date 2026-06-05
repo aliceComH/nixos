@@ -28,6 +28,9 @@
   i18n.defaultLocale = lib.mkDefault "pt_BR.UTF-8";
 
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.permittedInsecurePackages = [
+    "openssl-1.1.1w"
+  ];
 
   nix.settings = {
     experimental-features = [

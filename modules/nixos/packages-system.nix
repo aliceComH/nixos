@@ -66,9 +66,8 @@
         done
       '';
     })
-    code-cursor
+    sublime4
     claude-code-bin
-    vscode
     go
     rustc
     cargo

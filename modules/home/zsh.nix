@@ -67,7 +67,7 @@ in
 
     sessionVariables = {
       EDITOR = "nano";
-      VISUAL = "code";
+      VISUAL = "subl";
     };
 
     initContent = lib.mkMerge [

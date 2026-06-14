@@ -29,6 +29,7 @@
   # Partições exFAT (p.ex. SSDs externos formatados no Windows).
   boot.supportedFilesystems = [ "exfat" ];
 
+  # rtkit dá prioridade RT ao PipeWire sem precisar rodar como root.
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;

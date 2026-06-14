@@ -62,6 +62,7 @@
     protontricks
     winetricks
     lutris
+    wineWowPackages.stagingFull
     (pkgs.symlinkJoin {
       name = "osu-lazer-fast";
       paths = [ pkgs-osu.osu-lazer-bin ];
@@ -75,7 +76,6 @@
       '';
     })
     sublime4
-    claude-code-bin
     go
     rustc
     cargo

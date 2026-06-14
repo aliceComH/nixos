@@ -7,15 +7,16 @@ width = clip.width
 # 1. O Cérebro: Lógica Dinâmica de FPS baseada na Resolução Bruta
 if width <= 1920:
     target_fps = 180  # 1080p ou menor
-elif width <= 3840:
+elif width > 1920:
     target_fps = 120   # 4K
-else:
-    target_fps = 48   # 8K ou maior
 
 # Mantemos o "Cheat Code" do 1080p para salvar a sua CPU no 4K/8K
 if width > 1920:
     target_w = 1920
     target_h = int(target_w * (clip.height / clip.width))
+    # Força dimensões pares — YUV420 exige isso pelo subsampling de chroma
+    target_h = target_h - (target_h % 2)
+    target_w = target_w - (target_w % 2)
     clip = core.resize.Bicubic(clip, width=target_w, height=target_h)
 
 clip_analise = core.resize.Bicubic(clip, format=vs.YUV420P8)

@@ -45,7 +45,10 @@
         (pkgs.mpv.override {
           mpv-unwrapped = pkgs.mpv-unwrapped.override {
             vapoursynthSupport = true;
-            vapoursynth = pkgs.vapoursynth.withPlugins [ pkgs.vapoursynth-mvtools ];
+            vapoursynth = pkgs.vapoursynth.withPlugins [
+              pkgs.vapoursynth-mvtools
+              (pkgs.callPackage ../../pkgs/vapoursynth-rife-ncnn-vulkan/package.nix {})
+            ];
           };
         })
       ];
@@ -86,9 +89,6 @@
     libcanberra-gtk3
     imagemagick
     tesseract
-    vapoursynth
-    vapoursynth-mvtools
-    python3Packages.vapoursynth
     papirus-icon-theme
     font-awesome
     cloudflare-warp

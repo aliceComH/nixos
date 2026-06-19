@@ -64,8 +64,6 @@
     lact
     protontricks
     winetricks
-    lutris
-    wineWowPackages.stagingFull
     (pkgs.symlinkJoin {
       name = "osu-lazer-fast";
       paths = [ pkgs-osu.osu-lazer-bin ];

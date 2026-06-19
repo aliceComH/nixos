@@ -393,8 +393,4 @@ Configurados em [hosts/alice-nixos/configuration.nix](hosts/alice-nixos/configur
 
 ## Kernel
 
-O módulo [modules/nixos/kernel-7-rt-oriented.nix](modules/nixos/kernel-7-rt-oriented.nix) usa `linux_7_0` com tuning agressivo de baixa latência (RT-oriented) e cria uma specialisation de fallback `zen-fallback` com `linuxPackages_zen`.
-
-Se quiser voltar ao perfil Zen por omissão, troca o import em `configuration.nix` para [modules/nixos/kernel-zen.nix](modules/nixos/kernel-zen.nix).
-
-Benchmark recomendado após reboot: [KERNEL_BENCHMARK_RT_ORIENTED.md](KERNEL_BENCHMARK_RT_ORIENTED.md).
+O módulo [modules/nixos/kernel-zen.nix](modules/nixos/kernel-zen.nix) usa o kernel `linuxPackages_zen` por padrão, com otimizações para desktop e gaming.

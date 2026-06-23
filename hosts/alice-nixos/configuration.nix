@@ -20,6 +20,8 @@
     ../../modules/nixos/network-tuning.nix
     ../../modules/nixos/flatpak.nix
     ../../modules/nixos/llm/ollama.nix
+    # gst-interp: zero-copy frame interpolation (GStreamer + Vulkan + VA-API)
+    ../../modules/nixos/gst-interp.nix
   ];
 
   networking.hostName = "alice-nixos";

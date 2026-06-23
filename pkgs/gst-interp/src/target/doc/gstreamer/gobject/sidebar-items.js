@@ -1,0 +1,1 @@
+window.SIDEBAR_ITEMS = {"enum":["GObjectError"],"struct":["GObjectBuilder"],"trait":["GObjectExtManualGst"]};

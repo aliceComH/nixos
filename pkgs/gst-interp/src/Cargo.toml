@@ -1,0 +1,56 @@
+[package]
+name        = "gst-interp"
+version     = "0.1.0"
+edition     = "2021"
+description = "Zero-copy GStreamer + Vulkan Compute frame interpolation player"
+license     = "MIT"
+
+[[bin]]
+name = "gst-interp"
+path = "src/main.rs"
+
+# ---------------------------------------------------------------------------
+# Runtime dependencies
+# ---------------------------------------------------------------------------
+[dependencies]
+
+# GStreamer — core, base transforms e Vulkan interop.
+# IMPORTANTE: todos os crates gstreamer-rs devem usar a MESMA versão major.
+# gstreamer-vulkan nunca teve releases 0.23.x nem 0.24.x no crates.io —
+# o primeiro (e único) release estável é 0.25.x, que requer gstreamer ^0.25.0.
+# gstreamer 0.25.x = GStreamer 1.26 (em nixpkgs-unstable a partir de 2025).
+gstreamer        = { version = "0.25", features = ["v1_26"] }
+gstreamer-base   = { version = "0.25", features = ["v1_26"] }
+gstreamer-video  = { version = "0.25", features = ["v1_26"] }
+
+# gstreamer-vulkan 0.25.2 — wraps GstVulkanDevice, GstVulkanImageMemory, etc.
+# Deps internas: gstreamer ^0.25.0, glib ^0.22.0
+# Requer gst-plugins-bad compilado com Vulkan habilitado no sistema.
+gstreamer-vulkan = { version = "0.25", features = ["v1_26"] }
+
+# ash — Vulkan bindings "enxutos" (sem overhead de abstração)
+# Usamos ash para criar o VkComputePipeline, VkDescriptorSet, etc.
+# diretamente sobre o VkDevice obtido do contexto GStreamer.
+ash = { version = "0.38", default-features = false, features = ["linked"] }
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+
+# Error handling
+anyhow = "1"
+
+# Logging
+log        = "0.4"
+env_logger = "0.11"
+
+# Lazy static initialization (para pad templates do elemento GStreamer)
+once_cell = "1"
+termios = "0.3.3"
+
+# ---------------------------------------------------------------------------
+# Build-time dependencies (build.rs)
+# ---------------------------------------------------------------------------
+[build-dependencies]
+# Nenhuma crate extra — o build.rs invoca o binário `glslang` diretamente
+# via std::process::Command. O binário é disponibilizado pelo nativeBuildInput
+# no package.nix (variável de ambiente GLSLANG_VALIDATOR).

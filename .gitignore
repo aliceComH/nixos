@@ -27,3 +27,8 @@ home/.bash_history
 result
 result-*
 .direnv/
+
+# Gst-interp build artifacts
+/pkgs/gst-interp/result
+/pkgs/gst-interp/result-*
+/pkgs/gst-interp/src/target/

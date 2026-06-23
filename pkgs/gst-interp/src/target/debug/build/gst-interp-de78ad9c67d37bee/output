@@ -1,0 +1,3 @@
+cargo:rerun-if-changed=shaders/interpolate.comp
+shaders/interpolate.comp
+cargo:warning=✅ Shader compilado: shaders/interpolate.comp → /etc/nixos/pkgs/gst-interp/src/target/debug/build/gst-interp-de78ad9c67d37bee/out/interpolate.comp.spv

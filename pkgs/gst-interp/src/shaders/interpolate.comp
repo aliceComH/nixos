@@ -1,0 +1,94 @@
+// interpolate.comp — Compute Shader de interpolação de frames
+// Alvo: Vulkan 1.2 / SPIR-V 1.5 (radv, RX 9070 / RDNA4)
+//
+// Layout do Descriptor Set 0:
+//   binding 0 → frame N-1   (readonly image2D)
+//   binding 1 → frame N     (readonly image2D)
+//   binding 2 → frame N+1   (readonly image2D)
+//   binding 3 → output      (writeonly image2D) — o frame interpolado N+0.5
+//
+// Push Constants:
+//   alpha  → fator de interpolação [0.0, 1.0]  (0.5 = meio-frame)
+//   width  → largura do frame em pixels
+//   height → altura do frame em pixels
+//   flags  → reservado para futuras extensões (ex: modo RIFE)
+//
+// MVP (fase 1):
+//   result = mix(frame_n, frame_np1, alpha)
+//   Substitua o corpo de main() pelo optical flow / RIFE quando os pesos
+//   estiverem carregados nos SSBOs do binding 4+.
+//
+// Workgroup: 8×8 = 64 threads por grupo.
+// Para a RX 9070 (RDNA4, wavefront=32), isso = 2 waves por workgroup.
+// Ajuste para 16×16 = 256 threads se o profiler sugerir occupancy melhor.
+
+#version 450
+#extension GL_KHR_shader_subgroup_basic : enable
+
+// -------------------------------------------------------------------------
+// Workgroup size
+// -------------------------------------------------------------------------
+layout(local_size_x = 8, local_size_y = 8, local_size_z = 1) in;
+
+// -------------------------------------------------------------------------
+// Descriptor Set 0 — imagens do ping-pong buffer
+// Formato: VK_FORMAT_R8G8B8A8_UNORM (RGBA8)
+// Para conteúdo HDR, troque para rgba16f.
+// -------------------------------------------------------------------------
+layout(set = 0, binding = 0, rgba8) uniform readonly  image2D frame_nm1;  // N-1
+layout(set = 0, binding = 1, rgba8) uniform readonly  image2D frame_n;    // N
+layout(set = 0, binding = 2, rgba8) uniform readonly  image2D frame_np1;  // N+1
+layout(set = 0, binding = 3, rgba8) uniform writeonly image2D frame_out;  // output
+
+// -------------------------------------------------------------------------
+// Push constants — passados via vkCmdPushConstants antes de cada dispatch
+// Tamanho total: 16 bytes (dentro do limite mínimo garantido de 128 bytes)
+// -------------------------------------------------------------------------
+layout(push_constant) uniform PushConstants {
+    float alpha;   // interpolation factor: 0.0 = frame_n, 1.0 = frame_np1
+    uint  width;   // frame width  (pixels)
+    uint  height;  // frame height (pixels)
+    uint  flags;   // reserved: bit 0 = passthrough mode (sem interpolação)
+} pc;
+
+// -------------------------------------------------------------------------
+// main
+// -------------------------------------------------------------------------
+void main() {
+    ivec2 coord = ivec2(gl_GlobalInvocationID.xy);
+
+    // Guard: ignora threads fora dos limites do frame.
+    // Necessário quando (width ou height) não é múltiplo de 8.
+    if (coord.x >= int(pc.width) || coord.y >= int(pc.height)) {
+        return;
+    }
+
+    // Passthrough mode: copia frame_n diretamente (usado no bootstrap
+    // quando ainda não temos 3 frames no ping-pong buffer)
+    if ((pc.flags & 1u) != 0u) {
+        vec4 passthrough = imageLoad(frame_n, coord);
+        imageStore(frame_out, coord, passthrough);
+        return;
+    }
+
+    // ---- MVP: interpolação linear simples (mix) ----
+    // Lê frame N e frame N+1 e interpola linearmente.
+    // frame_nm1 está disponível no binding 0 para uso futuro pelo RIFE.
+    vec4 pN   = imageLoad(frame_n,   coord);
+    vec4 pNp1 = imageLoad(frame_np1, coord);
+
+    // mix(a, b, t) = a + t*(b-a) — operação nativa do hardware
+    vec4 result = mix(pN, pNp1, pc.alpha);
+
+    imageStore(frame_out, coord, result);
+
+    // ---- TODO: RIFE (fase 2) ----
+    // 1. Carregar campo de fluxo óptico via SSBO (binding 4)
+    //    que foi calculado pela rede RIFE em um pipeline anterior.
+    // 2. Usar o fluxo para fazer backward warping dos pixels:
+    //    vec2 flow_fwd = imageLoad(flow_fwd_buf, coord).xy * pc.alpha;
+    //    vec2 flow_bwd = imageLoad(flow_bwd_buf, coord).xy * (1.0 - pc.alpha);
+    //    vec4 warped_n   = texture(sampler_n,   uv + flow_fwd);
+    //    vec4 warped_np1 = texture(sampler_np1, uv - flow_bwd);
+    //    result = mix(warped_n, warped_np1, pc.alpha);
+}

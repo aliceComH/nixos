@@ -59,6 +59,11 @@
       '';
     })
     imv
+    # ---------------------------------------------------------------------------
+    # gst-interp: player de interpolação zero-copy via GStreamer + Vulkan Compute
+    # Pipeline: VA-API decode → VkImage (DMA-BUF) → Ping-Pong VRAM → Compute Shader
+    # ---------------------------------------------------------------------------
+    (pkgs.callPackage ../../pkgs/gst-interp/package.nix {})
     hyprpaper
     hyprshot
     lact

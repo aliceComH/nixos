@@ -45,6 +45,26 @@
 
   hardware.opentabletdriver.enable = true;
 
+  systemd.user.services.opentabletdriver = {
+    serviceConfig = {
+      # Define a política de agendamento como FIFO (First-In, First-Out)
+      # É a política padrão do kernel Linux para tarefas de tempo real.
+      CPUSchedulingPolicy = "fifo";
+      
+      # Prioridade de 1 a 99. 89 é um "sweet spot" excelente.
+      # Fica acima de quase tudo do sistema, mas abaixo dos threads
+      # críticos de interrupção do hardware, evitando congelamentos.
+      CPUSchedulingPriority = 89;
+      
+      # Eleva o limite máximo de prioridade RT que esse serviço pode solicitar
+      LimitRTPRIO = 99;
+    };
+  };
+
+  # Permite que o gerenciador systemd do usuário utilize prioridade de tempo real,
+  # repassando para os serviços de usuário.
+  systemd.services."user@".serviceConfig.LimitRTPRIO = 99;
+
   virtualisation.docker = {
     enable = true;
     enableOnBoot = true;

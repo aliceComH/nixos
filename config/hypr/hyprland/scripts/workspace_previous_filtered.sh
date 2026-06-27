@@ -25,7 +25,7 @@ command -v jq >/dev/null 2>&1 || exit 0
 
 FORBIDDEN_FILTER="$(forbidden_jq_filter)"
 mapfile -t ACTIVE_PERMITTED < <(
-  hyprctl workspaces -j | jq -r ".[] | select(.id > 0${FORBIDDEN_FILTER}) | .id" | sort -n -u
+  hyprctl -j workspaces | jq -r ".[] | select(.id > 0${FORBIDDEN_FILTER}) | .id" | sort -n -u
 )
 
 declare -A ACTIVE_SET
@@ -33,7 +33,7 @@ for id in "${ACTIVE_PERMITTED[@]}"; do
   ACTIVE_SET["$id"]=1
 done
 
-CURRENT_ID="$(hyprctl activeworkspace -j | jq -r '.id')"
+CURRENT_ID="$(hyprctl -j activeworkspace | jq -r '.id')"
 if ! [[ "$CURRENT_ID" =~ ^-?[0-9]+$ ]]; then
   exit 0
 fi
@@ -75,4 +75,4 @@ else
 fi
 mv -- "$tmp" "$WS_RETURN_HISTORY"
 
-hyprctl dispatch workspace "$target"
+hyprctl dispatch "hl.dsp.focus({ workspace = '$target' })"

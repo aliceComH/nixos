@@ -1,0 +1,3 @@
+--  ######## Workspace rules — Workspace 7 (Stash) ########
+
+--  Aplicações que abrem silenciosamente no stash

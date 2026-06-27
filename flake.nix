@@ -6,9 +6,9 @@
 
     antigravity-nix.url = "github:jacopone/antigravity-nix";
 
-    # nixpkgs travado no commit que fornece Hyprland 0.54.3.
+    # nixpkgs atualizado para a branch instável para obter Hyprland 0.55
     # Atualizar manualmente com: nix flake update nixpkgs-hyprland
-    nixpkgs-hyprland.url = "github:NixOS/nixpkgs/4bd9165a9165d7b5e33ae57f3eecbcb28fb231c9";
+    nixpkgs-hyprland.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-hyprland.flake = false;
 
     # nixpkgs independente para o osu-lazer.

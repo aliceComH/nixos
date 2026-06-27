@@ -70,39 +70,47 @@ update_ws_return_history() {
 PREV_WS=""
 
 handle() {
-  # Mantemos a sua lógica maravilhosa de histórico intacta
-  if [[ "$1" == workspace\>\>* ]]; then
-    local rest="${1#workspace>>}"
-    if [[ "$rest" =~ ^[0-9]+$ ]]; then
-      update_ws_return_history "${PREV_WS:-}" "$rest"
-      PREV_WS="$rest"
-    fi
+  local event="$1"
+  local ws_num=""
+
+  if [[ "$event" == workspace\>\>* ]]; then
+    ws_num="${event#workspace>>}"
+  elif [[ "$event" == focusedmon\>\>* ]]; then
+    ws_num="${event#*,}"
   fi
 
-  case "$1" in
+  if [[ -n "$ws_num" && "$ws_num" =~ ^[0-9]+$ ]]; then
+    if [[ "${PREV_WS:-}" != "$ws_num" ]]; then
+      update_ws_return_history "${PREV_WS:-}" "$ws_num"
+      PREV_WS="$ws_num"
+    fi
+    event="workspace>>$ws_num"
+  fi
+
+  case "$event" in
     "workspace>>5")
       # O scanout true se mantém para ambos os casos aqui
-      hyprctl keyword render:direct_scanout true
+      hyprctl eval 'hl.config({ render = { direct_scanout = true } })'
       
       # Pergunta ao Hyprland a classe da janela ativa atual
       local active_class
-      active_class=$(hyprctl activewindow -j | jq -r '.class')
+      active_class=$(hyprctl -j activewindow | jq -r '.class')
       
       if [[ "$active_class" == "osu!" ]]; then
-        hyprctl dispatch submap osu
+        hyprctl dispatch 'hl.dsp.submap("osu")'
       else
-        hyprctl dispatch submap gaming
+        hyprctl dispatch 'hl.dsp.submap("gaming")'
       fi
     ;;
 
     "workspace>>8")
-      hyprctl keyword render:direct_scanout false
-      hyprctl dispatch submap auxiliar
+      hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
+      hyprctl dispatch 'hl.dsp.submap("auxiliar")'
     ;;
 
     "workspace>>"*)
-      hyprctl keyword render:direct_scanout false
-      hyprctl dispatch submap reset
+      hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
+      hyprctl dispatch 'hl.dsp.submap("reset")'
     ;;
 
     "activewindow>>"*)
@@ -114,9 +122,9 @@ handle() {
       # Se a janela mudar ENQUANTO já estivermos no workspace 5, reavaliamos o submap
       if [[ "${PREV_WS:-}" == "5" ]]; then
         if [[ "$class" == "osu!" ]]; then
-          hyprctl dispatch submap osu
+          hyprctl dispatch 'hl.dsp.submap("osu")'
         else
-          hyprctl dispatch submap gaming
+          hyprctl dispatch 'hl.dsp.submap("gaming")'
         fi
       fi
     ;;

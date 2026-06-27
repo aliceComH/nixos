@@ -26,11 +26,11 @@ FORBIDDEN_FILTER="$(forbidden_jq_filter)"
 
 # 1. Pega os IDs dos workspaces numericos ativos, exclui os proibidos e ordena.
 mapfile -t WS_IDS < <(
-  hyprctl workspaces -j | jq -r ".[] | select(.id > 0${FORBIDDEN_FILTER}) | .id" | sort -n
+  hyprctl -j workspaces | jq -r ".[] | select(.id > 0${FORBIDDEN_FILTER}) | .id" | sort -n
 )
 
 # 2. Pega o ID do workspace atual.
-CURRENT_ID="$(hyprctl activeworkspace -j | jq -r '.id')"
+CURRENT_ID="$(hyprctl -j activeworkspace | jq -r '.id')"
 
 if ! [[ "$CURRENT_ID" =~ ^-?[0-9]+$ ]]; then
   exit 1
@@ -45,13 +45,13 @@ for f in "${FORBIDDEN[@]}"; do
   fi
 done
 if $is_forbidden; then
-  hyprctl dispatch workspace 1
+  hyprctl dispatch "hl.dsp.focus({ workspace = '1' })"
   exit 0
 fi
 
 # Se nao houver workspaces navegaveis, volta para 1.
 if [[ "${#WS_IDS[@]}" -eq 0 ]]; then
-  hyprctl dispatch workspace 1
+  hyprctl dispatch "hl.dsp.focus({ workspace = '1' })"
   exit 0
 fi
 
@@ -66,7 +66,7 @@ done
 
 # 5. Se o workspace atual nao estiver no array, volta para 1.
 if [[ "$CUR_IDX" -eq -1 ]]; then
-  hyprctl dispatch workspace 1
+  hyprctl dispatch "hl.dsp.focus({ workspace = '1' })"
   exit 0
 fi
 
@@ -81,4 +81,4 @@ fi
 TARGET_ID="${WS_IDS[$NEXT_IDX]}"
 
 # 7. Executa o pulo.
-hyprctl dispatch workspace "$TARGET_ID"
+hyprctl dispatch "hl.dsp.focus({ workspace = '$TARGET_ID' })"

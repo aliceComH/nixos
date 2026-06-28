@@ -62,7 +62,7 @@ hl.bind("ALT + G", hl.dsp.window.move({ workspace = "6", follow = false }))
 hl.bind("ALT + SHIFT + Q", hl.dsp.window.move({ workspace = "7", follow = false }))
 hl.bind("ALT + SHIFT + W", hl.dsp.focus({ workspace = "7" }))
 
--- Navegação inteligente de workspaces (pulando o 5)
+-- Navegação inteligente de workspaces
 hl.bind("ALT + TAB", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/cycle_workspaces.sh next"))
 hl.bind("ALT + SHIFT + TAB", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/cycle_workspaces.sh prev"))
 hl.bind("ALT + dead_grave", hl.dsp.focus({ workspace = "emptynm" }))
@@ -316,6 +316,11 @@ hl.define_submap("whatsapp", function() -- WHATSAPP
     hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"))
     hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"))
     hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"))
+
+    -- Navegação inteligente de workspaces
+    hl.bind("ALT + TAB", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/cycle_workspaces.sh next"))
+    hl.bind("ALT + SHIFT + TAB", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/cycle_workspaces.sh prev"))
+    hl.bind("ALT + dead_grave", hl.dsp.focus({ workspace = "emptynm" }))
 
     hl.bind("SUPER + SHIFT + F1", hl.dsp.exec_cmd("llm-start"), { description = "LLM ligar" })
     hl.bind("SUPER + SHIFT + F2", hl.dsp.exec_cmd("llm-stop"), { description = "LLM desligar" })

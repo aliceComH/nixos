@@ -18,6 +18,7 @@
     ../../modules/nixos/services.nix
     ../../modules/nixos/cpu-performance.nix
     ../../modules/nixos/network-tuning.nix
+    ../../modules/nixos/local-dns.nix
     ../../modules/nixos/flatpak.nix
     ../../modules/nixos/llm/ollama.nix
   ];

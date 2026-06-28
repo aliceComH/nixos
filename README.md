@@ -371,6 +371,27 @@ Instalados na activação do Home Manager ([modules/home/flatpak-user.nix](modul
 
 ---
 
+## DNS Local (Unbound) e Killswitch
+
+O sistema usa um servidor de DNS local (**Unbound**) focado em privacidade, cache de requisições e velocidade, configurado no módulo `modules/nixos/local-dns.nix`.
+O NetworkManager está instruído a não modificar o `/etc/resolv.conf`, deixando a resolução apenas no `127.0.0.1`.
+
+Para depurar ou voltar a usar o DNS normal via DHCP do seu roteador, há um script de *Killswitch* que comenta dinamicamente o módulo na configuração e reconstrói o sistema na hora:
+
+```bash
+/etc/nixos/config/hypr/hyprland/scripts/dns-killswitch.sh
+```
+
+- Execute o script 1 vez para desativar o DNS local e usar o DHCP do roteador.
+- Execute novamente para reativar o DNS local e isolar a configuração de rede.
+
+Para visualizar os logs do Unbound e monitorar as requisições sendo voadas:
+```bash
+journalctl -u unbound -f
+```
+
+---
+
 ## Editar dotfiles
 
 Tudo está num **único** repositório Git. Os ficheiros em `config/` e `local/share/` são ligados por symlinks para `/etc/nixos/...`; podes editar directamente. Quando mudas **módulos Nix** (pacotes, opções de sistema), corre `nixos-rebuild switch`. Para histórico limpo: `git pull`, revisa, rebuild.

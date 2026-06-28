@@ -9,7 +9,7 @@ hl.window_rule({ match = { class = "^()$", title = "^()$" }, no_blur = true })
 hl.window_rule({ match = { fullscreen = true }, no_blur = true })
 hl.window_rule({ match = { fullscreen = true }, opacity = "1.0 1.0" })
 --  windowrule = opacity 0.90 0.90, match:class ^(google-chrome)$
---  windowrulev2 = opacity 0.80 0.80,class:^(firefox)$
+--  windowrulev2 = opacity 0.80 0.80,class:^(google-chrome)$
 hl.window_rule({ match = { class = "^(org.telegram.desktop)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(thunar)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, opacity = "0.90 0.90" })

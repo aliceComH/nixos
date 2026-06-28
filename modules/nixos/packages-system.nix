@@ -21,7 +21,6 @@
     btop
     fastfetch
     wev
-    firefox
     google-chrome
     wootility
     v4l-utils

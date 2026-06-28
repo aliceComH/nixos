@@ -108,6 +108,11 @@ handle() {
       hyprctl dispatch 'hl.dsp.submap("auxiliar")'
     ;;
 
+    "workspace>>9")
+      hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
+      hyprctl dispatch 'hl.dsp.submap("whatsapp")'
+    ;;
+
     "workspace>>"*)
       hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
       hyprctl dispatch 'hl.dsp.submap("reset")'

@@ -15,7 +15,15 @@ hl.monitor({
 })
 
 for _, ws in ipairs({"1", "2", "3", "4", "5", "6", "7", "9", "10"}) do
-    hl.workspace_rule({ workspace = ws, monitor = "DP-3" })
+    hl.workspace_rule({ 
+        workspace = ws,
+        monitor = "DP-3",
+        no_rounding = true,
+        decorate = false,
+        gaps_in = 0,
+        gaps_out = 0,
+        no_border = true,
+    })
 end
 
 hl.config({

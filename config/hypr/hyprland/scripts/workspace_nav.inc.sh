@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # Partilhado por cycle_workspaces.sh, gaming_monitor.sh e workspace_previous_filtered.sh
 # Workspaces excluídos da navegação / histórico de retorno: 5 = gaming, 7 = stash, 8 = auxiliar
-FORBIDDEN=(5 7 8)
+FORBIDDEN=(5 7 8 9)
 
 is_forbidden_ws() {
   local id="$1"

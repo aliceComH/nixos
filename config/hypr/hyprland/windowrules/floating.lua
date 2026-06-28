@@ -99,7 +99,3 @@ hl.window_rule({ match = { title = "^(Copying — Dolphin)$" }, move = {"27", "5
 --  No shadow for tiled windows (matches windows that are not floating).
 hl.window_rule({ match = { float = false }, no_shadow = true })
 
---  Regra específica para a Biblioteca do Firefox
-hl.window_rule({ match = { class = "^(org.mozilla.firefox)$", title = "^(Biblioteca)$" }, float = true })
-hl.window_rule({ match = { class = "^(org.mozilla.firefox)$", title = "^(Biblioteca)$" }, center = true })
-hl.window_rule({ match = { class = "^(org.mozilla.firefox)$", title = "^(Biblioteca)$" }, size = {"768", "432"} })

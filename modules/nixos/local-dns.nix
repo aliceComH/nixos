@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  killswitchScript = "/etc/nixos/config/hypr/hyprland/scripts/adblock-killswitch.sh";
+in
 {
   services.unbound = {
     enable = true;
@@ -27,6 +30,11 @@
 
         # Pacote de certificados raiz para validar a conexão TLS com os servidores Quad9 e Cloudflare
         tls-cert-bundle = "/etc/ssl/certs/ca-certificates.crt";
+
+        # Ad-blocker: inclui regras de bloqueio de domínios geradas pelo update-blocklist.sh
+        # O arquivo fica em /var/lib/unbound/ porque o systemd ProtectSystem=strict
+        # impede escrita em /etc/unbound/ — só stateDir (/var/lib/unbound) é read-write.
+        include = ''"/var/lib/unbound/adblock.conf"'';
       };
 
       # Encaminha as requisições não cacheadas via DNS-over-TLS na porta 853
@@ -47,6 +55,23 @@
       ];
     };
   };
+
+  # Garante que os arquivos de blocklist existam antes do unbound iniciar.
+  # Sem isso, o unbound falha no boot ao tentar incluir um arquivo inexistente.
+  systemd.tmpfiles.rules = [
+    "f /var/lib/unbound/adblock.conf 0644 unbound unbound -"
+    "f /var/lib/unbound/adblock_master.conf 0644 unbound unbound -"
+  ];
+
+  # Permite que alice execute o killswitch sem senha via keybind do Hyprland
+  security.sudo.extraRules = [
+    {
+      users = [ "alice" ];
+      commands = [
+        { command = killswitchScript; options = [ "NOPASSWD" ]; }
+      ];
+    }
+  ];
 
   # Configura o sistema para usar a si mesmo como DNS
   networking.nameservers = [ "127.0.0.1" ];

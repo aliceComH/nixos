@@ -22,6 +22,7 @@
     fastfetch
     wev
     google-chrome
+    firefox
     wootility
     v4l-utils
     nvme-cli
@@ -72,7 +73,7 @@
         # Varre a pasta bin e injeta a latência extrema em todos os executáveis (incluindo o "osu!")
         for bin in $out/bin/*; do
           wrapProgram "$bin" \
-            --set PIPEWIRE_LATENCY "64/48000"
+            --set PIPEWIRE_LATENCY "128/48000"
         done
       '';
     })

@@ -70,10 +70,11 @@
       paths = [ pkgs-osu.osu-lazer-bin ];
       buildInputs = [ pkgs.makeWrapper ];
       postBuild = ''
-        # Varre a pasta bin e injeta a latência extrema em todos os executáveis (incluindo o "osu!")
+        # Varre a pasta bin e injeta a latência extrema + prioridade alta em todos os executáveis (incluindo o "osu!")
         for bin in $out/bin/*; do
           wrapProgram "$bin" \
-            --set PIPEWIRE_LATENCY "128/48000"
+            --set PIPEWIRE_LATENCY "64/48000" \
+            --run 'renice -n -15 $$ >/dev/null 2>&1 || true'
         done
       '';
     })

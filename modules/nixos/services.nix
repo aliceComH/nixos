@@ -49,10 +49,55 @@
     pulse.enable = true;
     jack.enable = false;
 
-    # Força o pipewire-pulse a também subir prioridade RT.
-    # Por padrão o pipewire-pulse herda o config do módulo RT,
-    # mas não solicita RT ao RTKit — com os PAM limits acima,
-    # o módulo RT consegue setar SCHED_RR diretamente via syscall.
+    # ── Clock global: rate FORÇADO 48000, quantum FORÇADO 32 (0.66ms) ──────
+    # force-quantum: trava o quantum do graph em 32. Nenhum cliente pode
+    #   renegociar (elimina o loop PIPEWIRE_QUANTUM vs Discord).
+    # force-rate: trava o rate em 48000. Streams a 44100 (osu!) são
+    #   resampleados pelo adaptador, sem switch de rate no graph.
+    # allowed-rates=[48000]: reforço extra — graph só opera em 48000.
+    # min/max-quantum=32: belt-and-suspenders — tranca a faixa inteira.
+    extraConfig.pipewire."10-clock" = {
+      "context.properties" = {
+        "default.clock.rate"           = 48000;
+        "default.clock.allowed-rates"  = [ 48000 ];
+        "default.clock.quantum"        = 1024;
+        "default.clock.min-quantum"    = 32;
+        "default.clock.max-quantum"    = 1024;
+        "default.clock.force-rate"     = 48000;
+      };
+    };
+
+    # ── NOVO: Interceptação de nós ALSA através do WirePlumber ──
+    wireplumber.extraConfig."11-alsa-force" = {
+      "monitor.alsa.rules" = [
+        {
+          matches = [
+            {
+              # Alvo: Captura qualquer stream de áudio aberto pela camada ALSA
+              "node.name" = "~alsa_playback.*";
+            }
+          ];
+          actions = {
+            update-props = {
+              # Força a reamostragem a acontecer no adaptador do cliente,
+              # entregando 48000Hz puros para o grafo.
+              "audio.rate"            = 48000;
+              "node.rate"             = "1/48000";
+              "node.force-rate"       = 48000;
+              
+              # Tranca a latência requisitada em 32 samples
+              "node.latency"          = "32/48000";
+              "node.force-quantum"    = 32;
+            };
+          };
+        }
+      ];
+    };
+
+    # ── Prioridade RT do pipewire-pulse + quantum mínimo ──────────────────
+    # Força o pipewire-pulse a subir prioridade RT via módulo RT.
+    # pulse.min.quantum garante que streams PulseAudio (Discord, browser)
+    # não operem com quantum menor que 32.
     extraConfig.pipewire-pulse."10-rt-priority" = {
       "context.modules" = [
         {
@@ -64,6 +109,7 @@
           flags = [ "ifexists" "nofail" ];
         }
       ];
+      "pulse.min.quantum" = "32/48000";
     };
   };
   services.pipewire.wireplumber.enable = true;

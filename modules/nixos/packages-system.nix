@@ -70,10 +70,14 @@
       paths = [ pkgs-osu.osu-lazer-bin ];
       buildInputs = [ pkgs.makeWrapper ];
       postBuild = ''
-        # Varre a pasta bin e injeta a latência extrema + prioridade alta em todos os executáveis (incluindo o "osu!")
+        # Varre a pasta bin e injeta prioridade alta em todos os executáveis (incluindo o "osu!")
+        # NOTA: PIPEWIRE_QUANTUM foi removido — o quantum 32/48000 já é configurado
+        # globalmente em services.nix (context.properties). A variável de ambiente
+        # forçava renegociação do graph inteiro, conflitando com Discord/WebRTC.
         for bin in $out/bin/*; do
           wrapProgram "$bin" \
-            --set PIPEWIRE_LATENCY "64/48000" \
+            --set PIPEWIRE_LATENCY "32/48000" \
+            --set PIPEWIRE_ALSA "{ alsa.format=S32_LE alsa.channels=2 alsa.rate=48000 alsa.buffer-bytes=512 alsa.period-bytes=256 }" \
             --run 'renice -n -15 $$ >/dev/null 2>&1 || true'
         done
       '';

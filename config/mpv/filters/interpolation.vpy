@@ -10,6 +10,30 @@ if width <= 1920:
 elif width > 1920:
     target_fps = 120   # 4K
 
+# ── Detecção de HDR e Tone Mapping para SDR ──────────────────────────────
+# Se o conteúdo é HDR (PQ/HLG + BT.2020), converte para SDR antes do MVTools.
+# Sem isso, a conversão direta de 10-bit HDR para 8-bit esmaga a faixa dinâmica
+# inteira — os vetores de movimento ficam imprecisos e o vídeo tem banding brutal.
+props = clip.get_frame(0).props
+
+transfer = props.get("_Transfer", 1)     # 1 = BT.709 (SDR default)
+primaries = props.get("_Primaries", 1)    # 1 = BT.709
+
+is_hdr = transfer in (16, 18) or primaries == 9
+
+if is_hdr:
+    clip = core.resize.Bicubic(
+        clip,
+        format=vs.YUV420P10,
+        matrix_in_s="2020ncl",
+        matrix_s="709",
+        transfer_in_s="st2084",
+        transfer_s="709",
+        primaries_in_s="2020",
+        primaries_s="709",
+        nominal_luminance=1000,
+    )
+
 # Mantemos o "Cheat Code" do 1080p para salvar a sua CPU no 4K/8K
 if width > 1920:
     target_w = 1920
@@ -43,3 +67,4 @@ sup_render = core.mv.Super(clip, pel=1, hpad=b_size, vpad=b_size)
 clip = core.mv.BlockFPS(clip, sup_render, bvec, fvec, num=dst_fps_num, den=dst_fps_den, mode=3, thscd2=12)
 
 clip.set_output()
+

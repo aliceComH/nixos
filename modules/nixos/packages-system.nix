@@ -22,7 +22,6 @@
     fastfetch
     wev
     google-chrome
-    firefox
     wootility
     v4l-utils
     nvme-cli

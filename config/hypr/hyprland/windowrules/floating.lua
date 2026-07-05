@@ -71,6 +71,9 @@ hl.window_rule({ match = { class = "^(jarvis.py)$" }, center = true })
 hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, float = true })
 hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, size = {"1152", "864"} })
 hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, center = true })
+hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, float = true })
+hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, size = {"1152", "864"} })
+hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, center = true })
 
 --  Move
 --  kde-material-you-colors spawns a window when changing dark/light theme. This is to make sure it doesn't interfere at all.

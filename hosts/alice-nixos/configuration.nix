@@ -20,6 +20,7 @@
     ../../modules/nixos/network-tuning.nix
     ../../modules/nixos/local-dns.nix
     ../../modules/nixos/flatpak.nix
+    ../../modules/nixos/voice-normalizer.nix
     ../../modules/nixos/llm/ollama.nix
   ];
 

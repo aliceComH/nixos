@@ -52,5 +52,5 @@ rules = [
   { mime = "application/x-7z*", use = ["archive", "open"] },
   { mime = "application/x-rar*", use = ["archive", "open"] },
   { mime = "application/x-xz", use = ["archive", "open"] },
-  { name = "*", use = ["open"] },
+  { url = "*", use = ["open"] },
 ]

@@ -5,9 +5,8 @@ hl.bind("SUPER + Z", hl.dsp.exec_cmd("sh ~/.config/hypr/hyprland/scripts/rofimoj
 -- Reload hyprland
 hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd("hyprctl reload"))
 
--- Forçar o monitor a ligar/desligar sinal (ajuda no handshake da TV)
-hl.bind("SUPER + F12", hl.dsp.exec_cmd("hyprctl dispatch dpms toggle"))
-hl.bind("SUPER + F11", hl.dsp.exec_cmd("hyprctl dispatch forcerendererreload"))
+hl.bind("SUPER + F11", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-oled.sh"))
+hl.bind("SUPER + F12", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-tv.sh"))
 
 -- Audio control
 hl.bind("F11", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/volume-control.sh down"), { repeating = true })
@@ -123,8 +122,8 @@ hl.define_submap("gaming", function() -- GAMING
 
     hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd("hyprctl reload"))
 
-    hl.bind("SUPER + F12", hl.dsp.exec_cmd("hyprctl dispatch dpms toggle"))
-    hl.bind("SUPER + F11", hl.dsp.exec_cmd("hyprctl dispatch forcerendererreload"))
+    hl.bind("SUPER + F11", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-oled.sh"))
+    hl.bind("SUPER + F12", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-tv.sh"))
     hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_\"$(date '+%Y-%m-%d_%H.%M.%S')\".png"), { locked = true, description = "Screenshot >> clipboard & save" })
     hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"), { description = "Screen snip" })
 end)
@@ -172,8 +171,8 @@ hl.define_submap("osu", function() -- OSU
     -- hl.bind("MOD5 + Control_R + mouse_up", hl.dsp.exec_cmd("true"))
     -- hl.bind("MOD5 + Control_R + mouse_down", hl.dsp.exec_cmd("true"))
 
-    hl.bind("SUPER + F12", hl.dsp.exec_cmd("hyprctl dispatch dpms toggle"))
-    hl.bind("SUPER + F11", hl.dsp.exec_cmd("hyprctl dispatch forcerendererreload"))
+    hl.bind("SUPER + F11", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-oled.sh"))
+    hl.bind("SUPER + F12", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-tv.sh"))
     hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_\"$(date '+%Y-%m-%d_%H.%M.%S')\".png"), { locked = true, description = "Screenshot >> clipboard & save" })
     hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"), { description = "Screen snip" })
 end)
@@ -197,8 +196,8 @@ hl.define_submap("auxiliar", function() -- DISCORD
     hl.bind("SUPER + Z", hl.dsp.exec_cmd("sh ~/.config/hypr/hyprland/scripts/rofimoji.sh"))
 
     hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd("hyprctl reload"))
-    hl.bind("SUPER + F12", hl.dsp.exec_cmd("hyprctl dispatch dpms toggle"))
-    hl.bind("SUPER + F11", hl.dsp.exec_cmd("hyprctl dispatch forcerendererreload"))
+    hl.bind("SUPER + F11", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-oled.sh"))
+    hl.bind("SUPER + F12", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-tv.sh"))
 
     hl.bind("F11", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/volume-control.sh down"), { repeating = true })
     hl.bind("F12", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/volume-control.sh up"), { repeating = true })
@@ -267,8 +266,8 @@ hl.define_submap("whatsapp", function() -- WHATSAPP
     hl.bind("SUPER + Z", hl.dsp.exec_cmd("sh ~/.config/hypr/hyprland/scripts/rofimoji.sh"))
 
     hl.bind("SUPER + ALT + R", hl.dsp.exec_cmd("hyprctl reload"))
-    hl.bind("SUPER + F12", hl.dsp.exec_cmd("hyprctl dispatch dpms toggle"))
-    hl.bind("SUPER + F11", hl.dsp.exec_cmd("hyprctl dispatch forcerendererreload"))
+    hl.bind("SUPER + F11", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-oled.sh"))
+    hl.bind("SUPER + F12", hl.dsp.exec_cmd("bash /etc/nixos/config/hypr/hyprland/scripts/toggle-blank-tv.sh"))
 
     hl.bind("F11", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/volume-control.sh down"), { repeating = true })
     hl.bind("F12", hl.dsp.exec_cmd("bash ~/.config/hypr/hyprland/scripts/volume-control.sh up"), { repeating = true })

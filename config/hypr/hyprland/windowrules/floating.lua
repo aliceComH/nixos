@@ -93,3 +93,24 @@ hl.window_rule({ match = { title = "^(Copying — Dolphin)$" }, move = {"27", "5
 
 --  No shadow for tiled windows (matches windows that are not floating).
 hl.window_rule({ match = { float = false }, no_shadow = true })
+
+-- --- Monitor Blanking (Software via MPV) ---
+-- Blank OLED
+hl.window_rule({ match = { class = "^(blank-oled)$" }, float = true })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, monitor = "DP-3" })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, size = {"100%", "100%"} })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, center = true })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, border_size = 0 })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, no_focus = true })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, no_initial_focus = true })
+hl.window_rule({ match = { class = "^(blank-oled)$" }, pin = true })
+
+-- Blank TV
+hl.window_rule({ match = { class = "^(blank-tv)$" }, float = true })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, monitor = "HDMI-A-1" })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, size = {"100%", "100%"} })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, center = true })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, border_size = 0 })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, no_focus = true })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, no_initial_focus = true })
+hl.window_rule({ match = { class = "^(blank-tv)$" }, pin = true })

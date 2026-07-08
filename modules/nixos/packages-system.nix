@@ -29,10 +29,12 @@
     gnome-calculator
     gnome-disk-utility
     file-roller
-    pkgs.thunar
-    pkgs.thunar-archive-plugin
-    pkgs.thunar-volman
-    nautilus
+    yazi
+    ffmpegthumbnailer  # preview de vídeo no yazi
+    poppler-utils      # preview de PDF no yazi (pdftotext/pdftoppm)
+    fd                 # busca rápida no yazi (alternativa ao find)
+    ripgrep            # busca de conteúdo no yazi
+    p7zip              # suporte a 7z/zip/rar no yazi
     traceroute
     rofi
     rofimoji

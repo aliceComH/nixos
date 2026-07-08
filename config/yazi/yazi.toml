@@ -1,0 +1,56 @@
+# Yazi — configuração principal
+# Docs: https://yazi-rs.github.io/docs/configuration/yazi
+
+[manager]
+# Ordena por data de modificação (mais recente primeiro), como você tinha no Nautilus
+sort_by = "modified"
+sort_reverse = true
+sort_dir_first = true
+show_hidden = true
+show_symlink = true
+linemode = "size"
+
+[preview]
+# Kitty suporta o protocolo icat nativamente → previews de imagem inline
+image_filter = "lanczos3"
+image_quality = 90
+max_width = 1920
+max_height = 1080
+
+# Cache de thumbnails para vídeos/PDFs
+cache_dir = ""
+
+[opener]
+edit = [
+  { run = 'nvim "$@"', block = true, desc = "Editar com Neovim" },
+  { run = 'vim "$@"', block = true, desc = "Editar com Vim" },
+]
+open = [
+  { run = 'xdg-open "$@"', desc = "Abrir com app padrão" },
+]
+play = [
+  { run = 'mpv "$@"', orphan = true, desc = "Reproduzir com mpv" },
+]
+image = [
+  { run = 'imv "$@"', orphan = true, desc = "Visualizar com imv" },
+]
+archive = [
+  { run = 'file-roller "$@"', orphan = true, desc = "Abrir com File Roller" },
+]
+
+[open]
+rules = [
+  { mime = "text/*", use = ["edit", "open"] },
+  { mime = "image/*", use = ["image", "open"] },
+  { mime = "video/*", use = ["play", "open"] },
+  { mime = "audio/*", use = ["play", "open"] },
+  { mime = "application/json", use = ["edit", "open"] },
+  { mime = "application/pdf", use = ["open"] },
+  { mime = "application/*zip*", use = ["archive", "open"] },
+  { mime = "application/x-tar", use = ["archive", "open"] },
+  { mime = "application/x-bzip*", use = ["archive", "open"] },
+  { mime = "application/x-7z*", use = ["archive", "open"] },
+  { mime = "application/x-rar*", use = ["archive", "open"] },
+  { mime = "application/x-xz", use = ["archive", "open"] },
+  { name = "*", use = ["open"] },
+]

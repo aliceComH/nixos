@@ -21,7 +21,7 @@
   networking.networkmanager.enable = true;
   services.cloudflare-warp.enable = true;
 
-  # Disques (gnome-disk-utility), Thunar-volman e montagens automáticas via D-Bus
+  # Disques (gnome-disk-utility) e montagens automáticas via D-Bus
   # precisam do udisks2 activo; sem o serviço a lista de discos fica vazia.
   services.udisks2.enable = true;
   services.gvfs.enable = true;

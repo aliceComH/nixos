@@ -2,8 +2,6 @@
 
 --  Floating
 
-hl.window_rule({ match = { class = "^(thunar)$", title = "^.* Properties$" }, float = true })
-hl.window_rule({ match = { class = "^(thunar)$", title = "^.* Properties$" }, center = true })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, float = true })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, size = {"205", "144"} })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, move = {"67", "200"} })
@@ -29,7 +27,7 @@ hl.window_rule({ match = { title = "^(.*)(wants to save)$" }, center = true })
 hl.window_rule({ match = { title = "^(.*)(wants to save)$" }, float = true })
 hl.window_rule({ match = { title = "^(.*)(wants to open)$" }, center = true })
 hl.window_rule({ match = { title = "^(.*)(wants to open)$" }, float = true })
--- hl.window_rule({ match = { class = "^(blueberry\.py)$" }, float = true })
+-- hl.window_rule({ match = { class = "^(blueberry\\.py)$" }, float = true })
 hl.window_rule({ match = { class = "^(guifetch)$   # FlafyDev/guifetch" }, float = true })
 hl.window_rule({ match = { class = "^(pavucontrol)$" }, float = true })
 hl.window_rule({ match = { class = "^(pavucontrol)$" }, size = {"837", "747"} })
@@ -59,18 +57,12 @@ hl.window_rule({ match = { class = "^(imv-dir)$" }, center = true })
 hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk)$" }, float = true })
 hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk)$" }, size = {"1152", "864"} })
 hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk)$" }, center = true })
-hl.window_rule({ match = { class = "^(thunar)$" }, float = true })
-hl.window_rule({ match = { class = "^(thunar)$" }, size = {"1152", "864"} })
-hl.window_rule({ match = { class = "^(thunar)$" }, center = true })
-hl.window_rule({ match = { class = "^(Thunar)$" }, float = true })
-hl.window_rule({ match = { class = "^(Thunar)$" }, size = {"1152", "864"} })
-hl.window_rule({ match = { class = "^(Thunar)$" }, center = true })
 hl.window_rule({ match = { class = "^(jarvis.py)$" }, float = true })
 hl.window_rule({ match = { class = "^(jarvis.py)$" }, size = {"400", "200"} })
 hl.window_rule({ match = { class = "^(jarvis.py)$" }, center = true })
-hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, float = true })
-hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, size = {"1152", "864"} })
-hl.window_rule({ match = { class = "^(org.gnome.Nautilus)$" }, center = true })
+hl.window_rule({ match = { class = "^(yazi)$" }, float = true })
+hl.window_rule({ match = { class = "^(yazi)$" }, size = {"1152", "864"} })
+hl.window_rule({ match = { class = "^(yazi)$" }, center = true })
 hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, float = true })
 hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, size = {"1152", "864"} })
 hl.window_rule({ match = { class = "^(org.gnome.FileRoller)$" }, center = true })
@@ -84,15 +76,15 @@ hl.window_rule({ match = { class = "^(plasma-changeicons)$" }, move = {"999999",
 hl.window_rule({ match = { title = "^(Copying — Dolphin)$" }, move = {"27", "53"} })
 
 --  Tiling
--- hl.window_rule({ match = { class = "^dev\.warp\.Warp$" }, tile = true })
+-- hl.window_rule({ match = { class = "^dev\\.warp\\.Warp$" }, tile = true })
 
 --  Picture-in-Picture
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, float = true })
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, keep_aspect_ratio = true })
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, move = {"1869", "1037"} })
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, size = {"717", "403"} })
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, float = true })
--- hl.window_rule({ match = { title = "^([Pp]icture[-\s]?[Ii]n[-\s]?[Pp]icture)(.*)$" }, pin = true })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, float = true })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, keep_aspect_ratio = true })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, move = {"1869", "1037"} })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, size = {"717", "403"} })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, float = true })
+-- hl.window_rule({ match = { title = "^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$" }, pin = true })
 
 --  --- Tearing ---
 --  windowrulev2 = immediate, title:.*\.exe
@@ -101,4 +93,3 @@ hl.window_rule({ match = { title = "^(Copying — Dolphin)$" }, move = {"27", "5
 
 --  No shadow for tiled windows (matches windows that are not floating).
 hl.window_rule({ match = { float = false }, no_shadow = true })
-

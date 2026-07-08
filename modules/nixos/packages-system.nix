@@ -53,9 +53,11 @@
           };
         })
       ];
-      buildInputs = [ pkgs.makeWrapper ];
+      buildInputs = [ pkgs.makeWrapper pkgs.luajitPackages.luasocket ];
       postBuild = ''
         wrapProgram $out/bin/mpv \
+          --prefix LUA_PATH ";" "${pkgs.luajitPackages.luasocket}/share/lua/5.1/?.lua;${pkgs.luajitPackages.luasocket}/share/lua/5.1/?/init.lua" \
+          --prefix LUA_CPATH ";" "${pkgs.luajitPackages.luasocket}/lib/lua/5.1/?.so" \
           --run 'for p in $(pgrep -x mpv); do [ "$p" != "$$" ] && kill -9 "$p" 2>/dev/null || true; done'
       '';
     })

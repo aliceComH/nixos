@@ -38,7 +38,7 @@ local function translate_text(text)
     local payload = utils.format_json({
         q = text,
         source = "en",
-        target = "pt",
+        target = "pb",
         format = "text"
     })
 

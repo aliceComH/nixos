@@ -10,7 +10,7 @@
       environment = {
         # O LibreTranslate baixa os modelos de idioma no primeiro uso. 
         # Restringimos a inglês e português para acelerar o processo.
-        LT_LOAD_ONLY = "en,pt";
+        LT_LOAD_ONLY = "en,pb";
       };
       extraOptions = [ "--pull=missing" ];
     };

@@ -18,7 +18,6 @@
     lsof
     jq
     fzf
-    btop
     fastfetch
     wev
     google-chrome

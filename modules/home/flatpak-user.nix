@@ -14,7 +14,6 @@
         com.jetbrains.DataGrip \
         com.spotify.Client \
         com.vysp3r.ProtonPlus \
-        io.missioncenter.MissionCenter \
         org.qbittorrent.qBittorrent
       do
         flatpak install --user -y --noninteractive flathub "$app" || true

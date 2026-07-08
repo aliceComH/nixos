@@ -33,6 +33,7 @@
   nixpkgs.config.permittedInsecurePackages = [
     "openssl-1.1.1w"
   ];
+  nixpkgs.config.problems.handlers.sublimetext4.broken = "warn";
 
   nix.settings = {
     experimental-features = [

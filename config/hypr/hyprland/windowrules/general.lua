@@ -35,5 +35,5 @@ hl.window_rule({ match = { class = "^(org.freedesktop.impl.portal.desktop.gtk)$"
 hl.window_rule({ match = { class = "^(org.freedesktop.impl.portal.desktop.hyprland)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(org.gnome.Loupe)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, opacity = "0.90 0.90" })
-hl.window_rule({ match = { class = "^(io.missioncenter.MissionCenter)$" }, opacity = "0.90 0.90" })
+hl.window_rule({ match = { class = "^(btop)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(evince)$" }, opacity = "0.90 0.90" })

@@ -23,7 +23,7 @@ hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p $(xdg-user-dir PICTURES)/Screenshots 
 hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"), { description = "Screen snip" })
 
 -- programs
-hl.bind("ALT + F1", hl.dsp.exec_cmd("flatpak run io.missioncenter.MissionCenter"))
+hl.bind("ALT + F1", hl.dsp.exec_cmd("kitty --class btop --title btop -e btop"))
 hl.bind("ALT + F2", hl.dsp.exec_cmd("kitty s-tui"))
 hl.bind("ALT + F3", hl.dsp.exec_cmd("lact"))
 hl.bind("SUPER + ALT + X", hl.dsp.exec_cmd("hyprctl kill"))
@@ -209,7 +209,7 @@ hl.define_submap("auxiliar", function() -- DISCORD
     hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_\"$(date '+%Y-%m-%d_%H.%M.%S')\".png"), { locked = true })
     hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"), { description = "Screen snip" })
 
-    hl.bind("ALT + F1", hl.dsp.exec_cmd("flatpak run io.missioncenter.MissionCenter"))
+    hl.bind("ALT + F1", hl.dsp.exec_cmd("kitty --class btop --title btop -e btop"))
     hl.bind("ALT + F2", hl.dsp.exec_cmd("kitty s-tui"))
     hl.bind("ALT + F3", hl.dsp.exec_cmd("lact"))
     hl.bind("SUPER + ALT + X", hl.dsp.exec_cmd("hyprctl kill"))
@@ -279,7 +279,7 @@ hl.define_submap("whatsapp", function() -- WHATSAPP
     hl.bind("PRINT", hl.dsp.exec_cmd("mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_\"$(date '+%Y-%m-%d_%H.%M.%S')\".png"), { locked = true })
     hl.bind("SUPER + SHIFT + S", hl.dsp.exec_cmd("pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent"), { description = "Screen snip" })
 
-    hl.bind("ALT + F1", hl.dsp.exec_cmd("flatpak run io.missioncenter.MissionCenter"))
+    hl.bind("ALT + F1", hl.dsp.exec_cmd("kitty --class btop --title btop -e btop"))
     hl.bind("ALT + F2", hl.dsp.exec_cmd("kitty s-tui"))
     hl.bind("ALT + F3", hl.dsp.exec_cmd("lact"))
     hl.bind("SUPER + ALT + X", hl.dsp.exec_cmd("hyprctl kill"))

@@ -10,11 +10,13 @@
     ../../modules/home/xdg-config.nix
     ../../modules/home/xdg-data.nix
     ../../modules/home/flatpak-user.nix
+    ../../modules/home/btop.nix
   ];
 
   home.username = "alice";
   home.homeDirectory = "/home/alice";
   home.stateVersion = "25.05";
+  home.enableNixpkgsReleaseCheck = false;
 
   programs.home-manager.enable = true;
 }

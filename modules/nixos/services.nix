@@ -29,6 +29,16 @@
   # Partições exFAT (p.ex. SSDs externos formatados no Windows).
   boot.supportedFilesystems = [ "exfat" ];
 
+  # Desativa economy de energia do codec HDA Intel (placa onboard).
+  # power_save=0: não entra em suspend após N segundos de silêncio.
+  # power_save_controller=N: desabilita o controller-level power save.
+  # Sem isso, o codec faz wake-up tardio e causa xruns nos primeiros
+  # frames após silêncio (audível como click/pop no mirror da soundbar).
+  boot.kernelParams = [
+    "snd_hda_intel.power_save=0"
+    "snd_hda_intel.power_save_controller=N"
+  ];
+
   # rtkit dá prioridade RT ao PipeWire sem precisar rodar como root.
   security.rtkit.enable = true;
 
@@ -49,20 +59,23 @@
     pulse.enable = true;
     jack.enable = false;
 
-    # ── Clock global: rate FORÇADO 48000, quantum FORÇADO 32 (0.66ms) ──────
-    # force-quantum: trava o quantum do graph em 32. Nenhum cliente pode
-    #   renegociar (elimina o loop PIPEWIRE_QUANTUM vs Discord).
-    # force-rate: trava o rate em 48000. Streams a 44100 (osu!) são
+    # ── Clock global: rate 48000, quantum 64 (~1.33ms), osu! opera em 32 ──
+    # force-quantum=64: trava o quantum do driver/graph em 64. Nenhum
+    #   cliente pode renegociar para cima (elimina quantum inflation).
+    # force-rate=48000: trava o rate — streams a 44100 (osu!) são
     #   resampleados pelo adaptador, sem switch de rate no graph.
     # allowed-rates=[48000]: reforço extra — graph só opera em 48000.
-    # min/max-quantum=32: belt-and-suspenders — tranca a faixa inteira.
+    # min-quantum=32: permite que regras WirePlumber (osu!) peçam 32.
+    # max-quantum=64: teto absoluto — impede loopbacks/clientes de
+    #   inflarem para 1024/6144 como acontecia antes.
     extraConfig.pipewire."10-clock" = {
       "context.properties" = {
         "default.clock.rate"           = 48000;
         "default.clock.allowed-rates"  = [ 48000 ];
-        "default.clock.quantum"        = 1024;
+        "default.clock.quantum"        = 64;
         "default.clock.min-quantum"    = 32;
-        "default.clock.max-quantum"    = 1024;
+        "default.clock.max-quantum"    = 64;
+        "default.clock.force-quantum"  = 64;
         "default.clock.force-rate"     = 48000;
       };
     };
@@ -96,8 +109,8 @@
 
     # ── Prioridade RT do pipewire-pulse + quantum mínimo ──────────────────
     # Força o pipewire-pulse a subir prioridade RT via módulo RT.
-    # pulse.min.quantum garante que streams PulseAudio (Discord, browser)
-    # não operem com quantum menor que 32.
+    # pulse.min.quantum=32/48000: permite que a regra do osu! (force-quantum=32)
+    # seja respeitada pela camada PulseAudio. Sem isso, o pulse clamparia a 64.
     extraConfig.pipewire-pulse."10-rt-priority" = {
       "context.modules" = [
         {

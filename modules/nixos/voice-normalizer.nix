@@ -99,6 +99,13 @@
               "media.class"       = "Audio/Sink";
               "audio.channels"    = 2;
               "audio.position"    = [ "FL" "FR" ];
+              "audio.rate"        = 48000;
+
+              # Alinha o quantum da filter-chain ao graph (64).
+              # Sem isso, o adaptador pode negociar um quantum diferente
+              # e causar resampling temporal desnecessário.
+              "node.force-quantum" = 64;
+              "node.latency"       = "64/48000";
 
               # Mantém a filter-chain processando mesmo sem clientes
               # conectados, evitando pop/crackle ao conectar o primeiro stream.
@@ -145,6 +152,9 @@
               "node.passive"         = true;
               "node.dont-reconnect"  = false;
               "stream.dont-remix"    = true;
+              "audio.rate"           = 48000;
+              "node.force-quantum"   = 64;
+              "node.latency"         = "64/48000";
             };
           };
         }

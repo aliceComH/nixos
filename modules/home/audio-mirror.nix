@@ -83,7 +83,7 @@ let
       fi
 
       echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$internal_sink"
-      exec "$pwloop_bin" -n hyperx-internal-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 128/48000
+      exec "$pwloop_bin" -n hyperx-internal-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
     }
 
     run_cloud3_loopback() {
@@ -108,7 +108,7 @@ let
       fi
 
       echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$cloud3_sink"
-      exec "$pwloop_bin" -n hyperx-cloud3-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$cloud3_sink" -c 2 -m '[ FL FR ]' --latency 128/48000
+      exec "$pwloop_bin" -n hyperx-cloud3-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$cloud3_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
     }
 
     reconcile_loopbacks() {

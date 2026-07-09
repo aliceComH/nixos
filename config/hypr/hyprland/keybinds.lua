@@ -40,7 +40,7 @@ hl.bind("ALT + 2", hl.dsp.exec_cmd("flatpak run com.meetfranz.Franz"))
 hl.bind("ALT + 3", hl.dsp.exec_cmd("steam"))
 hl.bind("ALT + 4", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://web.stremio.com/\""))
 hl.bind("ALT + 5", hl.dsp.exec_cmd("cd ~/Projetos/jarvis && nix-shell --run \"GTK_THEME=Adwaita:dark python jarvis.py\""))
-hl.bind("ALT + 6", hl.dsp.exec_cmd("flatpak run com.spotify.Client"))
+hl.bind("ALT + 6", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://music.youtube.com/\""))
 
 -- Shutdown menu
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
@@ -226,7 +226,7 @@ hl.define_submap("auxiliar", function() -- DISCORD
     hl.bind("ALT + 3", hl.dsp.exec_cmd("steam"))
     hl.bind("ALT + 4", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://web.stremio.com/\""))
     hl.bind("ALT + 5", hl.dsp.exec_cmd("cd ~/Projetos/jarvis && nix-shell --run \"GTK_THEME=Adwaita:dark python jarvis.py\""))
-    hl.bind("ALT + 6", hl.dsp.exec_cmd("flatpak run com.spotify.Client"))
+    hl.bind("ALT + 6", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://music.youtube.com/\""))
 
     hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
     hl.bind("CTRL + SHIFT + dead_grave", hl.dsp.exec_cmd("kitty reboot"))
@@ -296,7 +296,7 @@ hl.define_submap("whatsapp", function() -- WHATSAPP
     hl.bind("ALT + 3", hl.dsp.exec_cmd("steam"))
     hl.bind("ALT + 4", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://web.stremio.com/\""))
     hl.bind("ALT + 5", hl.dsp.exec_cmd("cd ~/Projetos/jarvis && nix-shell --run \"GTK_THEME=Adwaita:dark python jarvis.py\""))
-    hl.bind("ALT + 6", hl.dsp.exec_cmd("flatpak run com.spotify.Client"))
+    hl.bind("ALT + 6", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://music.youtube.com/\""))
 
     hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
     hl.bind("CTRL + SHIFT + dead_grave", hl.dsp.exec_cmd("kitty reboot"))

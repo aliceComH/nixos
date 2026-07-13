@@ -134,6 +134,23 @@ hl.config({
     }
 })
 
+-- ── Per-device keyboard layouts ──────────────────────────────────────────────
+-- Nomes obtidos via `hyprctl devices` (lowercase, espaços→hifens).
+-- Wooting 80HE: layout US International (herda as mesmas configs do input global)
+hl.device({
+    name = "wooting-wooting-80he",
+    kb_layout = "us",
+    kb_variant = "intl",
+})
+
+-- Logitech K400 Plus: layout ABNT2 (br)
+-- kb_variant vazio: impede herança do "intl" global (inexistente para layout br).
+hl.device({
+    name = "logitech-k400-plus",
+    kb_layout = "br",
+    kb_variant = "",
+})
+
 -- Curves (0.55 API: hl.curve)
 hl.curve("fastDecel", { type = "bezier", points = { {0, 1}, {0, 1} } })
 hl.curve("direct",    { type = "bezier", points = { {0.2, 0}, {0, 1} } })

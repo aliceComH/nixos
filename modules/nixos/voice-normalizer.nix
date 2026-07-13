@@ -9,18 +9,18 @@
 # A saída (playback) segue automaticamente o dispositivo de áudio padrão do
 # sistema, sem necessidade de scripts ou reconexão manual.
 #
-# Parâmetros do SC4 estão ajustados para voz/conversação:
-#   - Threshold -18 dB: captura a maioria das vozes antes de ficarem altas
-#   - Ratio 4:1: compressão moderada (não esmaga a dinâmica natural)
-#   - Attack 15ms: rápido o suficiente para pegar picos de voz
-#   - Release 300ms: suave, evita pumping audível
-#   - Makeup gain +6 dB: compensa a redução de ganho, trazendo vozes baixas
-#   - Knee 6 dB: transição suave entre não-comprimido e comprimido
-#   - RMS/peak = 0.5: mix entre RMS e peak detection (bom para voz)
+# Parâmetros do SC4 — AGRESSIVO (voz nivelada ao máximo):
+#   - Threshold -28 dB: captura praticamente qualquer voz, até sussurros
+#   - Ratio 10:1: compressão pesada — achata a dinâmica brutalmente
+#   - Attack 5ms: reage quase instantaneamente a gritos/picos
+#   - Release 150ms: recupera rápido sem pumping audível
+#   - Makeup gain +12 dB: compensa a compressão, levanta vozes baixas
+#   - Knee 3 dB: transição abrupta — compressor "morde" rápido
+#   - RMS/peak = 0.3: mais peak-reactive, pega picos rápidos de voz
 #
-# O Limiter atua como safety net:
-#   - Limit -3 dB: hard ceiling, ninguém ultrapassa isso
-#   - Input gain 0 dB: sem ganho adicional antes do limiter
+# O Limiter atua como safety net APERTADA:
+#   - Input gain +2 dB: empurra o sinal pós-compressor contra o teto
+#   - Limit -1 dB: hard ceiling quase no máximo digital
 #   - Release 0.01s: release ultra-rápido para transparência
 #
 # NOTA: O campo `plugin` em nós LADSPA do PipeWire aceita apenas o nome base
@@ -57,14 +57,24 @@
                   plugin = "sc4_1882";
                   label  = "sc4";
                   control = {
-                    # 0 = peak, 1 = RMS, 0.5 = mix (melhor para voz)
-                    "RMS/peak"              = 0.5;
-                    "Attack time (ms)"      = 15.0;
-                    "Release time (ms)"     = 300.0;
-                    "Threshold level (dB)"  = -18.0;
-                    "Ratio (1:n)"           = 4.0;
-                    "Knee radius (dB)"      = 6.0;
-                    "Makeup gain (dB)"      = 6.0;
+                    # 0 = peak, 1 = RMS. Mais perto de 0 = reage mais rápido
+                    # a gritos e picos súbitos de volume.
+                    "RMS/peak"              = 0.3;
+                    # 5ms: pega transientes de voz quase instantaneamente.
+                    "Attack time (ms)"      = 5.0;
+                    # 150ms: recupera rápido sem causar pumping audível.
+                    "Release time (ms)"     = 150.0;
+                    # -28 dB: captura até as vozes mais baixas. Praticamente
+                    # tudo acima de sussurro já entra na zona de compressão.
+                    "Threshold level (dB)"  = -28.0;
+                    # 10:1: compressão pesada. Achata a dinâmica brutalmente:
+                    # 10 dB acima do threshold viram apenas 1 dB de diferença.
+                    "Ratio (1:n)"           = 10.0;
+                    # 3 dB: transição mais abrupta — o compressor "morde" rápido.
+                    "Knee radius (dB)"      = 3.0;
+                    # +12 dB: compensa a perda de volume da compressão pesada.
+                    # Levanta vozes baixas significativamente após o achatamento.
+                    "Makeup gain (dB)"      = 12.0;
                   };
                 }
 
@@ -77,8 +87,13 @@
                   plugin = "fast_lookahead_limiter_1913";
                   label  = "fastLookaheadLimiter";
                   control = {
-                    "Input gain (dB)"    = 0.0;
-                    "Limit (dB)"         = -3.0;
+                    # +2 dB: empurra o sinal pós-compressor mais contra o teto,
+                    # garantindo que vozes altas batam no limiter.
+                    "Input gain (dB)"    = 2.0;
+                    # -1 dB: teto quase no máximo digital. Nada passa disso.
+                    # Mais apertado que -3 dB → menos headroom para picos.
+                    "Limit (dB)"         = -1.0;
+                    # 0.01s: release ultra-rápido para transparência.
                     "Release time (s)"   = 0.01;
                   };
                 }

@@ -15,6 +15,7 @@
     ../../modules/nixos/hyprland-system.nix
     ../../modules/nixos/packages-system.nix
     ../../modules/nixos/wooting-udev.nix
+    ../../modules/nixos/logitech-solaar.nix
     ../../modules/nixos/services.nix
     ../../modules/nixos/cpu-performance.nix
     ../../modules/nixos/network-tuning.nix
@@ -31,10 +32,6 @@
   i18n.defaultLocale = lib.mkDefault "pt_BR.UTF-8";
 
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "openssl-1.1.1w"
-  ];
-  nixpkgs.config.problems.handlers.sublimetext4.broken = "warn";
 
   nix.settings = {
     experimental-features = [

@@ -84,7 +84,6 @@
         done
       '';
     })
-    sublime4
     go
     rustc
     cargo

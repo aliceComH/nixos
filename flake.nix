@@ -32,7 +32,6 @@
     in
     {
       nixosConfigurations.alice-nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
         # Passa as variáveis para o nível do sistema NixOS
         specialArgs = { inherit repoRoot pkgs-hyprland pkgs-osu inputs; };
         
@@ -43,6 +42,7 @@
             home-manager.extraSpecialArgs = { inherit inputs; };
           }
           ./hosts/alice-nixos/configuration.nix
+          { nixpkgs.hostPlatform = system; }
         ];
       };
     };

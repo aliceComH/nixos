@@ -27,9 +27,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("wl-paste --primary --type text --watch cliphist store")
 
-    -- Logitech K400 Plus: inverte F-row para F1–F12 (firmware-level via Solaar HID++)
-    -- O sleep garante que o daemon D-Bus e o receiver estejam prontos.
-    hl.exec_cmd("sleep 3 && solaar config 'Wireless Touch Keyboard K400 Plus' fn-swap on")
+    -- Logitech Solaar: daemon que monitora devices Logitech via HID++ e reaaplica
+    -- configs salvas (ex: fn-swap off no K400 Plus) automaticamente em reconexões.
+    -- --window hide: roda sem GUI visível. 2>/dev/null: silencia warnings GTK/D-Bus.
+    hl.exec_cmd("solaar --window hide 2>/dev/null")
 
     hl.exec_cmd("hyprctl setcursor Bibata-Original-Ice 32")
 end)

@@ -18,10 +18,10 @@ require_cmd awk
 require_cmd sed
 
 # Whitelist de sinks que podem virar default no ciclo.
-# Cloud 3 não entra aqui de propósito: ele só recebe loopback quando 7.1 é default.
+# Cloud 3 não entra aqui de propósito: ele só recebe loopback quando KA13 é default.
 allowed_sink_patterns=(
-  'HyperX 7\.1 Audio'
-  'Kingston_HyperX_Virtual_Surround_Sound'
+  'FIIO KA13'
+  'FIIO_FIIO_KA13'
   'IEC958'
   'iec958'
   '[ÁA]udio interno'

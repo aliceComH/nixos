@@ -4,8 +4,8 @@ let
   mirrorScript = pkgs.writeShellScriptBin "mirror-audio" ''
     set -euo pipefail
 
-    internal_service_name="hyperx-internal-mirror.service"
-    cloud3_service_name="hyperx-cloud3-mirror.service"
+    internal_service_name="ka13-internal-mirror.service"
+    cloud3_service_name="ka13-cloud3-mirror.service"
 
     rg_bin="${pkgs.ripgrep}/bin/rg"
     sed_bin="${pkgs.gnused}/bin/sed"
@@ -15,7 +15,7 @@ let
     pwlink_bin="${pkgs.pipewire}/bin/pw-link"
     pwloop_bin="${pkgs.pipewire}/bin/pw-loopback"
     state_dir="''${XDG_RUNTIME_DIR:-/tmp}"
-    internal_toggle_file="$state_dir/hyperx-internal-mirror.enabled"
+    internal_toggle_file="$state_dir/ka13-internal-mirror.enabled"
 
     is_internal_toggle_enabled() {
       [ -f "$internal_toggle_file" ] && [ "$(<"$internal_toggle_file")" = "1" ]
@@ -27,16 +27,16 @@ let
       printf '%s\n' "$value" > "$internal_toggle_file"
     }
 
-    is_default_hyperx_7_1() {
+    is_default_ka13() {
       "$wpctl_bin" inspect @DEFAULT_AUDIO_SINK@ 2>/dev/null \
-        | "$rg_bin" -qi 'HyperX 7\.1 Audio|Kingston_HyperX_Virtual_Surround_Sound'
+        | "$rg_bin" -qi 'FIIO KA13|FIIO_FIIO_KA13'
     }
 
-    resolve_hyperx_sink() {
+    resolve_ka13_sink() {
       local sink
-      sink="$($pwlink_bin -o | $rg_bin '^alsa_output\.usb-Kingston_HyperX_Virtual_Surround_Sound_.*:monitor_FL$' | $head_bin -n1 | $sed_bin 's/:monitor_FL$//' || true)"
+      sink="$($pwlink_bin -o | $rg_bin '^alsa_output\.usb-FIIO_FIIO_KA13.*:monitor_FL$' | $head_bin -n1 | $sed_bin 's/:monitor_FL$//' || true)"
       if [ -z "$sink" ]; then
-        sink="$($pwlink_bin -o | $rg_bin '^alsa_output\.usb-.*HyperX.*:monitor_FL$' | $head_bin -n1 | $sed_bin 's/:monitor_FL$//' || true)"
+        sink="$($pwlink_bin -o | $rg_bin '^alsa_output\.usb-.*FIIO.*KA13.*:monitor_FL$' | $head_bin -n1 | $sed_bin 's/:monitor_FL$//' || true)"
       fi
       echo "$sink"
     }
@@ -62,18 +62,18 @@ let
     }
 
     run_internal_loopback() {
-      local hyperx_sink internal_sink
+      local ka13_sink internal_sink
 
-      if ! is_default_hyperx_7_1; then
-        echo "mirror-audio: loopback Áudio interno só é permitido com HyperX 7.1 como sink default." >&2
+      if ! is_default_ka13; then
+        echo "mirror-audio: loopback Áudio interno só é permitido com FIIO KA13 como sink default." >&2
         exit 1
       fi
 
-      hyperx_sink="$(resolve_hyperx_sink)"
+      ka13_sink="$(resolve_ka13_sink)"
       internal_sink="$(resolve_internal_sink)"
 
-      if [ -z "$hyperx_sink" ]; then
-        echo "mirror-audio: não encontrei monitor do sink HyperX." >&2
+      if [ -z "$ka13_sink" ]; then
+        echo "mirror-audio: não encontrei monitor do sink FIIO KA13." >&2
         exit 1
       fi
 
@@ -82,23 +82,23 @@ let
         exit 1
       fi
 
-      echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$internal_sink"
-      exec "$pwloop_bin" -n hyperx-internal-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
+      echo "mirror-audio: capture=$ka13_sink.monitor -> playback=$internal_sink"
+      exec "$pwloop_bin" -n ka13-internal-mirror -C "$ka13_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
     }
 
     run_cloud3_loopback() {
-      local hyperx_sink cloud3_sink
+      local ka13_sink cloud3_sink
 
-      if ! is_default_hyperx_7_1; then
-        echo "mirror-audio: default sink não é HyperX 7.1, não vou manter loopback Cloud3." >&2
+      if ! is_default_ka13; then
+        echo "mirror-audio: default sink não é FIIO KA13, não vou manter loopback Cloud3." >&2
         exit 1
       fi
 
-      hyperx_sink="$(resolve_hyperx_sink)"
+      ka13_sink="$(resolve_ka13_sink)"
       cloud3_sink="$(resolve_cloud3_sink)"
 
-      if [ -z "$hyperx_sink" ]; then
-        echo "mirror-audio: não encontrei monitor do sink HyperX." >&2
+      if [ -z "$ka13_sink" ]; then
+        echo "mirror-audio: não encontrei monitor do sink FIIO KA13." >&2
         exit 1
       fi
 
@@ -107,28 +107,28 @@ let
         exit 1
       fi
 
-      echo "mirror-audio: capture=$hyperx_sink.monitor -> playback=$cloud3_sink"
-      exec "$pwloop_bin" -n hyperx-cloud3-mirror -C "$hyperx_sink" -i stream.capture.sink=true -P "$cloud3_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
+      echo "mirror-audio: capture=$ka13_sink.monitor -> playback=$cloud3_sink"
+      exec "$pwloop_bin" -n ka13-cloud3-mirror -C "$ka13_sink" -i stream.capture.sink=true -P "$cloud3_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
     }
 
     reconcile_loopbacks() {
-      local hyperx_sink internal_sink cloud3_sink
+      local ka13_sink internal_sink cloud3_sink
 
-      if ! is_default_hyperx_7_1; then
-        # Ao sair do default 7.1, reseta o toggle do Áudio interno para estado padrão OFF.
+      if ! is_default_ka13; then
+        # Ao sair do default KA13, reseta o toggle do Áudio interno para estado padrão OFF.
         set_internal_toggle_enabled 0
         systemctl --user stop "$internal_service_name" "$cloud3_service_name"
-        echo "mirror-audio: default!=HyperX 7.1 -> Áudio interno OFF, Cloud3 OFF"
+        echo "mirror-audio: default!=FIIO KA13 -> Áudio interno OFF, Cloud3 OFF"
         return 0
       fi
 
-      hyperx_sink="$(resolve_hyperx_sink)"
+      ka13_sink="$(resolve_ka13_sink)"
       internal_sink="$(resolve_internal_sink)"
       cloud3_sink="$(resolve_cloud3_sink)"
 
-      if [ -z "$hyperx_sink" ]; then
+      if [ -z "$ka13_sink" ]; then
         systemctl --user stop "$internal_service_name" "$cloud3_service_name"
-        echo "mirror-audio: monitor do HyperX indisponível -> Áudio interno OFF, Cloud3 OFF"
+        echo "mirror-audio: monitor do FIIO KA13 indisponível -> Áudio interno OFF, Cloud3 OFF"
         return 0
       fi
 
@@ -151,13 +151,13 @@ let
       fi
 
       # Cloud3 é independente do toggle/estado do Áudio interno:
-      # sempre ON quando default=HyperX 7.1 e Cloud3 está conectado.
+      # sempre ON quando default=FIIO KA13 e Cloud3 está conectado.
       if [ -n "$cloud3_sink" ]; then
         systemctl --user start "$cloud3_service_name"
         if [ -n "$internal_sink" ]; then
-          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, Áudio interno ON (toggle)"
+          echo "mirror-audio: default=FIIO KA13 -> Cloud3 ON, Áudio interno ON (toggle)"
         else
-          echo "mirror-audio: default=HyperX 7.1 -> Cloud3 ON, Áudio interno OFF (desconectado)"
+          echo "mirror-audio: default=FIIO KA13 -> Cloud3 ON, Áudio interno OFF (desconectado)"
         fi
       else
         systemctl --user stop "$cloud3_service_name"
@@ -175,12 +175,12 @@ let
         run_cloud3_loopback
         ;;
       start)
-        if is_default_hyperx_7_1; then
+        if is_default_ka13; then
           reconcile_loopbacks
         else
           systemctl --user stop "$internal_service_name"
           systemctl --user stop "$cloud3_service_name"
-          echo "mirror-audio: aguardando default sink HyperX 7.1."
+          echo "mirror-audio: aguardando default sink FIIO KA13."
         fi
         ;;
       stop)
@@ -189,12 +189,12 @@ let
         systemctl --user stop "$cloud3_service_name"
         ;;
       restart)
-        if is_default_hyperx_7_1; then
+        if is_default_ka13; then
           reconcile_loopbacks
         else
           systemctl --user stop "$internal_service_name"
           systemctl --user stop "$cloud3_service_name"
-          echo "mirror-audio: aguardando default sink HyperX 7.1."
+          echo "mirror-audio: aguardando default sink FIIO KA13."
         fi
         ;;
       toggle)
@@ -229,9 +229,9 @@ in
 {
   home.packages = [ mirrorScript ];
 
-  systemd.user.services.hyperx-internal-mirror = {
+  systemd.user.services.ka13-internal-mirror = {
     Unit = {
-      Description = "Mirror HyperX sink monitor to Internal Audio sink";
+      Description = "Mirror FIIO KA13 sink monitor to Internal Audio sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
@@ -243,9 +243,9 @@ in
     };
   };
 
-  systemd.user.services.hyperx-cloud3-mirror = {
+  systemd.user.services.ka13-cloud3-mirror = {
     Unit = {
-      Description = "Mirror HyperX sink monitor to HyperX Cloud 3 Wireless sink";
+      Description = "Mirror FIIO KA13 sink monitor to HyperX Cloud 3 Wireless sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
@@ -257,9 +257,9 @@ in
     };
   };
 
-  systemd.user.services.hyperx-loopback-reconcile = {
+  systemd.user.services.ka13-loopback-reconcile = {
     Unit = {
-      Description = "Reconcile HyperX loopbacks against current default sink";
+      Description = "Reconcile FIIO KA13 loopbacks against current default sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
     };
@@ -270,15 +270,15 @@ in
     Install.WantedBy = [ "default.target" ];
   };
 
-  systemd.user.timers.hyperx-loopback-reconcile = {
+  systemd.user.timers.ka13-loopback-reconcile = {
     Unit = {
-      Description = "Periodic reconcile of HyperX loopbacks";
+      Description = "Periodic reconcile of FIIO KA13 loopbacks";
     };
 
     Timer = {
       OnBootSec = "10s";
       OnUnitActiveSec = "5s";
-      Unit = "hyperx-loopback-reconcile.service";
+      Unit = "ka13-loopback-reconcile.service";
     };
     Install.WantedBy = [ "timers.target" ];
   };

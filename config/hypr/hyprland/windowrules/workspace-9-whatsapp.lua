@@ -8,3 +8,5 @@ hl.window_rule({
     immediate = false,
     idle_inhibit = "focus",
 })
+
+hl.window_rule({ match = { class = "^(chrome-music.youtube.com__-Default)$" }, workspace = "4 silent" })

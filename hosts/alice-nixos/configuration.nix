@@ -24,6 +24,7 @@
     ../../modules/nixos/voice-normalizer.nix
     ../../modules/nixos/llm/ollama.nix
     ../../modules/nixos/libretranslate.nix
+    ../../modules/nixos/piper.nix
   ];
 
   networking.hostName = "alice-nixos";

@@ -28,12 +28,9 @@
     gnome-calculator
     gnome-disk-utility
     file-roller
-    yazi
-    ffmpegthumbnailer  # preview de vídeo no yazi
-    poppler-utils      # preview de PDF no yazi (pdftotext/pdftoppm)
-    fd                 # busca rápida no yazi (alternativa ao find)
-    ripgrep            # busca de conteúdo no yazi
-    p7zip              # suporte a 7z/zip/rar no yazi
+    fd                 # busca rápida no terminal (alternativa ao find)
+    ripgrep            # busca de conteúdo rápida no terminal
+    p7zip              # suporte a 7z/zip/rar
     traceroute
     rofi
     rofimoji

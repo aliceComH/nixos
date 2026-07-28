@@ -163,6 +163,16 @@
 
   programs.steam.enable = true;
 
+  programs.thunar = {
+    enable = true;
+    plugins = with pkgs.xfce; [
+      thunar-archive-plugin
+      thunar-volman
+    ];
+  };
+  services.tumbler.enable = true;
+  programs.xfconf.enable = true;
+
   services.tuned.enable = true;
 
   # Expoe/ativa unidade lactd a partir do pacote do LACT.

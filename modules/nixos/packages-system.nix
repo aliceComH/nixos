@@ -61,7 +61,7 @@
     imv
     hyprpaper
     hyprshot
-    lact
+    # lact # TEMPORARILY DISABLED: quebrado com libdisplay-info 0.4.0 no unstable
     protontricks
     winetricks
     (pkgs.symlinkJoin {
@@ -81,6 +81,7 @@
         done
       '';
     })
+    python3
     go
     rustc
     cargo

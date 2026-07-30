@@ -165,7 +165,7 @@
 
   programs.thunar = {
     enable = true;
-    plugins = with pkgs.xfce; [
+    plugins = with pkgs; [
       thunar-archive-plugin
       thunar-volman
     ];
@@ -176,11 +176,11 @@
   services.tuned.enable = true;
 
   # Expoe/ativa unidade lactd a partir do pacote do LACT.
-  systemd.packages = [ pkgs.lact ];
-  systemd.services.lactd = {
-    enable = true;
-    wantedBy = [ "multi-user.target" ];
-  };
+  # systemd.packages = [ pkgs.lact ];
+  # systemd.services.lactd = {
+  #   enable = true;
+  #   wantedBy = [ "multi-user.target" ];
+  # };
 
   programs.dconf.enable = true;
 

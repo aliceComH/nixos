@@ -94,7 +94,6 @@
     tesseract
     papirus-icon-theme
     font-awesome
-    cloudflare-warp
     vesktop
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])

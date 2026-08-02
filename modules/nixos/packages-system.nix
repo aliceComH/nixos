@@ -98,6 +98,7 @@
     firefox
     obs-studio
     obs-cmd
+    code-cursor
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])
     ++ [ pkgs.qt6Packages.qt6ct ];

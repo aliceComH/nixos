@@ -1,27 +1,37 @@
-# ── Voice Normalizer: Virtual Sink com Compressor + Limiter (LADSPA) ─────────
+# ── Voice Normalizer: Virtual Sink com Auto-Level + Compressor + Limiter ─────
 #
 # Cria uma filter-chain do PipeWire que aparece como um sink virtual chamado
 # "Voice Normalizer". O Discord (ou qualquer app) pode ser apontado para esse
 # sink via pavucontrol/wpctl. O áudio é processado em tempo real por:
 #
-#   SC4 Stereo Compressor  →  Fast Lookahead Limiter
+#   Dyson Compressor (L/R)  →  SC4 Stereo Compressor  →  Fast Lookahead Limiter
 #
 # A saída (playback) segue automaticamente o dispositivo de áudio padrão do
 # sistema, sem necessidade de scripts ou reconexão manual.
 #
-# Parâmetros do SC4 — AGRESSIVO (voz nivelada ao máximo):
-#   - Threshold -28 dB: captura praticamente qualquer voz, até sussurros
-#   - Ratio 10:1: compressão pesada — achata a dinâmica brutalmente
-#   - Attack 5ms: reage quase instantaneamente a gritos/picos
-#   - Release 150ms: recupera rápido sem pumping audível
-#   - Makeup gain +12 dB: compensa a compressão, levanta vozes baixas
-#   - Knee 3 dB: transição abrupta — compressor "morde" rápido
-#   - RMS/peak = 0.3: mais peak-reactive, pega picos rápidos de voz
+# Stage 1 — Dyson Compressor (auto-leveler, por canal):
+#   O Dyson mede o nível do sinal e ajusta o ganho automaticamente: vozes
+#   baixas/sussurros sobem, vozes altas descem. É o único plugin aqui que
+#   faz "upward compression" de verdade — o SC4 sozinho não levanta o que
+#   está abaixo do threshold, só aplica makeup gain uniforme.
+#   - Peak limit -8 dB: teto de saída mais baixo e confortável
+#   - Compression ratio 0.99 + fast ratio 1.0: nivelamento máximo
+#   - Release 0.6s: recuperação suave, sem pumping entre falas
 #
-# O Limiter atua como safety net APERTADA:
-#   - Input gain +2 dB: empurra o sinal pós-compressor contra o teto
-#   - Limit -1 dB: hard ceiling quase no máximo digital
-#   - Release 0.01s: release ultra-rápido para transparência
+# Stage 2 — SC4 Stereo Compressor (achata o que sobrou):
+#   - Threshold -30 dB: piso mínimo do plugin — tudo entra na compressão
+#   - Ratio 20:1: máximo do plugin — dinâmica residual praticamente zerada
+#   - Makeup gain +10 dB: compensa perda pós-Dyson e empurra tudo pro teto
+#   - Attack 5ms / Release 250ms: evita oscilação de ganho audível
+#   - Knee 1 dB: transição dura — sem "zona mole" de volume
+#
+# Stage 3 — Fast Lookahead Limiter (hard ceiling):
+#   - Limit -8 dB: teto final alinhado ao Dyson, nada passa disso
+#   - Input gain 0 dB: sem empurrar extra contra o teto
+#   - Release 0.2s: evita zipper noise (0.01s craqueava com ganho oscilando)
+#
+# Quantum/latency: 64/48000 — alinhado ao graph global (ver pipewire-quantum.md).
+#   Não aumentar; osu! e o resto do sistema dependem desse valor fixo.
 #
 # NOTA: O campo `plugin` em nós LADSPA do PipeWire aceita apenas o nome base
 # (sem path e sem .so). O PipeWire appenda .so automaticamente e procura no
@@ -32,13 +42,8 @@
 {
   services.pipewire = {
 
-    # ── Registra o pacote SWH no LADSPA_PATH do PipeWire ───────────────────
-    # O NixOS monta o diretório `pipewire-ladspa-plugins/lib/ladspa/` com
-    # symlinks para os .so de cada pacote listado aqui. Sem isso, o PipeWire
-    # não encontra os plugins e o módulo filter-chain falha ao carregar.
     extraLadspaPackages = [ pkgs.ladspaPlugins ];
 
-    # ── Filter-Chain: Compressor + Limiter para normalização de voz ────────
     extraConfig.pipewire."50-voice-normalizer" = {
       "context.modules" = [
         {
@@ -49,66 +54,84 @@
 
             "filter.graph" = {
               nodes = [
-                # ── Stage 1: SC4 Stereo Compressor ───────────────────────
-                # Plugin stereo: Left input/Right input → Left output/Right output
+                # ── Stage 1a: Dyson Compressor — canal esquerdo ──────────
+                # Auto-leveler: sobe sussurros, abaixa gritos, por canal.
+                {
+                  type   = "ladspa";
+                  name   = "leveler_l";
+                  plugin = "dyson_compress_1403";
+                  label  = "dysonCompress";
+                  control = {
+                    # -8 dB: teto de saída — tudo converge pra esse nível.
+                    "Peak limit (dB)"          = -8.0;
+                    # 0.6s: release moderado — nivelamento suave entre falas.
+                    "Release time (s)"         = 0.6;
+                    # 1.0: ratio rápido no máximo — pega transientes de voz.
+                    "Fast compression ratio"   = 1.0;
+                    # 0.99: compressão quase total — tudo no mesmo patamar.
+                    "Compression ratio"        = 0.99;
+                  };
+                }
+
+                # ── Stage 1b: Dyson Compressor — canal direito ───────────
+                {
+                  type   = "ladspa";
+                  name   = "leveler_r";
+                  plugin = "dyson_compress_1403";
+                  label  = "dysonCompress";
+                  control = {
+                    "Peak limit (dB)"          = -8.0;
+                    "Release time (s)"         = 0.6;
+                    "Fast compression ratio"   = 1.0;
+                    "Compression ratio"        = 0.99;
+                  };
+                }
+
+                # ── Stage 2: SC4 Stereo Compressor ───────────────────────
                 {
                   type   = "ladspa";
                   name   = "compressor";
                   plugin = "sc4_1882";
                   label  = "sc4";
                   control = {
-                    # 0 = peak, 1 = RMS. Mais perto de 0 = reage mais rápido
-                    # a gritos e picos súbitos de volume.
-                    "RMS/peak"              = 0.3;
-                    # 5ms: pega transientes de voz quase instantaneamente.
+                    "RMS/peak"              = 0.5;
+                    # 5ms: evita oscilação de ganho audível como crackle.
                     "Attack time (ms)"      = 5.0;
-                    # 150ms: recupera rápido sem causar pumping audível.
-                    "Release time (ms)"     = 150.0;
-                    # -28 dB: captura até as vozes mais baixas. Praticamente
-                    # tudo acima de sussurro já entra na zona de compressão.
-                    "Threshold level (dB)"  = -28.0;
-                    # 10:1: compressão pesada. Achata a dinâmica brutalmente:
-                    # 10 dB acima do threshold viram apenas 1 dB de diferença.
-                    "Ratio (1:n)"           = 10.0;
-                    # 3 dB: transição mais abrupta — o compressor "morde" rápido.
-                    "Knee radius (dB)"      = 3.0;
-                    # +12 dB: compensa a perda de volume da compressão pesada.
-                    # Levanta vozes baixas significativamente após o achatamento.
-                    "Makeup gain (dB)"      = 12.0;
+                    "Release time (ms)"     = 250.0;
+                    "Threshold level (dB)"  = -30.0;
+                    "Ratio (1:n)"           = 20.0;
+                    "Knee radius (dB)"      = 1.0;
+                    "Makeup gain (dB)"      = 10.0;
                   };
                 }
 
-                # ── Stage 2: Fast Lookahead Limiter ──────────────────────
-                # Safety net: impede qualquer pico acima de -3 dB.
-                # Plugin stereo: Input 1/Input 2 → Output 1/Output 2
+                # ── Stage 3: Fast Lookahead Limiter ──────────────────────
                 {
                   type   = "ladspa";
                   name   = "limiter";
                   plugin = "fast_lookahead_limiter_1913";
                   label  = "fastLookaheadLimiter";
                   control = {
-                    # +2 dB: empurra o sinal pós-compressor mais contra o teto,
-                    # garantindo que vozes altas batam no limiter.
-                    "Input gain (dB)"    = 2.0;
-                    # -1 dB: teto quase no máximo digital. Nada passa disso.
-                    # Mais apertado que -3 dB → menos headroom para picos.
-                    "Limit (dB)"         = -1.0;
-                    # 0.01s: release ultra-rápido para transparência.
-                    "Release time (s)"   = 0.01;
+                    "Input gain (dB)"    = 0.0;
+                    "Limit (dB)"         = -8.0;
+                    # 0.2s: release ultra-rápido (0.01s) gerava pumping/crackle
+                    # quando o limiter batia no teto com compressão agressiva.
+                    "Release time (s)"   = 0.2;
                   };
                 }
               ];
 
-              # ── Links internos do grafo ──────────────────────────────────
-              # SC4 stereo out → Limiter stereo in
               links = [
-                { output = "compressor:Left output";  input = "limiter:Input 1"; }
-                { output = "compressor:Right output"; input = "limiter:Input 2"; }
+                { output = "leveler_l:Output";        input = "compressor:Left input";  }
+                { output = "leveler_r:Output";        input = "compressor:Right input"; }
+                { output = "compressor:Left output";  input = "limiter:Input 1";        }
+                { output = "compressor:Right output"; input = "limiter:Input 2";        }
               ];
+
+              inputs  = [ "leveler_l:Input" "leveler_r:Input" ];
+              outputs = [ "limiter:Output 1" "limiter:Output 2" ];
             };
 
-            # ── Capture: lado de entrada (Virtual Sink) ──────────────────
-            # Apps como Discord enviam áudio para cá.
             "capture.props" = {
               "node.name"         = "voice_normalizer_sink";
               "media.class"       = "Audio/Sink";
@@ -116,53 +139,16 @@
               "audio.position"    = [ "FL" "FR" ];
               "audio.rate"        = 48000;
 
-              # Alinha o quantum da filter-chain ao graph (64).
-              # Sem isso, o adaptador pode negociar um quantum diferente
-              # e causar resampling temporal desnecessário.
               "node.force-quantum" = 64;
               "node.latency"       = "64/48000";
 
-              # Mantém a filter-chain processando mesmo sem clientes
-              # conectados, evitando pop/crackle ao conectar o primeiro stream.
               "node.always-process" = true;
             };
 
-            # ── Playback: lado de saída (segue o default sink) ───────────
             "playback.props" = {
               "node.name"            = "voice_normalizer_output";
               "audio.channels"       = 2;
               "audio.position"       = [ "FL" "FR" ];
-
-              # ╔══════════════════════════════════════════════════════════╗
-              # ║  FLAGS CRÍTICAS PARA "FOLLOW DEFAULT SINK"              ║
-              # ╠══════════════════════════════════════════════════════════╣
-              # ║                                                          ║
-              # ║  node.passive = true                                     ║
-              # ║    → Informa ao WirePlumber que este nó NÃO deve manter  ║
-              # ║      o sink de destino "ocupado". Sem isso, o WP trata   ║
-              # ║      a filter-chain como um cliente ativo e pode impedir ║
-              # ║      o suspend/idle do dispositivo de áudio.             ║
-              # ║                                                          ║
-              # ║  node.dont-reconnect = false                             ║
-              # ║    → Permite que o WirePlumber MOVA este stream para     ║
-              # ║      outro dispositivo quando o default sink mudar.      ║
-              # ║      Se fosse true, o stream ficaria preso ao device     ║
-              # ║      original e não seguiria mudanças de default.        ║
-              # ║                                                          ║
-              # ║  stream.dont-remix = true                                ║
-              # ║    → Preserva o layout de canais (FL+FR) do stream sem   ║
-              # ║      remixar para o formato do sink de destino. Evita    ║
-              # ║      artefatos de downmix/upmix indesejados.            ║
-              # ║                                                          ║
-              # ║  AUSÊNCIA de target.object / node.target:                ║
-              # ║    → Ao NÃO especificar um alvo fixo, o WirePlumber usa  ║
-              # ║      sua política padrão (find-default-target.lua) para  ║
-              # ║      rotear este stream para @DEFAULT_AUDIO_SINK@.       ║
-              # ║      Quando você muda o default (via wpctl, pavucontrol, ║
-              # ║      ou seletor do Hyprland), o WP automaticamente       ║
-              # ║      desconecta do device antigo e reconecta ao novo.    ║
-              # ║                                                          ║
-              # ╚══════════════════════════════════════════════════════════╝
 
               "node.passive"         = true;
               "node.dont-reconnect"  = false;

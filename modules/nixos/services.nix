@@ -67,6 +67,7 @@
     # min-quantum=32: permite que regras WirePlumber (osu!) peçam 32.
     # max-quantum=64: teto absoluto — impede loopbacks/clientes de
     #   inflarem para 1024/6144 como acontecia antes.
+    # ⚠️  NÃO ALTERAR — ver .agents/rules/pipewire-quantum.md
     extraConfig.pipewire."10-clock" = {
       "context.properties" = {
         "default.clock.rate"           = 48000;

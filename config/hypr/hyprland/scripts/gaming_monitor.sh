@@ -103,6 +103,11 @@ handle() {
       fi
     ;;
 
+    "workspace>>7")
+      hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
+      hyprctl dispatch 'hl.dsp.submap("media")'
+    ;;
+
     "workspace>>8")
       hyprctl eval 'hl.config({ render = { direct_scanout = false } })'
       hyprctl dispatch 'hl.dsp.submap("auxiliar")'

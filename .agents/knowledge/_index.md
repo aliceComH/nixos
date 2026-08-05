@@ -13,6 +13,7 @@ uma vez.
 | Doc | Resumo | Arquivos-chave |
 |---|---|---|
 | [mpv](mpv.md) | Player de vídeo com interpolação de frames, tradução ao vivo de legendas e pipeline de streaming (Crunchyroll/OBS) | `modules/nixos/packages-system.nix`, `config/mpv/`, `modules/nixos/crunchyroll-mpv.nix` |
+| [screen-sharing](screen-sharing.md) | Portais Wayland (hyprland/gtk) + PipeWire para screen share; fix do bug "morre até reiniciar a máquina" | `modules/nixos/hyprland-system.nix`, `config/xdg-desktop-portal/hyprland-portals.conf` |
 
 ## Grafo de relações
 
@@ -24,15 +25,18 @@ graph LR
     mpv["mpv"]
     libretranslate["LibreTranslate (em mpv.md)"]
     stremio["Stremio (em mpv.md)"]
+    screenSharing["screen-sharing"]
+    pipewire["PipeWire/WirePlumber (sem doc próprio)"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv
+    screenSharing -->|"ciclo de vida do socket"| pipewire
 ```
 
-*Nota:* `LibreTranslate` e `Stremio` ainda não têm doc próprio — estão
-documentados como seções dentro de `mpv.md`. Se crescerem em complexidade
-própria (mais scripts, mais integrações), promova-os a docs separados e
-atualize este grafo.
+*Nota:* `LibreTranslate`, `Stremio` e `PipeWire/WirePlumber` ainda não têm
+doc próprio — estão documentados como seções dentro de outros docs. Se
+crescerem em complexidade própria (mais scripts, mais integrações),
+promova-os a docs separados e atualize este grafo.
 
 ## Convenções
 

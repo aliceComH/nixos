@@ -61,7 +61,6 @@
     imv
     hyprpaper
     hyprshot
-    # lact # TEMPORARILY DISABLED: quebrado com libdisplay-info 0.4.0 no unstable
     protontricks
     winetricks
     (pkgs.symlinkJoin {

@@ -12,6 +12,7 @@
     ./hardware-configuration.nix
     ../../modules/nixos/kernel-zen.nix
     ../../modules/nixos/amd-gpu.nix
+    ../../modules/nixos/lact.nix
     ../../modules/nixos/hyprland-system.nix
     ../../modules/nixos/packages-system.nix
     ../../modules/nixos/wooting-udev.nix

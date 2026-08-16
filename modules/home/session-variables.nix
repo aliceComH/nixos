@@ -23,5 +23,8 @@
     XCURSOR_THEME = "Bibata-Original-Ice";
     XCURSOR_SIZE = "32";
     NIXOS_OZONE_WL = "1";
+    # -w: espera fechar o ficheiro (git commit, crontab, sudoedit, …)
+    EDITOR = "cursor -w";
+    VISUAL = "cursor -w";
   };
 }

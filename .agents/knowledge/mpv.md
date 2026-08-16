@@ -22,8 +22,9 @@ workspace 8 (auxiliar), separado do fluxo principal de trabalho.
   `mpv-unwrapped` é compilado com VapourSynth + `vapoursynth-mvtools` +
   plugin RIFE customizado (`pkgs/vapoursynth-rife-ncnn-vulkan/package.nix`).
 - `modules/home/xdg-config.nix` — symlink `config/mpv` → `~/.config/mpv`;
-  desktop entry `mpv-stremio` (`exec = "mpv-stremio-cleaner %U"`); `mimeApps`
-  associa `.m3u`/`.m3u8`/`audio/mpegurl` a esse entry.
+  desktop entry `mpv-stremio` (`exec = "mpv-stremio-cleaner %U"`) ainda
+  existe, mas o `mimeApps` aponta áudio/vídeo (incluindo `.m3u`/`.m3u8`)
+  para `umpv.desktop` e imagens para `imv-dir.desktop`.
 - `config/mpv/mpv.conf` — base (`video-sync=display-resample`,
   `keep-open=yes`) + dois perfis de interpolação:
   - `[interp-rife]` — GPU/Vulkan, filtro `~/.config/mpv/filters/interpolation-rife.vpy`.
@@ -57,10 +58,10 @@ workspace 8 (auxiliar), separado do fluxo principal de trabalho.
 - **Forte:** LibreTranslate (`modules/nixos/libretranslate.nix`, container
   Docker na porta 5000, modelos `en`/`pb`) — `translate-sub.lua` não
   funciona sem esse container rodando.
-- **Fraco:** Stremio (flatpak em `modules/home/flatpak-user.nix` +
-  `mimeApps` em `xdg-config.nix`) — Stremio só invoca o mpv como player de
-  destino; não há acoplamento de configuração entre os dois, o mpv nem
-  sabe que foi o Stremio quem o abriu.
+- **Fraco:** Stremio (flatpak em `modules/home/flatpak-user.nix`) — Stremio
+  só invoca o mpv como player de destino; não há acoplamento de
+  configuração entre os dois. Abertura de ficheiros de mídia no file
+  manager vai para `umpv`, não para o entry `mpv-stremio`.
 
 ## Pontos de atenção
 

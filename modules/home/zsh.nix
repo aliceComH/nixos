@@ -66,8 +66,8 @@ in
     ];
 
     sessionVariables = {
-      EDITOR = "nano";
-      VISUAL = "subl";
+      EDITOR = "cursor -w";
+      VISUAL = "cursor -w";
     };
 
     initContent = lib.mkMerge [

@@ -2,6 +2,9 @@
 
 --  Floating
 
+hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, float = true })
+hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, size = {"1067", "651"} })
+hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, center = true })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, float = true })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, size = {"205", "144"} })
 hl.window_rule({ match = { class = "^(org.gnome.Calculator)$" }, move = {"67", "200"} })

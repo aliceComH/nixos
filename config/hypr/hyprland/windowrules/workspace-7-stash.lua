@@ -1,12 +1,4 @@
---  ######## Workspace rules — Workspace 7 (Media) ########
+--  ######## Workspace rules — Workspace 7 (stash) ########
 
---  Firefox abre silenciosamente no workspace 7 (dedicado a consumo de mídia).
---  O conteúdo é capturado via OBS e transmitido ao MPV com interpolação.
-hl.window_rule({
-    match = {
-        class = "^(firefox)$",
-    },
-    workspace = "7 silent",
-    immediate = false,
-    idle_inhibit = "focus",
-})
+--  Workspace 7 continua a ser stash manual (SUPER+F7 / ALT+SHIFT+Q).
+--  Já não há atribuição automática (o Firefox+OBS do Crunchyroll saiu).

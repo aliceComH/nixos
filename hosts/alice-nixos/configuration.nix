@@ -26,7 +26,6 @@
     ../../modules/nixos/llm/ollama.nix
     ../../modules/nixos/libretranslate.nix
     ../../modules/nixos/piper.nix
-    ../../modules/nixos/crunchyroll-mpv.nix
   ];
 
   networking.hostName = "alice-nixos";

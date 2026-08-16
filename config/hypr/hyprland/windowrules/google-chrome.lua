@@ -1,16 +1,23 @@
---  Chromium + HTML5 fullscreen em tiling: maximize fantasma ao sair do F do vídeo.
+--  Chromium/LibreWolf + HTML5 fullscreen em tiling: maximize fantasma ao sair do F do vídeo.
 --  1) Regra oficial do exemplo Hyprland 0.54 (named rule) — mais fiável que one-liner.
 --  2) Hyprland do sistema leva patch PR #13790 (módulo hyprland-system.nix) porque
 --     suppress_event nem sempre intercepta o eco set_maximized no Wayland.
 
 hl.window_rule({
-  name = "chrome-suppress-client-maximize",
-  match = { class = "^(google-chrome|Google-chrome)$" },
+  name = "browser-suppress-client-maximize",
+  match = { class = "^(google-chrome|Google-chrome|librewolf|LibreWolf|FFPWA-.+)$" },
   suppress_event = "maximize"
 })
 
 hl.window_rule({
-  name = "chrome-sync-fullscreen",
-  match = { class = "^(google-chrome|Google-chrome)$" },
+  name = "browser-sync-fullscreen",
+  match = { class = "^(google-chrome|Google-chrome|librewolf|LibreWolf|FFPWA-.+)$" },
   sync_fullscreen = true
+})
+
+--  PWAs: sem decorações do compositor (a icon bar do firefoxpwa é CSS, noutro sítio).
+hl.window_rule({
+  match = { class = "^FFPWA-.+$" },
+  decorate = false,
+  border_size = 0,
 })

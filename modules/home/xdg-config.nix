@@ -221,6 +221,16 @@ in
         "image/jxl"
         "image/webp"
         "image/qoi"
-      ] (_: [ "imv-dir.desktop" ]));
+      ] (_: [ "imv-dir.desktop" ]))
+      // (lib.genAttrs [
+        "text/html"
+        "application/xhtml+xml"
+        "application/xml"
+        "text/xml"
+        "x-scheme-handler/http"
+        "x-scheme-handler/https"
+        "x-scheme-handler/about"
+        "x-scheme-handler/unknown"
+      ] (_: [ "librewolf.desktop" ]));
   };
 }

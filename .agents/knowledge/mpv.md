@@ -3,8 +3,7 @@
 ## O que é
 
 Player de vídeo usado como instância única no sistema, com interpolação de
-frames via VapourSynth/RIFE, tradução ao vivo de legendas e integração com
-um pipeline de streaming (Crunchyroll via OBS).
+frames via VapourSynth/RIFE e tradução ao vivo de legendas.
 
 ## Por que existe
 
@@ -42,16 +41,8 @@ workspace 8 (auxiliar), separado do fluxo principal de trabalho.
   "limpo" quando o arquivo chega via Stremio/M3U) e abre via `xdg-open`.
 - `config/hypr/hyprland/windowrules/workspace-8-auxiliar.lua` — janelas
   `class=mpv` vão para o workspace 8.
-- `config/hypr/hyprland/windowrules/workspace-7-stash.lua` — Firefox vai
-  para o workspace 7 (fonte de captura do OBS no pipeline de streaming
-  abaixo).
 - `config/hypr/hyprland/general.lua` — `misc.swallow_regex` inclui `mpv`
   (terminal que abre o mpv via CLI é "engolido").
-- `modules/nixos/crunchyroll-mpv.nix` — comando `media-stream`: cria sink
-  nula `Crunchyroll-Sink` (reusa se já existir), sobe OBS em background,
-  espera o WebSocket (porta 4455), inicia gravação via `obs-cmd`, e abre
-  `mpv udp://127.0.0.1:1234` — herda os perfis de interpolação do
-  `mpv.conf` normalmente.
 
 ## Depende de / Relacionado a
 

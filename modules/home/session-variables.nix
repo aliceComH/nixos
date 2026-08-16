@@ -26,5 +26,6 @@
     # -w: espera fechar o ficheiro (git commit, crontab, sudoedit, …)
     EDITOR = "cursor -w";
     VISUAL = "cursor -w";
+    BROWSER = "librewolf";
   };
 }

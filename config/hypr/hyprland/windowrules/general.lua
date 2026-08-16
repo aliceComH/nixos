@@ -19,7 +19,6 @@ hl.window_rule({ match = { class = "^(org.pulseaudio.pavucontrol)$" }, opacity =
 hl.window_rule({ match = { class = "^(qt5ct)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(qt6ct)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(org.kde.ark)$" }, opacity = "0.90 0.90" })
-hl.window_rule({ match = { class = "^(com.obsproject.Studio)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(Alacritty)$" }, opacity = "0.90 0.90" })
 hl.window_rule({ match = { class = "^(kitty)$" }, opacity = "0.70 0.70" })
 hl.window_rule({ match = { class = "^(thunar)$" }, opacity = "0.70 0.70" })

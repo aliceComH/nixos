@@ -94,9 +94,6 @@
     papirus-icon-theme
     font-awesome
     vesktop
-    firefox
-    obs-studio
-    obs-cmd
     code-cursor
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])

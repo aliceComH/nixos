@@ -16,7 +16,7 @@ hl.on("hyprland.start", function()
     -- hl.exec_cmd("gnome-keyring-daemon --start --components=secrets")
     -- hl.exec_cmd("/usr/lib/polkit-kde-authentication-agent-1 || /usr/libexec/polkit-kde-authentication-agent-1  || /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 || /usr/libexec/polkit-gnome-authentication-agent-1")
     hl.exec_cmd("dbus-update-activation-environment --all")
-    hl.exec_cmd("sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE && systemctl --user start nixos-fake-graphical-session.target")
+    hl.exec_cmd("sleep 1 && dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP HYPRLAND_INSTANCE_SIGNATURE PATH BROWSER && systemctl --user start nixos-fake-graphical-session.target")
     -- hyprpm reload removido: sem plugins evita o aviso "Outdated headers" no arranque.
     -- movido para systemd --user (Home Manager): hypr-gaming-monitor.service
     -- movido para systemd --user (Home Manager): hypr-opentabletdriver-autostart.service

@@ -8,7 +8,7 @@
     ../../modules/home/audio-mirror.nix
     ../../modules/home/hypr-user-services.nix
     ../../modules/home/xdg-config.nix
-    ../../modules/home/librewolf.nix
+    ../../modules/home/firefox.nix
     ../../modules/home/xdg-data.nix
     ../../modules/home/flatpak-user.nix
     ../../modules/home/btop.nix

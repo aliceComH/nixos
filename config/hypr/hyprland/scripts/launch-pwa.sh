@@ -90,7 +90,7 @@ PY
 
 ensure_runtime() {
   local runtime="${XDG_DATA_HOME:-$HOME/.local/share}/firefoxpwa/runtime"
-  if [[ ! -e "$runtime/firefox" && ! -e "$runtime/librewolf" ]]; then
+  if [[ ! -e "$runtime/firefox" ]]; then
     firefoxpwa runtime install || true
   fi
 }

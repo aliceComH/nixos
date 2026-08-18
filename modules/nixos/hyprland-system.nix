@@ -12,6 +12,7 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "0";
+    BROWSER = "firefox";
   };
 
   # Mantemos os portais explícitos para evitar regressões de screen share.
@@ -24,15 +25,28 @@
   };
 
   xdg.portal.config = {
-    common.default = [
-      "hyprland"
-      "gtk"
-    ];
-    hyprland.default = [
-      "hyprland"
-      "gtk"
-    ];
+    common = {
+      default = [
+        "hyprland"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+    };
+    hyprland = {
+      default = [
+        "hyprland"
+        "gtk"
+      ];
+      "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
+      "org.freedesktop.impl.portal.OpenURI" = [ "gtk" ];
+    };
   };
+
+  # PATH mínimo do portal não inclui /etc/profiles/.../bin; firefox.desktop
+  # relativo falha e o fallback do Electron é o Chrome (Exec absoluto).
+  systemd.user.services.xdg-desktop-portal.environment.PATH =
+    "/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin:/run/wrappers/bin";
 
   # ── Fix: screen share do Vesktop/Discord "morrendo" até reiniciar a máquina ──
   # xdg-desktop-portal e xdg-desktop-portal-hyprland ficam rodando por dias

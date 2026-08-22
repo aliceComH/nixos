@@ -1,4 +1,4 @@
-{ pkgs, pkgs-hyprland, ... }:
+{ pkgs, pkgs-hyprland, lib, ... }:
 
 {
 
@@ -12,7 +12,6 @@
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "0";
-    BROWSER = "firefox";
   };
 
   # Mantemos os portais explícitos para evitar regressões de screen share.
@@ -43,10 +42,13 @@
     };
   };
 
-  # PATH mínimo do portal não inclui /etc/profiles/.../bin; firefox.desktop
-  # relativo falha e o fallback do Electron é o Chrome (Exec absoluto).
+  # PATH mínimo do portal não inclui /etc/profiles/.../bin; .desktop com
+  # Exec relativo (ex.: apps do Home Manager) falha ao abrir links externos.
+  # mkForce: o módulo xdg-desktop-portal do nixpkgs também define este PATH
+  # (via a opção `path` do serviço) com prioridade normal; sem mkForce as
+  # duas definições colidem em "conflicting definition values".
   systemd.user.services.xdg-desktop-portal.environment.PATH =
-    "/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin:/run/wrappers/bin";
+    lib.mkForce "/etc/profiles/per-user/%u/bin:/run/current-system/sw/bin:/run/wrappers/bin";
 
   # ── Fix: screen share do Vesktop/Discord "morrendo" até reiniciar a máquina ──
   # xdg-desktop-portal e xdg-desktop-portal-hyprland ficam rodando por dias

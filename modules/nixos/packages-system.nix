@@ -20,7 +20,6 @@
     fzf
     fastfetch
     wev
-    google-chrome
     wootility
     v4l-utils
     nvme-cli

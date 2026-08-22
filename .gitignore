@@ -7,11 +7,9 @@
 *~
 
 # Dados sensíveis que não devem ir ao GitHub
-config/google-chrome/
 config/discord/
 config/Code/
 config/Cursor/
-config/opera-gx/
 
 # Arquivos de sessão
 config/session/

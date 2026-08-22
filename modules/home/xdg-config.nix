@@ -60,7 +60,6 @@ in
         "application/x-shellscript"
         "text/x-c"
         "text/x-c++"
-        # Texto/código sem default (não roubar HTML/XML do Chrome)
         "text/markdown"
         "text/x-python"
         "text/x-script.python"
@@ -221,25 +220,6 @@ in
         "image/jxl"
         "image/webp"
         "image/qoi"
-      ] (_: [ "imv-dir.desktop" ]))
-      // (lib.genAttrs [
-        "text/html"
-        "application/xhtml+xml"
-        "application/xml"
-        "text/xml"
-        "x-scheme-handler/http"
-        "x-scheme-handler/https"
-        "x-scheme-handler/about"
-        "x-scheme-handler/unknown"
-      ] (_: [ "firefox.desktop" ]));
-    associations.removed = lib.genAttrs [
-      "text/html"
-      "application/xhtml+xml"
-      "x-scheme-handler/http"
-      "x-scheme-handler/https"
-    ] (_: [
-      "google-chrome.desktop"
-      "com.google.Chrome.desktop"
-    ]);
+      ] (_: [ "imv-dir.desktop" ]));
   };
 }

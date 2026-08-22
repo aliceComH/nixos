@@ -124,26 +124,6 @@
       ];
       "pulse.min.quantum" = "32/48000";
     };
-
-    # Firefox (cubeb) escreve o volume HTML5 na sink-input.
-    # YouTube já normaliza no player; isto impede o mixer de oscilar 93–99%.
-    # Não mexe em quantum/rate (ver .agents/rules/pipewire-quantum.md).
-    extraConfig.pipewire-pulse."20-firefox-lock-volume" = {
-      "pulse.rules" = [
-        {
-          matches = [
-            { "application.process.binary" = "firefox"; }
-            { "application.name" = "Firefox"; }
-          ];
-          actions = {
-            quirks = [ "block-sink-volume" ];
-            update-props = {
-              "channelmix.lock-volumes" = true;
-            };
-          };
-        }
-      ];
-    };
   };
   services.pipewire.wireplumber.enable = true;
 

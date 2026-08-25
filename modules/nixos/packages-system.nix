@@ -20,6 +20,7 @@
     fzf
     fastfetch
     wev
+    google-chrome
     wootility
     v4l-utils
     nvme-cli
@@ -93,6 +94,7 @@
     papirus-icon-theme
     font-awesome
     vesktop
+    teamspeak6-client
     code-cursor
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])

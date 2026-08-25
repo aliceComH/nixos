@@ -11,7 +11,7 @@ hl.monitor({
   mode = "3920x2160@120",
   position = "25600x0",
   scale = 1.5,
-  vrr = 1,
+  vrr = 0,
 })
 
 for _, ws in ipairs({"1", "2", "3", "4", "5", "6", "7", "9", "10"}) do

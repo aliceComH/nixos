@@ -25,3 +25,7 @@ home/.bash_history
 result
 result-*
 .direnv/
+
+# p2p-rooms secrets
+p2p-rooms/.env
+p2p-rooms/node_modules/

@@ -415,3 +415,9 @@ Configurados em [hosts/alice-nixos/configuration.nix](hosts/alice-nixos/configur
 ## Kernel
 
 O módulo [modules/nixos/kernel-zen.nix](modules/nixos/kernel-zen.nix) usa o kernel `linuxPackages_zen` por padrão, com otimizações para desktop e gaming.
+
+Além do pacote zen, o módulo liga `threadirqs`, `nohz=on` e `rcu_nocbs=all` — otimizações de baixa latência em interrupções que replicam o que tínhamos testado em `kernel-7-rt-oriented.nix` (commit `6ab4fb1a`), mas sem recompilar o kernel (esse commit compilava um `linux_7_0` customizado; o benchmark documentado em `KERNEL_BENCHMARK_RT_ORIENTED.md`, removido no commit `c8ef01b3`, mostrou que o zen pré-compilado ganhava em frametime/jitter, então não vale recompilar de novo). As otimizações de rede (BBR, CAKE, buffers, EEE off) já vivem separadas em [modules/nixos/network-tuning.nix](modules/nixos/network-tuning.nix) e continuam sempre ativas.
+
+Essas três flags ficam atrás da opção `local.kernelLowLatencyIrqTuning.enable` (default `true`). Se alguma delas causar instabilidade no arranque, escolhe no menu do boot loader a entrada **"NixOS (no-irq-tuning)"** — mesmo kernel, sem essas otimizações.
+
+O padrão é o zen **7.2.2** (`v7.2.2-zen1` do [zen-kernel](https://github.com/zen-kernel/zen-kernel/tags)), compilado localmente porque o `linuxPackages_zen` do nixpkgs ainda está em 7.1.10. Fallback no boot: **"NixOS (mainline-72)"** — `linuxPackages_latest` (mainline 7.2.2, cache binário). Quando o nixpkgs empacotar o zen 7.2, o override em [modules/nixos/kernel-zen.nix](modules/nixos/kernel-zen.nix) pode voltar a ser um simples `pkgs.linuxPackages_zen`.

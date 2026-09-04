@@ -19,6 +19,13 @@ let
   '';
 in
 {
+  # IPv6 tem de ficar activo no kernel. Unity/Mono (MTGA via Proton) cria
+  # sockets dual-stack no construtor; com `ipv6.disable=1` o socket() falha
+  # com EAFNOSUPPORT e o cliente mostra "Connection Lost" / "Error looking
+  # up error string" (ValveSoftware/Proton#8132). Não voltar a passar esse
+  # parâmetro em boot.kernelParams.
+  networking.enableIPv6 = true;
+
   boot.kernelModules = [
     "tcp_bbr"
     "sch_cake"

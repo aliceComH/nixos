@@ -1,0 +1,62 @@
+From: krombo-kode
+Subject: hidpp20: INDEX_OFFSET quirk for G502 Hero (libratbag #1606 / #1799)
+
+The G502 reports a 1-indexed active onboard profile. libratbag 0.18 stores
+that value as-is (0-based), so every ratbagd probe after a USB replug looks
+one slot ahead. hidpp20drv_set_current_profile then *enables* that next
+disabled slot in flash — Piper shows a brand-new default profile.
+
+Upstream merged this as #1799 (after v0.18). Adapted to v0.18 context
+(no G502X_PLUS quirk yet).
+
+--- a/data/devices/logitech-g502-hero.device
++++ b/data/devices/logitech-g502-hero.device
+@@ -3,3 +3,6 @@ Name=Logitech G502 Hero
+ DeviceMatch=usb:046d:c08b
+ Driver=hidpp20
+ DeviceType=mouse
++
++[Driver/hidpp20]
++Quirk=INDEX_OFFSET
+--- a/src/hidpp20.c
++++ b/src/hidpp20.c
+@@ -110,6 +110,7 @@ hidpp20_get_quirk_string(enum hidpp20_quirk quirk)
+ 	CASE_RETURN_STRING(HIDPP20_QUIRK_NONE);
+ 	CASE_RETURN_STRING(HIDPP20_QUIRK_G305);
+ 	CASE_RETURN_STRING(HIDPP20_QUIRK_G602);
++	CASE_RETURN_STRING(HIDPP20_QUIRK_INDEX_OFFSET);
+ 	}
+ 
+ 	abort();
+@@ -2272,6 +2273,10 @@ hidpp20_onboard_profiles_allocate(struct hidpp20_device *device,
+ 
+ 	active_profile_index = rc;
+ 
++	/* Apply quirk for devices that return 1-indexed profile */
++	if (device->quirk == HIDPP20_QUIRK_INDEX_OFFSET && active_profile_index > 0)
++		active_profile_index--;
++
+ 	profiles = zalloc(sizeof(struct hidpp20_profiles));
+ 	profiles->profiles = zalloc(info.profile_count * sizeof(struct hidpp20_profile));
+ 	profiles->sector_size = info.sector_size;
+--- a/src/hidpp20.h
++++ b/src/hidpp20.h
+@@ -55,6 +55,7 @@ enum hidpp20_quirk {
+ 	HIDPP20_QUIRK_NONE,
+ 	HIDPP20_QUIRK_G305,
+ 	HIDPP20_QUIRK_G602,
++	HIDPP20_QUIRK_INDEX_OFFSET, /* Device returns 1-indexed profile, decrement by 1. */
+ };
+ 
+ struct hidpp20_device {
+--- a/src/libratbag-data.c
++++ b/src/libratbag-data.c
+@@ -224,6 +224,8 @@ init_data_hidpp20(struct ratbag *ratbag,
+ 			data->hidpp20.quirk = HIDPP20_QUIRK_G305;
+ 		else if(streq(str, "G602"))
+ 			data->hidpp20.quirk = HIDPP20_QUIRK_G602;
++		else if(streq(str, "INDEX_OFFSET"))
++			data->hidpp20.quirk = HIDPP20_QUIRK_INDEX_OFFSET;
+ 	}
+ }
+ 

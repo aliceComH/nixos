@@ -1,6 +1,48 @@
 # Pacotes de sistema (PATH global). Flatpaks: modules/home/flatpak-user.nix
 { pkgs, pkgs-osu, ... }:
 
+let
+  giTypelibPkgs = with pkgs; [
+    atk
+    gdk-pixbuf
+    glib
+    gobject-introspection
+    gsettings-desktop-schemas
+    gtk3
+    harfbuzz
+    pango
+  ];
+  pythonEnv = pkgs.python3.withPackages (ps: [ ps.pygobject3 ]);
+  # GI_TYPELIB_PATH na sessão do Hyprland não actualiza sem logout.
+  # wrapGApps mete os typelibs no wrapper do python.
+  pythonWithGi = pkgs.stdenv.mkDerivation {
+    pname = "python3-with-gi";
+    inherit (pkgs.python3) version;
+    nativeBuildInputs = [
+      pkgs.makeWrapper
+      pkgs.wrapGAppsHook3
+      pkgs.gobject-introspection
+    ];
+    buildInputs = giTypelibPkgs ++ [ pythonEnv ];
+    dontUnpack = true;
+    dontConfigure = true;
+    dontBuild = true;
+    dontWrapGApps = true;
+    installPhase = ''
+      mkdir -p $out/bin
+      for f in ${pythonEnv}/bin/*; do
+        ln -s "$f" "$out/bin/$(basename "$f")"
+      done
+      rm -f $out/bin/python $out/bin/python3
+      rm -f $out/bin/python3.*
+    '';
+    postFixup = ''
+      makeWrapper ${pythonEnv}/bin/python3 $out/bin/python3 \
+        "''${gappsWrapperArgs[@]}"
+      ln -s python3 $out/bin/python
+    '';
+  };
+in
 {
   environment.systemPackages =
     (with pkgs; [
@@ -80,7 +122,7 @@
         done
       '';
     })
-    python3
+    pythonWithGi
     go
     rustc
     cargo

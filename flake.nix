@@ -15,6 +15,12 @@
     # Atualizar apenas o osu: nix flake update nixpkgs-osu
     nixpkgs-osu.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    # Minecraft Bedrock (Windows/GDK) via WineGDK — NÃO actualizar o hyprland.
+    bedrock-on-linux = {
+      url = "github:Wyze3306/BedrockOnLinux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";

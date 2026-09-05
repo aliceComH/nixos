@@ -26,6 +26,7 @@
     ../../modules/nixos/llm/ollama.nix
     ../../modules/nixos/libretranslate.nix
     ../../modules/nixos/piper.nix
+    ../../modules/nixos/minecraft-bedrock.nix
   ];
 
   networking.hostName = "alice-nixos";

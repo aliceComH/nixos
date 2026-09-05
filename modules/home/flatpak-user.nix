@@ -18,6 +18,8 @@
       do
         flatpak install --user -y --noninteractive flathub "$app" || true
       done
+      # mcpelauncher era o caminho Android/Google Play — já não usamos.
+      flatpak uninstall --user -y io.mrarm.mcpelauncher >/dev/null 2>&1 || true
     )
   '';
 }

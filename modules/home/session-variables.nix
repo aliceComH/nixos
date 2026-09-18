@@ -24,7 +24,7 @@
     XCURSOR_SIZE = "32";
     NIXOS_OZONE_WL = "1";
     # -w: espera fechar o ficheiro (git commit, crontab, sudoedit, …)
-    EDITOR = "cursor -w";
-    VISUAL = "cursor -w";
+    EDITOR = "antigravity-ide -w";
+    VISUAL = "antigravity-ide -w";
   };
 }

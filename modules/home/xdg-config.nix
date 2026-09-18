@@ -25,9 +25,6 @@ in
     "kde-material-you-colors" = linkForce "config/kde-material-you-colors";
     "xdg-desktop-portal" = linkForce "config/xdg-desktop-portal";
     "mpv" = linkForce "config/mpv";
-    # Apenas settings + keybindings (resto de ~/.config/Cursor fica local: extensões, cache, etc.)
-    "Cursor/User/settings.json" = linkForce "config/cursor/User/settings.json";
-    "Cursor/User/keybindings.json" = linkForce "config/cursor/User/keybindings.json";
   };
 
   # 1. Cria o aplicativo fantasma no sistema
@@ -39,7 +36,7 @@ in
     mimeType = [ "audio/x-mpegurl" "application/vnd.apple.mpegurl" "audio/mpegurl" ];
   };
 
-  # Defaults de abertura: Cursor (texto), umpv (áudio/vídeo), imv-dir (imagens).
+  # Defaults de abertura: Antigravity IDE (texto), umpv (áudio/vídeo), imv-dir (imagens).
   xdg.mimeApps = {
     enable = true;
     defaultApplications =
@@ -77,7 +74,7 @@ in
         "text/x-rust"
         "text/x-ruby"
         "inode/x-empty"
-      ] (_: [ "cursor.desktop" ]))
+      ] (_: [ "antigravity-ide.desktop" ]))
       // (lib.genAttrs [
         "application/ogg"
         "application/x-ogg"

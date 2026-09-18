@@ -61,6 +61,26 @@ let
       echo "$sink"
     }
 
+    start_user_service() {
+      local unit="$1"
+      systemctl --user reset-failed "$unit" 2>/dev/null || true
+      systemctl --user start "$unit"
+    }
+
+    # PipeWire 1.6+ pw-loopback dropped --quantum and --latency RATE/QUANTUM.
+    # Quantum vai em PIPEWIRE_LATENCY; -l (se algum dia precisares) é milissegundos.
+    run_loopback() {
+      local name="$1" capture="$2" playback="$3"
+      echo "mirror-audio: capture=$capture.monitor -> playback=$playback"
+      exec env PIPEWIRE_LATENCY=64/48000 "$pwloop_bin" \
+        -n "$name" \
+        -C "$capture" \
+        -i stream.capture.sink=true \
+        -P "$playback" \
+        -c 2 \
+        -m '[ FL FR ]'
+    }
+
     run_internal_loopback() {
       local ka13_sink internal_sink
 
@@ -82,8 +102,7 @@ let
         exit 1
       fi
 
-      echo "mirror-audio: capture=$ka13_sink.monitor -> playback=$internal_sink"
-      exec "$pwloop_bin" -n ka13-internal-mirror -C "$ka13_sink" -i stream.capture.sink=true -P "$internal_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
+      run_loopback ka13-internal-mirror "$ka13_sink" "$internal_sink"
     }
 
     run_cloud3_loopback() {
@@ -107,8 +126,7 @@ let
         exit 1
       fi
 
-      echo "mirror-audio: capture=$ka13_sink.monitor -> playback=$cloud3_sink"
-      exec "$pwloop_bin" -n ka13-cloud3-mirror -C "$ka13_sink" -i stream.capture.sink=true -P "$cloud3_sink" -c 2 -m '[ FL FR ]' --latency 64/48000 --quantum 64
+      run_loopback ka13-cloud3-mirror "$ka13_sink" "$cloud3_sink"
     }
 
     reconcile_loopbacks() {
@@ -135,7 +153,7 @@ let
       if ! is_internal_toggle_enabled; then
         systemctl --user stop "$internal_service_name"
         if [ -n "$cloud3_sink" ]; then
-          systemctl --user start "$cloud3_service_name"
+          start_user_service "$cloud3_service_name"
           echo "mirror-audio: toggle Áudio interno está OFF -> Áudio interno OFF, Cloud3 ON"
         else
           systemctl --user stop "$cloud3_service_name"
@@ -145,7 +163,7 @@ let
       fi
 
       if [ -n "$internal_sink" ]; then
-        systemctl --user start "$internal_service_name"
+        start_user_service "$internal_service_name"
       else
         systemctl --user stop "$internal_service_name"
       fi
@@ -153,7 +171,7 @@ let
       # Cloud3 é independente do toggle/estado do Áudio interno:
       # sempre ON quando default=FIIO KA13 e Cloud3 está conectado.
       if [ -n "$cloud3_sink" ]; then
-        systemctl --user start "$cloud3_service_name"
+        start_user_service "$cloud3_service_name"
         if [ -n "$internal_sink" ]; then
           echo "mirror-audio: default=FIIO KA13 -> Cloud3 ON, Áudio interno ON (toggle)"
         else
@@ -200,16 +218,16 @@ let
       toggle)
         if is_internal_toggle_enabled; then
           set_internal_toggle_enabled 0
-          systemctl --user stop "$internal_service_name"
-          echo "mirror-audio: Áudio interno OFF (toggle)"
         else
           set_internal_toggle_enabled 1
-          reconcile_loopbacks
-          if systemctl --user --quiet is-active "$internal_service_name"; then
-            echo "mirror-audio: Áudio interno ON (toggle)"
-          else
-            echo "mirror-audio: Áudio interno ON solicitado (aguardando dispositivos compatíveis)"
-          fi
+        fi
+        reconcile_loopbacks
+        if is_internal_toggle_enabled && systemctl --user --quiet is-active "$internal_service_name"; then
+          echo "mirror-audio: Áudio interno ON (toggle)"
+        elif is_internal_toggle_enabled; then
+          echo "mirror-audio: Áudio interno ON solicitado (aguardando dispositivos compatíveis)"
+        else
+          echo "mirror-audio: Áudio interno OFF (toggle)"
         fi
         ;;
       reconcile)
@@ -234,12 +252,15 @@ in
       Description = "Mirror FIIO KA13 sink monitor to Internal Audio sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
+      StartLimitIntervalSec = 30;
+      StartLimitBurst = 8;
     };
     Service = {
       Type = "simple";
       ExecStart = "${mirrorScript}/bin/mirror-audio run-internal";
       Restart = "on-failure";
       RestartSec = 2;
+      Environment = [ "PIPEWIRE_LATENCY=64/48000" ];
     };
   };
 
@@ -248,12 +269,15 @@ in
       Description = "Mirror FIIO KA13 sink monitor to HyperX Cloud 3 Wireless sink";
       After = [ "pipewire.service" "wireplumber.service" ];
       Wants = [ "pipewire.service" "wireplumber.service" ];
+      StartLimitIntervalSec = 30;
+      StartLimitBurst = 8;
     };
     Service = {
       Type = "simple";
       ExecStart = "${mirrorScript}/bin/mirror-audio run-cloud3";
       Restart = "on-failure";
       RestartSec = 2;
+      Environment = [ "PIPEWIRE_LATENCY=64/48000" ];
     };
   };
 

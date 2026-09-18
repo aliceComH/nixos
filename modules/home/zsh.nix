@@ -66,8 +66,8 @@ in
     ];
 
     sessionVariables = {
-      EDITOR = "cursor -w";
-      VISUAL = "cursor -w";
+      EDITOR = "antigravity-ide -w";
+      VISUAL = "antigravity-ide -w";
     };
 
     initContent = lib.mkMerge [

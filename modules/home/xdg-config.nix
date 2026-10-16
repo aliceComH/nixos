@@ -36,11 +36,14 @@ in
     mimeType = [ "audio/x-mpegurl" "application/vnd.apple.mpegurl" "audio/mpegurl" ];
   };
 
-  # Defaults de abertura: Antigravity IDE (texto), umpv (áudio/vídeo), imv-dir (imagens).
+  # Defaults de abertura: Thunar (arquivos/pastas), Antigravity IDE (texto), umpv (áudio/vídeo), imv-dir (imagens).
   xdg.mimeApps = {
     enable = true;
     defaultApplications =
-      (lib.genAttrs [
+      {
+        "inode/directory" = [ "thunar.desktop" ];
+      }
+      // (lib.genAttrs [
         # Tipos que o vim.desktop / gvim.desktop declaram
         "text/english"
         "text/plain"

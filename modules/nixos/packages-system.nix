@@ -67,6 +67,7 @@ in
     v4l-utils
     nvme-cli
     pavucontrol
+    thunderbird
     gnome-calculator
     gnome-disk-utility
     file-roller

@@ -11,8 +11,8 @@
     libnotify
 
     # --- Pacotes do Google Antigravity ---
-    inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity
-    inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity-ide
-    inputs.antigravity-nix.packages.${pkgs.system}.google-antigravity-cli
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-ide
+    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-cli
   ];
 }

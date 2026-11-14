@@ -6,8 +6,9 @@
 
     antigravity-nix.url = "github:jacopone/antigravity-nix";
 
-    # nixpkgs travado no commit exato que tem o Hyprland 0.55
-    # Para atualizar o Hyprland no futuro, precisamos mudar a hash aqui.
+    # nixpkgs travado no commit exato que tem o Hyprland 0.55.
+    # A rev fixa na URL faz com que `nix flake update` NUNCA mude este input.
+    # Para atualizar o Hyprland no futuro, troque o hash aqui manualmente.
     nixpkgs-hyprland.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
     nixpkgs-hyprland.flake = false;
 
@@ -21,6 +22,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Claude Desktop (comunidade). Atualizar só ele: nix flake update claude-desktop
+    claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,6 +37,7 @@
       system = "x86_64-linux";
       # Checkout deve viver em /etc/nixos para symlinks mkOutOfStoreSymlink apontarem para ficheiros editáveis.
       repoRoot = "/etc/nixos";
+      # Hyprland vem SEMPRE daqui (commit fixo). Use pkgs-hyprland.hyprland nos módulos.
       pkgs-hyprland = import nixpkgs-hyprland { inherit system; config.allowUnfree = true; };
       pkgs-osu = import nixpkgs-osu { inherit system; config.allowUnfree = true; };
     in
@@ -40,7 +45,7 @@
       nixosConfigurations.alice-nixos = nixpkgs.lib.nixosSystem {
         # Passa as variáveis para o nível do sistema NixOS
         specialArgs = { inherit repoRoot pkgs-hyprland pkgs-osu inputs; };
-        
+
         modules = [
           home-manager.nixosModules.home-manager
           {

@@ -1,5 +1,5 @@
 # Pacotes de sistema (PATH global). Flatpaks: modules/home/flatpak-user.nix
-{ pkgs, pkgs-osu, ... }:
+{ pkgs, pkgs-osu, inputs, ... }:
 
 let
   giTypelibPkgs = with pkgs; [
@@ -138,6 +138,7 @@ in
     font-awesome
     vesktop
     teamspeak6-client
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])
     ++ [ pkgs.qt6Packages.qt6ct ];

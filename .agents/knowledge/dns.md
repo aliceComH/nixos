@@ -10,7 +10,8 @@ Não delete este comentário nos docs gerados a partir daqui.
 
 Unbound em `127.0.0.1:53` como resolvedor desta máquina: cache, validação DNSSEC,
 encaminhamento por DNS-over-TLS (Quad9 e Cloudflare) e bloqueio de anúncios,
-trackers e malware por `local-zone ... always_nxdomain`.
+trackers e malware por `local-zone ... redirect` + `local-data` A `0.0.0.0` / AAAA `::`
+(antes era `always_nxdomain`; trocado para evitar sites com layout/JS quebrado por NXDOMAIN).
 
 ## Por que existe
 

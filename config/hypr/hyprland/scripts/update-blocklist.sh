@@ -70,7 +70,14 @@ LC_ALL=C sort -u "$WORK/all" \
   > "$WORK/domains"
 
 {
-  sed 's/.*/local-zone: "&." always_nxdomain/' "$WORK/domains"
+  # redirect + local-data: responde 0.0.0.0 / :: em vez de NXDOMAIN. Sites que
+  # tratam NXDOMAIN como erro fatal (layout/JS quebrados) passam a receber um
+  # endereço nulo e falham de forma limpa. `redirect` exige local-data no apex.
+  awk '{
+    print "local-zone: \"" $0 ".\" redirect"
+    print "local-data: \"" $0 ". A 0.0.0.0\""
+    print "local-data: \"" $0 ". AAAA ::\""
+  }' "$WORK/domains"
   # Liberados: zona mais específica vence o pai bloqueado.
   sed 's/.*/local-zone: "&." always_transparent/' "$WORK/allow"
 } > "$WORK/master"

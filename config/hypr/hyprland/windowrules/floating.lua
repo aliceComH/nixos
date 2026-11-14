@@ -2,6 +2,10 @@
 
 --  Floating
 
+
+hl.window_rule({ match = { class = "^(kitty)$" }, float = true })
+hl.window_rule({ match = { class = "^(kitty)$" }, size = {"837", "747"} })
+hl.window_rule({ match = { class = "^(kitty)$" }, center = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, float = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, size = {"1067", "651"} })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, center = true })

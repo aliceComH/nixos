@@ -138,7 +138,7 @@ in
     font-awesome
     vesktop
     teamspeak6-client
-    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-fhs
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])
     ++ [ pkgs.qt6Packages.qt6ct ];

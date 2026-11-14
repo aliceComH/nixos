@@ -2,7 +2,19 @@
   description = "nixHyprland — NixOS + Home Manager + Hyprland (alice-nixos)";
 
   inputs = {
+    # ── Grupos de atualização (Central de Updates: tools/updates/) ──────────
+    # Cada grupo tem os seus inputs e atualiza sozinho. Ver .agents/knowledge/updates.md.
+    #   Sistema (drivers + ferramentas): nixpkgs, home-manager
+    #   Programas: nixpkgs-apps, antigravity-nix, claude-desktop, bedrock-on-linux
+    #   osu!: nixpkgs-osu
+    #   Hyprland: nixpkgs-hyprland (rev fixa)
+
+    # Base do sistema: kernel, drivers (Mesa, firmware), PipeWire, systemd e ferramentas.
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
+    # nixpkgs independente para os programas (modules/nixos/programs.nix).
+    # Atualizar apenas os programas: nix flake update nixpkgs-apps
+    nixpkgs-apps.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     antigravity-nix.url = "github:jacopone/antigravity-nix";
 
@@ -19,7 +31,7 @@
     # Minecraft Bedrock (Windows/GDK) via WineGDK — NÃO actualizar o hyprland.
     bedrock-on-linux = {
       url = "github:Wyze3306/BedrockOnLinux";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-apps";
     };
 
     # Claude Desktop (comunidade, reempacota o .deb oficial). Atualizar só ele: nix flake update claude-desktop
@@ -32,7 +44,7 @@
   };
 
   # A tag @inputs captura tudo o que foi definido acima e empacota numa variável
-  outputs = { self, nixpkgs, nixpkgs-hyprland, nixpkgs-osu, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-apps, nixpkgs-hyprland, nixpkgs-osu, home-manager, ... }@inputs:
     let
       system = "x86_64-linux";
       # Checkout deve viver em /etc/nixos para symlinks mkOutOfStoreSymlink apontarem para ficheiros editáveis.
@@ -40,11 +52,13 @@
       # Hyprland vem SEMPRE daqui (commit fixo). Use pkgs-hyprland.hyprland nos módulos.
       pkgs-hyprland = import nixpkgs-hyprland { inherit system; config.allowUnfree = true; };
       pkgs-osu = import nixpkgs-osu { inherit system; config.allowUnfree = true; };
+      # Programas vêm SEMPRE daqui. Sem overlays: os de nixpkgs.overlays são só do pkgs base.
+      pkgs-apps = import nixpkgs-apps { inherit system; config.allowUnfree = true; };
     in
     {
       nixosConfigurations.alice-nixos = nixpkgs.lib.nixosSystem {
         # Passa as variáveis para o nível do sistema NixOS
-        specialArgs = { inherit repoRoot pkgs-hyprland pkgs-osu inputs; };
+        specialArgs = { inherit repoRoot pkgs-hyprland pkgs-osu pkgs-apps inputs; };
 
         modules = [
           home-manager.nixosModules.home-manager

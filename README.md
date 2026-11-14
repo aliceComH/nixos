@@ -235,8 +235,9 @@ Implementação incremental recomendada:
 
 ### Adicionar um programa
 
-1. Utilizador: edita [modules/home/packages-home.nix](modules/home/packages-home.nix).
-2. Sistema: edita [modules/nixos/packages-system.nix](modules/nixos/packages-system.nix).
+1. Programa (app): edita [modules/nixos/programs.nix](modules/nixos/programs.nix) — usa `pkgs-apps`.
+2. Ferramenta do sistema: edita [modules/nixos/packages-system.nix](modules/nixos/packages-system.nix)
+   (ou [modules/home/packages-home.nix](modules/home/packages-home.nix) para a sessão do utilizador).
 3. Procura o atributo exacto em [search.nixos.org](https://search.nixos.org/packages).
 4. Aplica:
 

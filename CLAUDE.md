@@ -16,12 +16,25 @@ Responda sempre em português do Brasil.
 ## Regras de operação
 
 - **Rebuild:** o comando é `sudo nixos-rebuild switch --flake /etc/nixos#alice-nixos`.
-  Nunca rode sem a Alice pedir; informe o comando e deixe ela decidir.
+  Pode rodar sozinha, sem pedir, sempre que precisar aplicar ou testar uma mudança
+  (inclusive em loop de testar e corrigir). Avise depois o que foi aplicado.
 - **Commits:** só commite quando a Alice pedir.
 - **Knowledge:** antes de mexer em qualquer subsistema, consulte
   `.agents/knowledge/_index.md` e leia o doc relacionado, se existir.
 - **`.agents/`:** é a fonte única das regras e do knowledge. Não apague nem mova;
   edite as regras lá, não aqui.
+
+## Grupos de atualização
+
+O sistema atualiza em quatro grupos independentes, cada um com os seus inputs do
+flake: Hyprland, osu!, Sistema (drivers + ferramentas) e Programas. Detalhes em
+`.agents/knowledge/updates.md`.
+
+- Programa novo vai em `modules/nixos/programs.nix` com `pkgs-apps`; ferramenta do
+  sistema vai em `modules/nixos/packages-system.nix` com `pkgs`.
+- Nunca rode `nix flake update` sem nomear os inputs: sem argumentos ele atualiza
+  todos os grupos de uma vez.
+- A Central de Updates fica em `tools/updates/updates.py`.
 
 ## Regras importadas
 

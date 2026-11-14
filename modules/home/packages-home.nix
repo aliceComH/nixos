@@ -1,4 +1,6 @@
-{ pkgs, inputs, ... }:
+# Ferramentas de sessão do usuário (pkgs base — grupo "Sistema").
+# Programas (apps) ficam em modules/nixos/programs.nix.
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -9,10 +11,5 @@
     slurp
     wf-recorder
     libnotify
-
-    # --- Pacotes do Google Antigravity ---
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-ide
-    inputs.antigravity-nix.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity-cli
   ];
 }

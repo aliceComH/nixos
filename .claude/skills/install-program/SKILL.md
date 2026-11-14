@@ -17,7 +17,8 @@ Siga os passos NA ORDEM. Use SEMPRE a ferramenta `AskUserQuestion` para as pergu
 
 `AskUserQuestion` com opções:
 - "(Recomendado, se o programa tiver config própria) Módulo separado"
-- "Apenas adicionar em packages-system.nix"
+- "Apenas adicionar em programs.nix (programa/app; atualiza com o grupo Programas)"
+- "Apenas adicionar em packages-system.nix (ferramenta do sistema; atualiza com kernel/drivers)"
 - "Apenas adicionar em packages-home.nix (Home Manager)"
 
 Se Alice não souber, recomende módulo separado quando houver serviço, opções
@@ -27,11 +28,15 @@ Se Alice não souber, recomende módulo separado quando houver serviço, opçõe
 - Criar `modules/nixos/<programa>.nix` (ou `modules/home/` se for Home Manager).
 - Registrar em `imports` de `hosts/alice-nixos/configuration.nix` (ou no equivalente home).
 - Preferir `programs.<x>.enable = true` quando existir; senão `environment.systemPackages`.
+- Se for um programa/app, usar `pkgs-apps` (e `programs.<x>.package = pkgs-apps.<x>`) e
+  declarar `local.updateGroups.programas = [ ... ]` para aparecer na Central de Updates.
 - Idempotência: se o módulo/import/pacote já existir, NÃO duplicar; avise e siga.
 
 ### Se lista de pacotes
-- Adicionar em `modules/nixos/packages-system.nix` (ou `modules/home/packages-home.nix`),
-  em ordem coerente com os vizinhos; não duplicar se já presente.
+- Programa/app: adicionar em `modules/nixos/programs.nix`, na lista `apps`, usando
+  `pkgs-apps` (nunca `pkgs`). Ferramenta do sistema: `modules/nixos/packages-system.nix`
+  (ou `modules/home/packages-home.nix`). Ver `.agents/knowledge/updates.md`.
+- Em ordem coerente com os vizinhos; não duplicar se já presente.
 
 ## 2. Pergunta: keybind
 
@@ -66,8 +71,8 @@ Hyprland Lua, ex.: `ALT + T`.
 ## 3. Finalização
 
 - Validar com `grep -c` que a bind apareceu em N = (submaps − 2) + 1 lugares.
-- Não rodar `nixos-rebuild` sem pedir; informar o comando:
-  `sudo nixos-rebuild switch --flake /etc/nixos#alice-nixos` e `hyprctl reload`.
+- Aplicar com `sudo nixos-rebuild switch --flake /etc/nixos#alice-nixos` (pode rodar
+  sem pedir) e depois `hyprctl reload`.
 - Se a mudança atravessou vários arquivos de um subsistema, seguir
   `.agents/rules/knowledge-docs.md` (criar/atualizar doc em `.agents/knowledge/`).
 - Respeitar `.agents/rules/pipewire-quantum.md` se o programa mexer em áudio.

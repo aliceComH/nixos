@@ -18,6 +18,9 @@ let
   bol = inputs.bedrock-on-linux.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
+  # Pertence ao grupo "Programas" da Central de Updates.
+  local.updateGroups.programas = [ bol ];
+
   environment.systemPackages = [
     (pkgs.symlinkJoin {
       name = "bedrock-on-linux";

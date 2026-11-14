@@ -12,9 +12,11 @@ uma vez.
 
 | Doc | Resumo | Arquivos-chave |
 |---|---|---|
-| [mpv](mpv.md) | Player de vídeo com interpolação de frames e tradução ao vivo de legendas | `modules/nixos/packages-system.nix`, `config/mpv/` |
+| [mpv](mpv.md) | Player de vídeo com interpolação de frames e tradução ao vivo de legendas | `modules/nixos/programs.nix`, `config/mpv/` |
 | [screen-sharing](screen-sharing.md) | Portais Wayland (hyprland/gtk) + PipeWire para screen share; fix do bug "morre até reiniciar a máquina" | `modules/nixos/hyprland-system.nix`, `config/xdg-desktop-portal/hyprland-portals.conf` |
 | [minecraft-bedrock](minecraft-bedrock.md) | Bedrock Store via WineGDK (BedrockOnLinux); vsync/XWayland e render distance | `modules/nixos/minecraft-bedrock.nix`, `config/hypr/hyprland/windowrules/workspace-5-gaming.lua` |
+
+| [updates](updates.md) | Grupos de atualização independentes (Hyprland, osu!, Sistema, Programas) e a Central de Updates | `flake.nix`, `modules/nixos/programs.nix`, `modules/nixos/update-groups.nix`, `tools/updates/` |
 
 ## Grafo de relações
 
@@ -29,11 +31,14 @@ graph LR
     screenSharing["screen-sharing"]
     pipewire["PipeWire/WirePlumber (sem doc próprio)"]
     bedrock["minecraft-bedrock"]
+    updates["updates"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv
     screenSharing -->|"ciclo de vida do socket"| pipewire
     bedrock -.->|"Hyprland tearing/fullscreen"| screenSharing
+    updates -->|"build do mpv em programs.nix"| mpv
+    updates -.->|"input segue nixpkgs-apps"| bedrock
 ```
 
 *Nota:* `LibreTranslate`, `Stremio` e `PipeWire/WirePlumber` ainda não têm

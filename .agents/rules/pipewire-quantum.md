@@ -47,7 +47,7 @@ Qualquer mudança em áudio deve respeitar esta regra, especialmente:
 - `modules/nixos/services.nix`
 - `modules/nixos/voice-normalizer.nix`
 - `modules/home/audio-mirror.nix` (loopbacks já usam `--quantum 64`)
-- `modules/nixos/packages-system.nix` (wrapper osu! / PIPEWIRE_ALSA)
+- `modules/nixos/osu.nix` (wrapper osu! / PIPEWIRE_ALSA)
 
 ## Checklist antes de commitar mudanças de áudio
 

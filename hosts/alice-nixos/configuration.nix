@@ -14,7 +14,10 @@
     ../../modules/nixos/amd-gpu.nix
     ../../modules/nixos/lact.nix
     ../../modules/nixos/hyprland-system.nix
+    ../../modules/nixos/update-groups.nix
     ../../modules/nixos/packages-system.nix
+    ../../modules/nixos/programs.nix
+    ../../modules/nixos/osu.nix
     ../../modules/nixos/wooting-udev.nix
     ../../modules/nixos/logitech-solaar.nix
     ../../modules/nixos/services.nix

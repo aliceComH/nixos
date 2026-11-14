@@ -9,6 +9,12 @@
     portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
   };
 
+  # Lista exibida na Central de Updates (tools/updates/updates.py).
+  local.updateGroups.hyprland = [
+    pkgs-hyprland.hyprland
+    pkgs-hyprland.xdg-desktop-portal-hyprland
+  ];
+
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     WLR_NO_HARDWARE_CURSORS = "0";

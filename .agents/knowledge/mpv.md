@@ -14,7 +14,7 @@ workspace 8 (auxiliar), separado do fluxo principal de trabalho.
 
 ## Arquivos envolvidos
 
-- `modules/nixos/packages-system.nix` — build do pacote: wrapper
+- `modules/nixos/programs.nix` — build do pacote (com `pkgs-apps`): wrapper
   `mpv-single-instance` mata qualquer instância anterior via `pkill` antes
   de abrir uma nova (`--run 'for p in $(pgrep -x mpv)...'`) e injeta
   LuaSocket no `LUA_PATH`/`LUA_CPATH` (necessário pelo `translate-sub.lua`).

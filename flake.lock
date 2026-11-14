@@ -22,7 +22,7 @@
     "bedrock-on-linux": {
       "inputs": {
         "nixpkgs": [
-          "nixpkgs"
+          "nixpkgs-apps"
         ]
       },
       "locked": {
@@ -130,6 +130,22 @@
         "type": "github"
       }
     },
+    "nixpkgs-apps": {
+      "locked": {
+        "lastModified": 1794386569,
+        "narHash": "sha256-x9sADJvoVG0L6RejZB+/BB4YiGZFBZrfTlhF4uBq1tQ=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "d4f25a3e562008648d45bcf2d70bcc7422cad84e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs-hyprland": {
       "flake": false,
       "locked": {
@@ -217,6 +233,7 @@
         "claude-desktop": "claude-desktop",
         "home-manager": "home-manager",
         "nixpkgs": "nixpkgs_3",
+        "nixpkgs-apps": "nixpkgs-apps",
         "nixpkgs-hyprland": "nixpkgs-hyprland",
         "nixpkgs-osu": "nixpkgs-osu"
       }

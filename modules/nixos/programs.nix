@@ -42,6 +42,7 @@ let
       thunderbird
       vesktop
       vscodium # editor: árvore de arquivos + preview de Markdown (ALT + SHIFT + C)
+      obsidian # notas / vault em ~/vault (ALT + O)
       imv
       gnome-calculator
       gnome-disk-utility

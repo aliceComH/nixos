@@ -17,6 +17,7 @@ uma vez.
 | [minecraft-bedrock](minecraft-bedrock.md) | Bedrock Store via WineGDK (BedrockOnLinux); vsync/XWayland e render distance | `modules/nixos/minecraft-bedrock.nix`, `config/hypr/hyprland/windowrules/workspace-5-gaming.lua` |
 
 | [updates](updates.md) | Grupos de atualização independentes (Hyprland, osu!, Sistema, Programas) e a Central de Updates | `flake.nix`, `modules/nixos/programs.nix`, `modules/nixos/update-groups.nix`, `tools/updates/` |
+| [dns](dns.md) | Unbound local: cache, DNSSEC, DoT e bloqueio de anúncios com atualização semanal | `modules/nixos/local-dns.nix`, `config/hypr/hyprland/scripts/update-blocklist.sh`, `config/unbound/allowlist.txt` |
 
 ## Grafo de relações
 
@@ -32,6 +33,7 @@ graph LR
     pipewire["PipeWire/WirePlumber (sem doc próprio)"]
     bedrock["minecraft-bedrock"]
     updates["updates"]
+    dns["dns"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv

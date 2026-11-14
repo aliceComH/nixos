@@ -1,0 +1,3 @@
+# Domínios que NUNCA devem ser bloqueados, um por linha (libera o domínio e
+# tudo abaixo dele). Depois de editar: sudo bash
+# /etc/nixos/config/hypr/hyprland/scripts/update-blocklist.sh

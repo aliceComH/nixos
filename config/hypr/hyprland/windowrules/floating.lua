@@ -10,12 +10,12 @@ hl.window_rule({ match = { class = "^(kitty|btop)$" }, suppress_event = "maximiz
 
 --  Kitty: canto superior esquerdo, com margem de 48px.
 hl.window_rule({ match = { class = "^(kitty)$" }, float = true })
-hl.window_rule({ match = { class = "^(kitty)$" }, size = {"837", "747"} })
+hl.window_rule({ match = { class = "^(kitty)$" }, size = {"1004", "822"} })
 hl.window_rule({ match = { class = "^(kitty)$" }, move = {"48", "48"} })
 
 --  Central de Updates (tools/updates/updates.py): janela, no centro da tela.
 hl.window_rule({ match = { class = "^(updates.py)$" }, float = true })
-hl.window_rule({ match = { class = "^(updates.py)$" }, size = {"1100", "860"} })
+hl.window_rule({ match = { class = "^(updates.py)$" }, size = {"1210", "992"} })
 hl.window_rule({ match = { class = "^(updates.py)$" }, center = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, float = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, size = {"1067", "651"} })

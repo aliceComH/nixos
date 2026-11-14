@@ -6,7 +6,7 @@
     # Força a compilação/linkagem do btop com suporte ao ROCm SMI (AMD)
     package = pkgs.btop.override { rocmSupport = true; };
     settings = {
-      color_theme = "/usr/share/btop/themes/solarized_dark.theme";
+      color_theme = "Default";
       theme_background = true;
       truecolor = true;
       force_tty = false;

@@ -22,8 +22,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Claude Desktop (comunidade). Atualizar só ele: nix flake update claude-desktop
-    claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
+    # Claude Desktop (comunidade, reempacota o .deb oficial). Atualizar só ele: nix flake update claude-desktop
+    claude-desktop.url = "github:aaddrick/claude-desktop-debian";
 
     home-manager = {
       url = "github:nix-community/home-manager";

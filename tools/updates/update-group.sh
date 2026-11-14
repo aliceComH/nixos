@@ -19,7 +19,7 @@ case "$group" in
   hyprland)  inputs=(nixpkgs-hyprland) ;;
   osu)       inputs=(nixpkgs-osu) ;;
   sistema)   inputs=(nixpkgs home-manager) ;;
-  programas) inputs=(nixpkgs-apps antigravity-nix claude-desktop bedrock-on-linux) ;;
+  programas) inputs=(nixpkgs-apps claude-desktop bedrock-on-linux) ;;
   *) echo "uso: $0 <hyprland|osu|sistema|programas>" >&2; exit 2 ;;
 esac
 

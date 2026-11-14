@@ -36,7 +36,7 @@ in
     mimeType = [ "audio/x-mpegurl" "application/vnd.apple.mpegurl" "audio/mpegurl" ];
   };
 
-  # Defaults de abertura: Thunar (arquivos/pastas), Antigravity IDE (texto), umpv (áudio/vídeo), imv-dir (imagens).
+  # Defaults de abertura: Thunar (arquivos/pastas), VSCodium (texto), umpv (áudio/vídeo), imv-dir (imagens).
   xdg.mimeApps = {
     enable = true;
     defaultApplications =
@@ -77,7 +77,7 @@ in
         "text/x-rust"
         "text/x-ruby"
         "inode/x-empty"
-      ] (_: [ "antigravity-ide.desktop" ]))
+      ] (_: [ "codium.desktop" ]))
       // (lib.genAttrs [
         "application/ogg"
         "application/x-ogg"

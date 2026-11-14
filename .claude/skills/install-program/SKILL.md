@@ -59,7 +59,7 @@ Hyprland Lua, ex.: `ALT + T`.
   **EXCETO `gaming` e `osu`** (nunca adicionar nesses dois, sem exceção).
 - Descobrir os submaps dinamicamente: `grep -n 'hl.define_submap' keybinds.lua`
   (não assumir a lista; novos submaps devem ser incluídos automaticamente).
-- Inserir junto das demais binds de programas (ex.: após `ALT + C` / `antigravity-ide`),
+- Inserir junto das demais binds de programas (ex.: após `ALT + C` / `claude-desktop`),
   respeitando indentação (4 espaços dentro de submap).
 - Formato: `hl.bind("ALT + T", hl.dsp.exec_cmd("<binário>"))`.
 - Atenção: o arquivo usa finais de linha CRLF; o `Edit` pode falhar no match ou

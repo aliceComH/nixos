@@ -1,6 +1,6 @@
 # Programas (apps de uso direto). Vêm do input `nixpkgs-apps`, independente do
 # `nixpkgs` base — grupo "Programas" da Central de Updates.
-# Atualizar só eles: nix flake update nixpkgs-apps antigravity-nix claude-desktop bedrock-on-linux
+# Atualizar só eles: nix flake update nixpkgs-apps claude-desktop bedrock-on-linux
 # Ver .agents/knowledge/updates.md.
 #
 # Atenção: `pkgs-apps` NÃO recebe os overlays de `nixpkgs.overlays` (são do pkgs base).
@@ -41,7 +41,7 @@ let
       google-chrome
       thunderbird
       vesktop
-      teamspeak6-client
+      vscodium # editor: árvore de arquivos + preview de Markdown (ALT + SHIFT + C)
       imv
       gnome-calculator
       gnome-disk-utility
@@ -53,10 +53,6 @@ let
     ++ [
       mpvSingleInstance
       inputs.claude-desktop.packages.${system}.claude-desktop
-      # --- Google Antigravity ---
-      inputs.antigravity-nix.packages.${system}.google-antigravity
-      inputs.antigravity-nix.packages.${system}.google-antigravity-ide
-      inputs.antigravity-nix.packages.${system}.google-antigravity-cli
     ];
 in
 {

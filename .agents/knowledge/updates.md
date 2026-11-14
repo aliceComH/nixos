@@ -25,7 +25,7 @@ o NixOS duas vezes.
 | Hyprland | `nixpkgs-hyprland` (rev fixa na URL) | `modules/nixos/hyprland-system.nix` |
 | osu! | `nixpkgs-osu` | `modules/nixos/osu.nix` |
 | Sistema (drivers + ferramentas) | `nixpkgs`, `home-manager` | `packages-system.nix`, `modules/home/packages-home.nix`, `amd-gpu.nix`, `kernel-zen.nix`, `services.nix` e todo o resto |
-| Programas | `nixpkgs-apps`, `antigravity-nix`, `claude-desktop`, `bedrock-on-linux` | `modules/nixos/programs.nix`, `minecraft-bedrock.nix`, flatpaks |
+| Programas | `nixpkgs-apps`, `claude-desktop`, `bedrock-on-linux` | `modules/nixos/programs.nix`, `minecraft-bedrock.nix`, flatpaks |
 
 ## Arquivos envolvidos
 

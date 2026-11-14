@@ -3,9 +3,20 @@
 --  Floating
 
 
+--  Terminais: sempre em janela. O kitty restaura o último estado (maximizado) do
+--  cache dele e pede maximize ao abrir; suppress_event ignora esse pedido.
+--  A causa raiz está tratada em config/kitty/kitty.conf (remember_window_size no).
+hl.window_rule({ match = { class = "^(kitty|btop)$" }, suppress_event = "maximize" })
+
+--  Kitty: canto superior esquerdo, com margem de 48px.
 hl.window_rule({ match = { class = "^(kitty)$" }, float = true })
 hl.window_rule({ match = { class = "^(kitty)$" }, size = {"837", "747"} })
-hl.window_rule({ match = { class = "^(kitty)$" }, center = true })
+hl.window_rule({ match = { class = "^(kitty)$" }, move = {"48", "48"} })
+
+--  Central de Updates (tools/updates/updates.py): janela, no centro da tela.
+hl.window_rule({ match = { class = "^(updates.py)$" }, float = true })
+hl.window_rule({ match = { class = "^(updates.py)$" }, size = {"1100", "860"} })
+hl.window_rule({ match = { class = "^(updates.py)$" }, center = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, float = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, size = {"1067", "651"} })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, center = true })

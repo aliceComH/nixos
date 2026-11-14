@@ -8,7 +8,7 @@
 # Grupo -> inputs do flake (fonte da verdade: tools/updates/update-group.sh):
 #   hyprland    -> nixpkgs-hyprland (rev fixa em flake.nix)
 #   osu         -> nixpkgs-osu
-#   programas   -> nixpkgs-apps, antigravity-nix, claude-desktop, bedrock-on-linux
+#   programas   -> nixpkgs-apps, claude-desktop, bedrock-on-linux
 #   drivers + ferramentas ("Sistema") -> nixpkgs, home-manager
 #
 # Drivers e ferramentas atualizam juntos porque kernel, Mesa, systemd, PipeWire e

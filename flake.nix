@@ -5,7 +5,7 @@
     # ── Grupos de atualização (Central de Updates: tools/updates/) ──────────
     # Cada grupo tem os seus inputs e atualiza sozinho. Ver .agents/knowledge/updates.md.
     #   Sistema (drivers + ferramentas): nixpkgs, home-manager
-    #   Programas: nixpkgs-apps, antigravity-nix, claude-desktop, bedrock-on-linux
+    #   Programas: nixpkgs-apps, claude-desktop, bedrock-on-linux
     #   osu!: nixpkgs-osu
     #   Hyprland: nixpkgs-hyprland (rev fixa)
 
@@ -15,8 +15,6 @@
     # nixpkgs independente para os programas (modules/nixos/programs.nix).
     # Atualizar apenas os programas: nix flake update nixpkgs-apps
     nixpkgs-apps.url = "github:NixOS/nixpkgs/nixos-unstable";
-
-    antigravity-nix.url = "github:jacopone/antigravity-nix";
 
     # nixpkgs travado no commit exato que tem o Hyprland 0.55.
     # A rev fixa na URL faz com que `nix flake update` NUNCA mude este input.

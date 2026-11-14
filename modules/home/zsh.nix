@@ -66,8 +66,8 @@ in
     ];
 
     sessionVariables = {
-      EDITOR = "antigravity-ide -w";
-      VISUAL = "antigravity-ide -w";
+      EDITOR = "codium -w";
+      VISUAL = "codium -w";
     };
 
     initContent = lib.mkMerge [

@@ -56,7 +56,7 @@ GROUPS = [
         "id": "programas",
         "title": "Programas",
         "color": "#BD93F9",
-        "inputs": ["nixpkgs-apps", "antigravity-nix", "claude-desktop", "bedrock-on-linux"],
+        "inputs": ["nixpkgs-apps", "claude-desktop", "bedrock-on-linux"],
         "sections": [("Pacotes", "programas")],
         "note": "Também roda `flatpak update --user` (Spotify, DataGrip, ProtonPlus, qBittorrent).",
     },

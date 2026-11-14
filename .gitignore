@@ -29,3 +29,6 @@ result-*
 # p2p-rooms secrets
 p2p-rooms/.env
 p2p-rooms/node_modules/
+
+# Claude Code: permissões locais desta máquina
+.claude/settings.local.json

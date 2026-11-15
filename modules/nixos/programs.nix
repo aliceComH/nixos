@@ -50,6 +50,7 @@ let
       wootility
       protontricks
       winetricks
+      claude-code
     ])
     ++ [
       mpvSingleInstance

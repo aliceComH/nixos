@@ -1,6 +1,8 @@
 {
   lib,
   pkgs,
+  pkgs-hyprland,
+  pkgs-mesa,
   config,
   ...
 }:
@@ -27,13 +29,33 @@
   config = {
     services.xserver.videoDrivers = [ "amdgpu" ];
 
+    # A Mesa NÃO vem do `pkgs` do sistema: o Hyprland (nixpkgs travado, glibc
+    # antiga) faz dlopen de /run/opengl-driver/lib/gbm/dri_gbm.so. Uma Mesa
+    # compilada com glibc mais nova falha com "GLIBC_2.xx not found", o
+    # aquamarine loga "Couldn't open a GBM device" e o Hyprland aborta em
+    # CBackend::create(). Apps mais novos carregam uma Mesa mais antiga sem
+    # problema (glibc é compatível para trás), então trava-se pelo mais velho.
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
+      package = pkgs-mesa.mesa;
+      package32 = pkgs-mesa.pkgsi686Linux.mesa;
       extraPackages = with pkgs; [
         rocmPackages.clr.icd
       ];
     };
+
+    assertions = [
+      {
+        assertion = lib.versionAtLeast pkgs-hyprland.glibc.version pkgs-mesa.glibc.version;
+        message = ''
+          A Mesa (nixpkgs-mesa, glibc ${pkgs-mesa.glibc.version}) foi compilada com uma
+          glibc mais nova que a do Hyprland (nixpkgs-hyprland, glibc
+          ${pkgs-hyprland.glibc.version}). O Hyprland não conseguiria carregar o driver
+          e não subiria. Use em nixpkgs-mesa uma rev com glibc <= a do Hyprland.
+        '';
+      }
+    ];
 
     boot.extraModprobeConfig = ''
       options amdgpu ppfeaturemask=0xFFF7FFFF

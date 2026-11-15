@@ -1,22 +1,50 @@
 /*
-* GTK Colors
-* Generated with Matugen
+* Paleta GTK da Alice: escuro quente, inspirado no tema dark do Claude.
+* Escrita à mão (substitui a antiga gerada pelo Matugen). Vale para todos os
+* apps GTK3 pelo tema adw-gtk3-dark, que lê estas cores nomeadas, e para
+* GTK4/libadwaita pelo arquivo irmão em config/gtk-4.0/gtk.css.
+* Mantenha o bloco de cores igual nos dois arquivos.
+*   barras/janela  #1f1e1d     conteúdo   #262624
+*   superfície     #30302e     borda      #3a3936
+*   texto          #ebe9e1     destaque   #d97757
 */
 
-@define-color accent_color #b8cac9;
-@define-color accent_fg_color #233333;
-@define-color accent_bg_color #b8cac9;
-@define-color window_bg_color #121413;
-@define-color window_fg_color #e3e2e1;
-@define-color headerbar_bg_color #121413;
-@define-color headerbar_fg_color #e3e2e1;
-@define-color popover_bg_color #121413;
-@define-color popover_fg_color #e3e2e1;
-@define-color view_bg_color #121413;
-@define-color view_fg_color #e3e2e1;
-@define-color card_bg_color #121413;
-@define-color card_fg_color #e3e2e1;
-@define-color sidebar_bg_color @window_bg_color;
-@define-color sidebar_fg_color @window_fg_color;
-@define-color sidebar_border_color @window_bg_color;
-@define-color sidebar_backdrop_color @window_bg_color;
+@define-color accent_color #d97757;
+@define-color accent_bg_color #c6613f;
+@define-color accent_fg_color #ffffff;
+
+@define-color window_bg_color #1f1e1d;
+@define-color window_fg_color #ebe9e1;
+@define-color view_bg_color #262624;
+@define-color view_fg_color #ebe9e1;
+
+@define-color headerbar_bg_color #1f1e1d;
+@define-color headerbar_fg_color #ebe9e1;
+@define-color headerbar_border_color #3a3936;
+@define-color headerbar_backdrop_color #1f1e1d;
+@define-color headerbar_shade_color rgba(0, 0, 0, 0.36);
+
+@define-color sidebar_bg_color #1f1e1d;
+@define-color sidebar_fg_color #ebe9e1;
+@define-color sidebar_backdrop_color #1f1e1d;
+@define-color sidebar_border_color #3a3936;
+@define-color sidebar_shade_color rgba(0, 0, 0, 0.25);
+@define-color secondary_sidebar_bg_color #232221;
+@define-color secondary_sidebar_fg_color #ebe9e1;
+@define-color secondary_sidebar_backdrop_color #232221;
+@define-color secondary_sidebar_border_color #3a3936;
+@define-color secondary_sidebar_shade_color rgba(0, 0, 0, 0.25);
+
+@define-color card_bg_color rgba(255, 255, 255, 0.05);
+@define-color card_fg_color #ebe9e1;
+@define-color card_shade_color rgba(0, 0, 0, 0.36);
+@define-color dialog_bg_color #2b2a28;
+@define-color dialog_fg_color #ebe9e1;
+@define-color popover_bg_color #30302e;
+@define-color popover_fg_color #ebe9e1;
+@define-color popover_shade_color rgba(0, 0, 0, 0.25);
+@define-color thumbnail_bg_color #30302e;
+@define-color thumbnail_fg_color #ebe9e1;
+
+@define-color shade_color rgba(0, 0, 0, 0.25);
+@define-color scrollbar_outline_color rgba(0, 0, 0, 0.5);

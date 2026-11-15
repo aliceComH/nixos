@@ -92,6 +92,8 @@ let
     imagemagick
     tesseract
     papirus-icon-theme
+    colloid-icon-theme # ícones em uso (Colloid-Dark); o Papirus fica como fallback
+    adw-gtk3 # tema GTK3 que lê as cores nomeadas de config/gtk-3.0/gtk.css
     font-awesome
     ])
     ++ (with pkgs.libsForQt5; [ qt5ct ])

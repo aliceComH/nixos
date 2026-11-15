@@ -3,6 +3,7 @@
 {
   imports = [
     ../../modules/home/session-variables.nix
+    ../../modules/home/gtk-theme.nix
     ../../modules/home/packages-home.nix
     ../../modules/home/zsh.nix
     ../../modules/home/audio-mirror.nix

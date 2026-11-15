@@ -33,7 +33,7 @@ in
     local.updateGroups.drivers = [
       config.boot.kernelPackages.kernel
       pkgs.linux-firmware
-      pkgs.mesa
+      config.hardware.graphics.package # Mesa: travada em nixpkgs-mesa (ver amd-gpu.nix)
       config.services.pipewire.package
       config.services.pipewire.wireplumber.package
       pkgs.lact

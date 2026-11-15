@@ -18,6 +18,7 @@ uma vez.
 
 | [updates](updates.md) | Grupos de atualização independentes (Hyprland, osu!, Sistema, Programas) e a Central de Updates | `flake.nix`, `modules/nixos/programs.nix`, `modules/nixos/update-groups.nix`, `tools/updates/` |
 | [dns](dns.md) | Unbound local: cache, DNSSEC, DoT e bloqueio de anúncios com atualização semanal | `modules/nixos/local-dns.nix`, `config/hypr/hyprland/scripts/update-blocklist.sh`, `config/unbound/allowlist.txt` |
+| [gtk-theme](gtk-theme.md) | Tema GTK e ícones via dconf, paleta escura quente (adw-gtk3 + cores nomeadas) e as windowrules do Thunar | `modules/home/gtk-theme.nix`, `config/gtk-3.0/gtk.css`, `config/hypr/hyprland/windowrules/floating.lua` |
 
 ## Grafo de relações
 
@@ -34,6 +35,7 @@ graph LR
     bedrock["minecraft-bedrock"]
     updates["updates"]
     dns["dns"]
+    gtkTheme["gtk-theme"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv

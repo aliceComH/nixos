@@ -1,0 +1,14 @@
+diff --git a/config/hypr/hyprland/general.lua b/config/hypr/hyprland/general.lua
+index e169fd2c..880c8976 100644
+--- a/config/hypr/hyprland/general.lua
++++ b/config/hypr/hyprland/general.lua
+@@ -112,7 +112,8 @@ hl.config({
+         session_lock_xray = true,
+         initial_workspace_tracking = false,
+         focus_on_activate = false,
+-        middle_click_paste = true
++        middle_click_paste = true,
++        new_float_force_onscreen = 0 -- 0.57: default 2 forçaria flutuantes novas para dentro da tela
+     },
+     render = {
+         direct_scanout = 0

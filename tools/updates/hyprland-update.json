@@ -1,0 +1,11 @@
+{
+  "fase": "pronto",
+  "versao_alvo": "0.57.2",
+  "nixpkgs_rev": "d4f25a3e562008648d45bcf2d70bcc7422cad84e",
+  "versao_atual": "0.55.4",
+  "rev_atual": "e73de5be04e0eff4190a1432b946d469c794e7b4",
+  "wiki_commit": "ec1068fed41a68d9bace129de16aed785dd785ee",
+  "tag_data": "2026-11-09",
+  "atualizado_em": "2026-11-15",
+  "patch_sha256": "a8d4c5cdf3abfa15dcaadf1c47bcb6d618f22f9b925bef7184c6edaefa6f05ad"
+}

@@ -17,6 +17,11 @@ hl.window_rule({ match = { class = "^(kitty)$" }, move = {"48", "48"} })
 hl.window_rule({ match = { class = "^(updates.py)$" }, float = true })
 hl.window_rule({ match = { class = "^(updates.py)$" }, size = {"1210", "992"} })
 hl.window_rule({ match = { class = "^(updates.py)$" }, center = true })
+
+--  Avaliador de Restaurantes (~/Projetos/avaliador-de-restaurantes): janela, no centro da tela.
+hl.window_rule({ match = { class = "^(avaliador-restaurantes)$" }, float = true })
+hl.window_rule({ match = { class = "^(avaliador-restaurantes)$" }, size = {"1200", "820"} })
+hl.window_rule({ match = { class = "^(avaliador-restaurantes)$" }, center = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, float = true })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, size = {"1067", "651"} })
 hl.window_rule({ match = { class = "^(.piper-wrapped)$" }, center = true })

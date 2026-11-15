@@ -45,6 +45,7 @@ hl.bind("ALT + 4", hl.dsp.exec_cmd("google-chrome-stable --app=\"https://web.str
 hl.bind("ALT + 5", hl.dsp.exec_cmd("steam"))
 hl.bind("ALT + 6", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/claudia/claudia.py"))
 hl.bind("ALT + 0", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python /etc/nixos/tools/updates/updates.py"))
+hl.bind("ALT + 9", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/avaliador-de-restaurantes/avaliador.py"))
 
 -- Shutdown menu
 hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
@@ -243,6 +244,7 @@ hl.define_submap("auxiliar", function() -- DISCORD
     hl.bind("ALT + 5", hl.dsp.exec_cmd("steam"))
     hl.bind("ALT + 6", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/claudia/claudia.py"))
     hl.bind("ALT + 0", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python /etc/nixos/tools/updates/updates.py"))
+    hl.bind("ALT + 9", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/avaliador-de-restaurantes/avaliador.py"))
 
     hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
     hl.bind("CTRL + SHIFT + dead_grave", hl.dsp.exec_cmd("kitty reboot"))
@@ -319,6 +321,7 @@ hl.define_submap("whatsapp", function() -- WHATSAPP
     hl.bind("ALT + 5", hl.dsp.exec_cmd("steam"))
     hl.bind("ALT + 6", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/claudia/claudia.py"))
     hl.bind("ALT + 0", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python /etc/nixos/tools/updates/updates.py"))
+    hl.bind("ALT + 9", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/avaliador-de-restaurantes/avaliador.py"))
 
     hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
     hl.bind("CTRL + SHIFT + dead_grave", hl.dsp.exec_cmd("kitty reboot"))
@@ -401,6 +404,7 @@ hl.define_submap("media", function() -- MEDIA (Workspace 7)
     hl.bind("ALT + 5", hl.dsp.exec_cmd("steam"))
     hl.bind("ALT + 6", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/claudia/claudia.py"))
     hl.bind("ALT + 0", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python /etc/nixos/tools/updates/updates.py"))
+    hl.bind("ALT + 9", hl.dsp.exec_cmd("GTK_THEME=Adwaita:dark python ~/Projetos/avaliador-de-restaurantes/avaliador.py"))
 
     hl.bind("CTRL + SHIFT + ESCAPE", hl.dsp.exec_cmd("kitty systemctl poweroff -i"))
     hl.bind("CTRL + SHIFT + dead_grave", hl.dsp.exec_cmd("kitty reboot"))

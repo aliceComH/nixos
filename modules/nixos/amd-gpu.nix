@@ -47,6 +47,13 @@
 
     assertions = [
       {
+        assertion = lib.versionAtLeast pkgs.glibc.version pkgs-mesa.glibc.version;
+        message = ''
+          A Mesa (nixpkgs-mesa, glibc ${pkgs-mesa.glibc.version}) é mais nova que a glibc do
+          sistema (${pkgs.glibc.version}). Atualize o grupo Sistema antes do Hyprland.
+        '';
+      }
+      {
         assertion = lib.versionAtLeast pkgs-hyprland.glibc.version pkgs-mesa.glibc.version;
         message = ''
           A Mesa (nixpkgs-mesa, glibc ${pkgs-mesa.glibc.version}) foi compilada com uma

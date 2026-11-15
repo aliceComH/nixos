@@ -18,14 +18,16 @@
 
     # nixpkgs travado no commit exato que tem o Hyprland 0.55.
     # A rev fixa na URL faz com que `nix flake update` NUNCA mude este input.
-    # Para atualizar o Hyprland no futuro, troque o hash aqui manualmente.
+    # Atualizar o Hyprland: skill /update-hyprland + botão da Central de Updates
+    # (ver .agents/knowledge/hyprland-update.md). Não troque o hash à mão.
     nixpkgs-hyprland.url = "github:NixOS/nixpkgs/e73de5be04e0eff4190a1432b946d469c794e7b4";
     nixpkgs-hyprland.flake = false;
 
     # Mesa (userspace de vídeo) travada num nixpkgs com glibc <= a do Hyprland.
     # O Hyprland travado carrega a Mesa de /run/opengl-driver via dlopen; se ela
     # for compilada com uma glibc mais nova que a dele, o GBM não abre e o
-    # compositor não sobe. Só troque esta rev junto com a do nixpkgs-hyprland.
+    # compositor não sobe. O botão "Atualizar Hyprland" troca esta rev junto com a
+    # do nixpkgs-hyprland (mesma rev = mesma glibc); não mexa à mão.
     # Ver modules/nixos/amd-gpu.nix e .agents/knowledge/updates.md.
     nixpkgs-mesa.url = "github:NixOS/nixpkgs/34ab99075ac4f7e40cf037eef32cb1c360bb85e9";
     nixpkgs-mesa.flake = false;

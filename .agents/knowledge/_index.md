@@ -18,6 +18,7 @@ uma vez.
 
 | [updates](updates.md) | Grupos de atualização independentes (Hyprland, osu!, Sistema, Programas) e a Central de Updates | `flake.nix`, `modules/nixos/programs.nix`, `modules/nixos/update-groups.nix`, `tools/updates/` |
 | [dns](dns.md) | Unbound local: cache, DNSSEC, DoT e bloqueio de anúncios com atualização semanal | `modules/nixos/local-dns.nix`, `config/hypr/hyprland/scripts/update-blocklist.sh`, `config/unbound/allowlist.txt` |
+| [hyprland-update](hyprland-update.md) | Fluxo de update do Hyprland: skill `/update-hyprland` (baixa wiki/código, analisa, adequa) + trava no botão da Central | `.claude/skills/update-hyprland/SKILL.md`, `tools/updates/hyprland-update.sh`, `tools/updates/update-group.sh` |
 | [gtk-theme](gtk-theme.md) | Tema GTK e ícones via dconf, paleta escura quente (adw-gtk3 + cores nomeadas) e as windowrules do Thunar | `modules/home/gtk-theme.nix`, `config/gtk-3.0/gtk.css`, `config/hypr/hyprland/windowrules/floating.lua` |
 
 ## Grafo de relações
@@ -36,6 +37,7 @@ graph LR
     updates["updates"]
     dns["dns"]
     gtkTheme["gtk-theme"]
+    hyprUpdate["hyprland-update"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv
@@ -43,6 +45,8 @@ graph LR
     bedrock -.->|"Hyprland tearing/fullscreen"| screenSharing
     updates -->|"build do mpv em programs.nix"| mpv
     updates -.->|"input segue nixpkgs-apps"| bedrock
+    updates -->|"botão lê o estado da skill"| hyprUpdate
+    hyprUpdate -.->|"regras do Thunar conferidas na finalização"| gtkTheme
 ```
 
 *Nota:* `LibreTranslate`, `Stremio` e `PipeWire/WirePlumber` ainda não têm

@@ -19,6 +19,8 @@ Responda sempre em português do Brasil.
   Pode rodar sozinha, sem pedir, sempre que precisar aplicar ou testar uma mudança
   (inclusive em loop de testar e corrigir). Avise depois o que foi aplicado.
 - **Commits:** só commite quando a Alice pedir.
+- **Update do Hyprland:** só pela skill `/update-hyprland` seguida do botão da Central de
+  Updates. Nunca troque a rev do `nixpkgs-hyprland` à mão. Ver `.agents/knowledge/hyprland-update.md`.
 - **Knowledge:** antes de mexer em qualquer subsistema, consulte
   `.agents/knowledge/_index.md` e leia o doc relacionado, se existir.
 - **`.agents/`:** é a fonte única das regras e do knowledge. Não apague nem mova;

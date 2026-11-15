@@ -30,10 +30,11 @@ GROUPS = [
         "id": "hyprland",
         "title": "Hyprland",
         "color": "#8BE9FD",
-        "inputs": ["nixpkgs-hyprland"],
+        "inputs": ["nixpkgs-hyprland", "nixpkgs-mesa"],
         "sections": [("Pacotes", "hyprland")],
-        "note": "Travado por rev em flake.nix. Atualizar troca a rev e pede confirmação extra: "
-                "wiki, código-fonte local e regras são da versão travada.",
+        "note": "Travado por rev em flake.nix. O botão só instala o que a skill /update-hyprland "
+                "preparou (wiki + código-fonte da versão nova e sistema adequado); sem isso não faz nada. "
+                "A Mesa acompanha a mesma rev.",
     },
     {
         "id": "osu",

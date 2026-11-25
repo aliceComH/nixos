@@ -37,5 +37,5 @@ traz o PyGObject), sem pacote Nix próprio e sem daemon.
 - Uma pasta só conta como repo se for a raiz (`rev-parse --show-toplevel` igual ao caminho); subpasta de outro repo aparece como "não é repositório git (fica dentro do repo X)".
 - Arquivos não rastreados contam em "Mudanças" (uma pasta nova não rastreada conta como 1, como no `git status`).
 - `~/.claude` É repositório git (origin `alice-ai`), ao contrário do que se supunha.
-- O caminho do portfólio em Go (`~/Projetos/portfolio-go`) é provisório; ajustar em `pastas.toml` quando o repo existir.
+- O portfólio em Go é o `~/Projetos/combobreaker` (cartão em `pastas.toml`).
 - Keybind **ALT+8** em `config/hypr/hyprland/keybinds.lua`: no nível principal e nos submaps auxiliar, whatsapp e media (ao lado do ALT+9). Fica fora dos submaps gaming e osu.

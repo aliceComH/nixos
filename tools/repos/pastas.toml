@@ -34,7 +34,7 @@ descricao = "Currículos, cartas e gerador de PDF."
 cor = "#F1FA8C"
 
 [[pasta]]
-nome = "Portfólio (Go)"
-caminho = "~/Projetos/portfolio-go"
-descricao = "Futuro repositório do portfólio em Go. Ajuste o caminho quando o repo for criado."
+nome = "combobreaker (portfólio Go)"
+caminho = "~/Projetos/combobreaker"
+descricao = "Portfólio em Go: backend de placar de jogo de ritmo, com AWS emulada (MiniStack), K8s, Terraform e observabilidade."
 cor = "#BD93F9"

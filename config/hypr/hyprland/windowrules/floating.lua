@@ -18,6 +18,11 @@ hl.window_rule({ match = { class = "^(updates.py)$" }, float = true })
 hl.window_rule({ match = { class = "^(updates.py)$" }, size = {"1210", "992"} })
 hl.window_rule({ match = { class = "^(updates.py)$" }, center = true })
 
+--  Mapa de Pastas (tools/repos/repos.py): janela, no centro da tela.
+hl.window_rule({ match = { class = "^(repos.py)$" }, float = true })
+hl.window_rule({ match = { class = "^(repos.py)$" }, size = {"1100", "900"} })
+hl.window_rule({ match = { class = "^(repos.py)$" }, center = true })
+
 --  Avaliador de Restaurantes (~/Projetos/avaliador-de-restaurantes): janela, no centro da tela.
 hl.window_rule({ match = { class = "^(avaliador-restaurantes)$" }, float = true })
 hl.window_rule({ match = { class = "^(avaliador-restaurantes)$" }, size = {"1200", "820"} })

@@ -1,0 +1,40 @@
+# Mapa de Pastas (tools/repos/repos.py) — lista das pastas que a Alice e o Claude mexem.
+#
+# Para adicionar uma pasta, copie um bloco [[pasta]] e ajuste. Campos:
+#   nome      título do cartão
+#   caminho   caminho local (aceita ~)
+#   descricao uma frase sobre o que é a pasta
+#   cor       (opcional) cor do título, em hex
+#
+# A interface descobre sozinha se é repositório git, o remote, a branch etc.
+# Pasta que ainda não existe aparece como "não existe ainda".
+
+[[pasta]]
+nome = "Sistema (NixOS)"
+caminho = "/etc/nixos"
+descricao = "Configuração do sistema: NixOS + Home Manager + Hyprland, flake alice-nixos."
+cor = "#8BE9FD"
+
+[[pasta]]
+nome = "Vault"
+caminho = "~/vault"
+descricao = "Segundo cérebro (Obsidian). Sincroniza sozinho pelo ~/.claude/scripts/vault-sync.sh."
+cor = "#50FA7B"
+
+[[pasta]]
+nome = "Claude (global)"
+caminho = "~/.claude"
+descricao = "Configuração global do Claude: skills, scripts, CLAUDE.md."
+cor = "#FFB86C"
+
+[[pasta]]
+nome = "Currículos 2026"
+caminho = "~/Documentos/CV_2026"
+descricao = "Currículos, cartas e gerador de PDF."
+cor = "#F1FA8C"
+
+[[pasta]]
+nome = "Portfólio (Go)"
+caminho = "~/Projetos/portfolio-go"
+descricao = "Futuro repositório do portfólio em Go. Ajuste o caminho quando o repo for criado."
+cor = "#BD93F9"

@@ -51,6 +51,7 @@ let
       protontricks
       winetricks
       claude-code
+      prismlauncher # Minecraft Java (ALT + M)
     ])
     ++ [
       mpvSingleInstance

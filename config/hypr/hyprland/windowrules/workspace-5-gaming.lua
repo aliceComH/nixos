@@ -61,12 +61,11 @@ hl.window_rule({
 })
 
 --  Prism Launcher (Minecraft Java): todas as janelas do launcher flutuando no 5.
---  Sem "silent": o ALT + M leva junto para o workspace 5.
 hl.window_rule({
     match = {
         class = "^(org\\.prismlauncher\\.PrismLauncher)$",
     },
-    workspace = "5",
+    workspace = "5 silent",
     float = true,
     center = true,
 })

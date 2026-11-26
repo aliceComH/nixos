@@ -23,8 +23,8 @@ e shaders ficam em `~/.local/share/PrismLauncher/` e não são declarados no Nix
 - `config/hypr/hyprland/keybinds.lua` — `ALT + M` → `prismlauncher` no escopo global e nos submaps
   (menos `gaming`/`osu`).
 - `config/hypr/hyprland/windowrules/workspace-5-gaming.lua` — o Prism
-  (`org.prismlauncher.PrismLauncher`) abre flutuando e centralizado no 5, sem
-  `silent`. O jogo (`^(Minecraft\*? [0-9].*)$`, via XWayland) vai para `5 silent`
+  (`org.prismlauncher.PrismLauncher`) abre flutuando e centralizado no `5 silent`
+  (a pedido da Alice, o ALT + M não muda de workspace). O jogo (`^(Minecraft\*? [0-9].*)$`, via XWayland) vai para `5 silent`
   com `fullscreen`, `content = "game"`, `immediate`, sem blur/shadow e com
   `idle_inhibit`.
 - `config/hypr/hyprland/scripts/gaming_monitor.sh` — liga `render.direct_scanout`

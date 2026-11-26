@@ -27,6 +27,8 @@ e shaders ficam em `~/.local/share/PrismLauncher/` e não são declarados no Nix
   (a pedido da Alice, o ALT + M não muda de workspace). O jogo (`^(Minecraft\*? [0-9].*)$`, via XWayland) vai para `5 silent`
   com `fullscreen`, `content = "game"`, `immediate`, sem blur/shadow e com
   `idle_inhibit`.
+- `modules/nixos/minecraft-lan.nix` — firewall: UDP 4445 (anúncio do Open to LAN) e
+  TCP 25565 (hospedar) aceitos só de `192.168.0.0/24`, via `extraCommands` com `-s`.
 - `config/hypr/hyprland/scripts/gaming_monitor.sh` — liga `render.direct_scanout`
   ao entrar no 5 e desliga nos outros workspaces.
 
@@ -49,3 +51,7 @@ e shaders ficam em `~/.local/share/PrismLauncher/` e não são declarados no Nix
   abertas depois do reload.
 - "String too big (was 20 characters, max 16)" ao entrar em um mundo = a conta
   Microsoft não tem perfil Java. Não é bug de mod.
+- A sub-rede `192.168.0.0/24` está fixa em `minecraft-lan.nix`. Se o roteador
+  mudar de faixa, o Open to LAN para de funcionar em silêncio (o firewall descarta).
+- Sem o módulo, o mundo de outra pessoa não aparece na lista (multicast descartado)
+  e o Open to LAN local sorteia uma porta que fica bloqueada.

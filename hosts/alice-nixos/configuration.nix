@@ -30,6 +30,7 @@
     ../../modules/nixos/libretranslate.nix
     ../../modules/nixos/piper.nix
     ../../modules/nixos/minecraft-bedrock.nix
+    ../../modules/nixos/minecraft-lan.nix
   ];
 
   networking.hostName = "alice-nixos";

@@ -15,6 +15,7 @@ uma vez.
 | [mpv](mpv.md) | Player de vídeo com interpolação de frames e tradução ao vivo de legendas | `modules/nixos/programs.nix`, `config/mpv/` |
 | [screen-sharing](screen-sharing.md) | Portais Wayland (hyprland/gtk) + PipeWire para screen share; fix do bug "morre até reiniciar a máquina" | `modules/nixos/hyprland-system.nix`, `config/xdg-desktop-portal/hyprland-portals.conf` |
 | [minecraft-bedrock](minecraft-bedrock.md) | Bedrock Store via WineGDK (BedrockOnLinux); vsync/XWayland e render distance | `modules/nixos/minecraft-bedrock.nix`, `config/hypr/hyprland/windowrules/workspace-5-gaming.lua` |
+| [minecraft-java](minecraft-java.md) | Prism Launcher + Fabric; windowrules do workspace 5 com fullscreen e direct scanout | `modules/nixos/programs.nix`, `config/hypr/hyprland/windowrules/workspace-5-gaming.lua` |
 
 | [updates](updates.md) | Grupos de atualização independentes (Hyprland, osu!, Sistema, Programas) e a Central de Updates | `flake.nix`, `modules/nixos/programs.nix`, `modules/nixos/update-groups.nix`, `tools/updates/` |
 | [dns](dns.md) | Unbound local: cache, DNSSEC, DoT e bloqueio de anúncios com atualização semanal | `modules/nixos/local-dns.nix`, `config/hypr/hyprland/scripts/update-blocklist.sh`, `config/unbound/allowlist.txt` |
@@ -40,6 +41,7 @@ graph LR
     gtkTheme["gtk-theme"]
     hyprUpdate["hyprland-update"]
     repos["repos"]
+    mcJava["minecraft-java"]
 
     mpv -->|"tradução ao vivo"| libretranslate
     stremio -.->|"player de destino"| mpv
@@ -50,6 +52,8 @@ graph LR
     updates -->|"botão lê o estado da skill"| hyprUpdate
     hyprUpdate -.->|"regras do Thunar conferidas na finalização"| gtkTheme
     repos -.->|"mesma família de GUI"| updates
+    mcJava -.->|"mesmo workspace 5"| bedrock
+    updates -.->|"pacote em programs.nix"| mcJava
 ```
 
 *Nota:* `LibreTranslate`, `Stremio` e `PipeWire/WirePlumber` ainda não têm

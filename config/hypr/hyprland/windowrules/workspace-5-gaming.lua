@@ -59,3 +59,30 @@ hl.window_rule({
     no_blur = true,
     float = true,
 })
+
+--  Prism Launcher (Minecraft Java): todas as janelas do launcher flutuando no 5.
+--  Sem "silent": o ALT + M leva junto para o workspace 5.
+hl.window_rule({
+    match = {
+        class = "^(org\\.prismlauncher\\.PrismLauncher)$",
+    },
+    workspace = "5",
+    float = true,
+    center = true,
+})
+
+--  Minecraft Java (XWayland/GLFW): a class vem com a versão, "Minecraft* 1.21.1"
+--  (o * aparece quando há mods). Fullscreen real (modo 2) para direct scanout
+--  (ligado pelo gaming_monitor.sh no workspace 5); content "game" + immediate.
+hl.window_rule({
+    match = {
+        class = "^(Minecraft\\*? [0-9].*)$",
+    },
+    workspace = "5 silent",
+    fullscreen = true,
+    content = "game",
+    immediate = true,
+    no_blur = true,
+    no_shadow = true,
+    idle_inhibit = "fullscreen",
+})
